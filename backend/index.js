@@ -1,115 +1,611 @@
-require('dotenv').config();
-const express = require('express');
+const sdk = require('node-appwrite');
+const { logger } = require('./discord-logger');
 
-const app = express();
+// This is your Appwrite function
+module.exports = async ({ req, res, log, error }) => {
+  // Initialize Appwrite client
+  const client = new sdk.Client();
+  client
+    .setEndpoint(process.env.APPWRITE_FUNCTION_ENDPOINT || 'https://cloud.appwrite.io/v1')
+    .setProject(process.env.APPWRITE_FUNCTION_PROJECT_ID)
+    .setKey(process.env.APPWRITE_API_KEY);
 
-// Parse JSON request bodies
-app.use(express.json());
+  const databases = new sdk.Databases(client);
+  const storage = new sdk.Storage(client);
+  const users = new sdk.Users(client);
 
-// In-memory data store (for demo purposes)
-let items = [];
-let nextId = 1;
-
-// Health check / root
-app.get('/', (req, res) => {
-  res.json({ status: 'ok', message: 'Backend is running' });
-});
-
-// GET /items - list all items
-app.get('/items', (req, res) => {
-  res.json({ data: items });
-});
-
-// GET /items/:id - fetch a single item
-app.get('/items/:id', (req, res) => {
-  const id = Number(req.params.id);
-  const item = items.find((i) => i.id === id);
-  if (!item) {
-    return res.status(404).json({ error: 'Item not found' });
-  }
-  res.json({ data: item });
-});
-
-// POST /items - create a new item
-app.post('/items', (req, res) => {
-  const { name, description } = req.body || {};
-
-  if (typeof name !== 'string' || name.trim() === '') {
-    return res.status(400).json({ error: 'Field "name" is required' });
-  }
-
-  const newItem = {
-    id: nextId++,
-    name: name.trim(),
-    description: typeof description === 'string' ? description.trim() : null,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+  // Database and collection IDs
+  const DATABASE_ID = process.env.DATABASE_ID || 'edtech_db';
+  const COLLECTIONS = {
+    COURSES: 'courses',
+    LESSONS: 'lessons',
+    QUIZZES: 'quizzes',
+    QUIZ_QUESTIONS: 'quiz_questions',
+    USER_PROGRESS: 'user_progress',
+    QUIZ_ATTEMPTS: 'quiz_attempts',
+    TRANSACTIONS: 'transactions',
+    RANKS: 'ranks',
+    BADGES: 'badges',
+    USER_BADGES: 'user_badges',
+    NOTIFICATIONS: 'notifications'
   };
 
-  items.push(newItem);
-  res.status(201).json({ data: newItem });
-});
+  // CORS headers
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Appwrite-Project, X-Appwrite-Key',
+    'Access-Control-Max-Age': '86400'
+  };
 
-// PATCH /items/:id - partially update an item
-app.patch('/items/:id', (req, res) => {
-  const id = Number(req.params.id);
-  const itemIndex = items.findIndex((i) => i.id === id);
-  if (itemIndex === -1) {
-    return res.status(404).json({ error: 'Item not found' });
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.json({ message: 'OK' }, 200, corsHeaders);
   }
 
-  const { name, description } = req.body || {};
-  const existing = items[itemIndex];
+  // Helper function to handle errors
+  const handleError = async (err, message = 'Internal Server Error') => {
+    await logger.logError(`EdTech API Error: ${message}`, err);
+    error(err);
+    return res.json({ 
+      success: false, 
+      error: message,
+      details: process.env.NODE_ENV === 'development' ? err.message : undefined
+    }, 500, corsHeaders);
+  };
 
-  if (name !== undefined) {
-    if (typeof name !== 'string' || name.trim() === '') {
-      return res.status(400).json({ error: 'Field "name" must be a non-empty string' });
+  // Helper function to validate required fields
+  const validateRequired = (data, fields) => {
+    const missing = fields.filter(field => !data[field]);
+    if (missing.length > 0) {
+      throw new Error(`Missing required fields: ${missing.join(', ')}`);
     }
-    existing.name = name.trim();
-  }
+  };
 
-  if (description !== undefined) {
-    if (description !== null && typeof description !== 'string') {
-      return res.status(400).json({ error: 'Field "description" must be a string or null' });
+  try {
+    // Parse URL path
+    const url = new URL(req.url, 'http://localhost');
+    const pathSegments = url.pathname.split('/').filter(segment => segment);
+    const [resource, id, subResource, subId] = pathSegments;
+
+    log(`${req.method} ${url.pathname}`);
+    await logger.logInfo(`API Request: ${req.method} ${url.pathname}`, { 
+      userAgent: req.headers['user-agent'],
+      ip: req.headers['x-forwarded-for'] || req.headers['x-real-ip']
+    });
+
+    // Health check
+    if (req.method === 'GET' && (!resource || resource === 'health')) {
+      return res.json({ 
+        success: true, 
+        message: 'EdTech API is running',
+        timestamp: new Date().toISOString()
+      }, 200, corsHeaders);
     }
-    existing.description = typeof description === 'string' ? description.trim() : null;
+
+    const requestBody = req.bodyRaw ? JSON.parse(req.bodyRaw) : {};
+
+    // COURSES ENDPOINTS
+    if (resource === 'courses') {
+      switch (req.method) {
+        case 'GET':
+          if (id) {
+            // Get specific course
+            const course = await databases.getDocument(DATABASE_ID, COLLECTIONS.COURSES, id);
+            // Get course lessons
+            const lessons = await databases.listDocuments(DATABASE_ID, COLLECTIONS.LESSONS, [
+              sdk.Query.equal('courseId', id),
+              sdk.Query.orderAsc('order')
+            ]);
+            return res.json({ 
+              success: true, 
+              data: { ...course, lessons: lessons.documents }
+            }, 200, corsHeaders);
+          } else {
+            // List all courses
+            const queryParams = [];
+            if (url.searchParams.get('category')) {
+              queryParams.push(sdk.Query.equal('category', url.searchParams.get('category')));
+            }
+            if (url.searchParams.get('instructor')) {
+              queryParams.push(sdk.Query.equal('instructorId', url.searchParams.get('instructor')));
+            }
+            queryParams.push(sdk.Query.orderDesc('$createdAt'));
+            
+            const courses = await databases.listDocuments(DATABASE_ID, COLLECTIONS.COURSES, queryParams);
+            return res.json({ 
+              success: true, 
+              data: courses.documents,
+              total: courses.total
+            }, 200, corsHeaders);
+          }
+
+        case 'POST':
+          validateRequired(requestBody, ['title', 'description', 'instructorId', 'category', 'price']);
+          const newCourse = await databases.createDocument(
+            DATABASE_ID,
+            COLLECTIONS.COURSES,
+            sdk.ID.unique(),
+            {
+              ...requestBody,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+              enrollmentCount: 0,
+              isPublished: false
+            }
+          );
+          await logger.logInfo('Course created', { courseId: newCourse.$id, title: newCourse.title });
+          return res.json({ success: true, data: newCourse }, 201, corsHeaders);
+
+        case 'PUT':
+          if (!id) throw new Error('Course ID is required');
+          const updatedCourse = await databases.updateDocument(
+            DATABASE_ID,
+            COLLECTIONS.COURSES,
+            id,
+            { ...requestBody, updatedAt: new Date().toISOString() }
+          );
+          await logger.logInfo('Course updated', { courseId: id });
+          return res.json({ success: true, data: updatedCourse }, 200, corsHeaders);
+
+        case 'DELETE':
+          if (!id) throw new Error('Course ID is required');
+          await databases.deleteDocument(DATABASE_ID, COLLECTIONS.COURSES, id);
+          await logger.logInfo('Course deleted', { courseId: id });
+          return res.json({ success: true, message: 'Course deleted' }, 200, corsHeaders);
+      }
+    }
+
+    // LESSONS ENDPOINTS
+    if (resource === 'lessons') {
+      switch (req.method) {
+        case 'GET':
+          if (id) {
+            const lesson = await databases.getDocument(DATABASE_ID, COLLECTIONS.LESSONS, id);
+            return res.json({ success: true, data: lesson }, 200, corsHeaders);
+          } else {
+            const courseId = url.searchParams.get('courseId');
+            const queryParams = courseId ? [sdk.Query.equal('courseId', courseId)] : [];
+            queryParams.push(sdk.Query.orderAsc('order'));
+            
+            const lessons = await databases.listDocuments(DATABASE_ID, COLLECTIONS.LESSONS, queryParams);
+            return res.json({ 
+              success: true, 
+              data: lessons.documents,
+              total: lessons.total
+            }, 200, corsHeaders);
+          }
+
+        case 'POST':
+          validateRequired(requestBody, ['courseId', 'title', 'content', 'order']);
+          const newLesson = await databases.createDocument(
+            DATABASE_ID,
+            COLLECTIONS.LESSONS,
+            sdk.ID.unique(),
+            {
+              ...requestBody,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+              completionCount: 0
+            }
+          );
+          return res.json({ success: true, data: newLesson }, 201, corsHeaders);
+
+        case 'PUT':
+          if (!id) throw new Error('Lesson ID is required');
+          const updatedLesson = await databases.updateDocument(
+            DATABASE_ID,
+            COLLECTIONS.LESSONS,
+            id,
+            { ...requestBody, updatedAt: new Date().toISOString() }
+          );
+          return res.json({ success: true, data: updatedLesson }, 200, corsHeaders);
+
+        case 'DELETE':
+          if (!id) throw new Error('Lesson ID is required');
+          await databases.deleteDocument(DATABASE_ID, COLLECTIONS.LESSONS, id);
+          return res.json({ success: true, message: 'Lesson deleted' }, 200, corsHeaders);
+      }
+    }
+
+    // QUIZZES ENDPOINTS
+    if (resource === 'quizzes') {
+      switch (req.method) {
+        case 'GET':
+          if (id) {
+            const quiz = await databases.getDocument(DATABASE_ID, COLLECTIONS.QUIZZES, id);
+            // Get quiz questions
+            const questions = await databases.listDocuments(DATABASE_ID, COLLECTIONS.QUIZ_QUESTIONS, [
+              sdk.Query.equal('quizId', id),
+              sdk.Query.orderAsc('order')
+            ]);
+            return res.json({ 
+              success: true, 
+              data: { ...quiz, questions: questions.documents }
+            }, 200, corsHeaders);
+          } else {
+            const courseId = url.searchParams.get('courseId');
+            const queryParams = courseId ? [sdk.Query.equal('courseId', courseId)] : [];
+            queryParams.push(sdk.Query.orderDesc('$createdAt'));
+            
+            const quizzes = await databases.listDocuments(DATABASE_ID, COLLECTIONS.QUIZZES, queryParams);
+            return res.json({ 
+              success: true, 
+              data: quizzes.documents,
+              total: quizzes.total
+            }, 200, corsHeaders);
+          }
+
+        case 'POST':
+          validateRequired(requestBody, ['courseId', 'title', 'description', 'timeLimit', 'passingScore']);
+          const newQuiz = await databases.createDocument(
+            DATABASE_ID,
+            COLLECTIONS.QUIZZES,
+            sdk.ID.unique(),
+            {
+              ...requestBody,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+              attemptCount: 0
+            }
+          );
+          return res.json({ success: true, data: newQuiz }, 201, corsHeaders);
+
+        case 'PUT':
+          if (!id) throw new Error('Quiz ID is required');
+          const updatedQuiz = await databases.updateDocument(
+            DATABASE_ID,
+            COLLECTIONS.QUIZZES,
+            id,
+            { ...requestBody, updatedAt: new Date().toISOString() }
+          );
+          return res.json({ success: true, data: updatedQuiz }, 200, corsHeaders);
+
+        case 'DELETE':
+          if (!id) throw new Error('Quiz ID is required');
+          await databases.deleteDocument(DATABASE_ID, COLLECTIONS.QUIZZES, id);
+          return res.json({ success: true, message: 'Quiz deleted' }, 200, corsHeaders);
+      }
+    }
+
+    // QUIZ QUESTIONS ENDPOINTS
+    if (resource === 'quiz-questions') {
+      switch (req.method) {
+        case 'GET':
+          const quizId = url.searchParams.get('quizId');
+          const queryParams = quizId ? [sdk.Query.equal('quizId', quizId)] : [];
+          queryParams.push(sdk.Query.orderAsc('order'));
+          
+          const questions = await databases.listDocuments(DATABASE_ID, COLLECTIONS.QUIZ_QUESTIONS, queryParams);
+          return res.json({ 
+            success: true, 
+            data: questions.documents,
+            total: questions.total
+          }, 200, corsHeaders);
+
+        case 'POST':
+          validateRequired(requestBody, ['quizId', 'question', 'options', 'correctAnswer', 'order']);
+          const newQuestion = await databases.createDocument(
+            DATABASE_ID,
+            COLLECTIONS.QUIZ_QUESTIONS,
+            sdk.ID.unique(),
+            requestBody
+          );
+          return res.json({ success: true, data: newQuestion }, 201, corsHeaders);
+
+        case 'PUT':
+          if (!id) throw new Error('Question ID is required');
+          const updatedQuestion = await databases.updateDocument(
+            DATABASE_ID,
+            COLLECTIONS.QUIZ_QUESTIONS,
+            id,
+            requestBody
+          );
+          return res.json({ success: true, data: updatedQuestion }, 200, corsHeaders);
+
+        case 'DELETE':
+          if (!id) throw new Error('Question ID is required');
+          await databases.deleteDocument(DATABASE_ID, COLLECTIONS.QUIZ_QUESTIONS, id);
+          return res.json({ success: true, message: 'Question deleted' }, 200, corsHeaders);
+      }
+    }
+
+    // USER PROGRESS ENDPOINTS
+    if (resource === 'progress') {
+      switch (req.method) {
+        case 'GET':
+          const userId = url.searchParams.get('userId');
+          const courseId = url.searchParams.get('courseId');
+          const queryParams = [];
+          
+          if (userId) queryParams.push(sdk.Query.equal('userId', userId));
+          if (courseId) queryParams.push(sdk.Query.equal('courseId', courseId));
+          
+          const progress = await databases.listDocuments(DATABASE_ID, COLLECTIONS.USER_PROGRESS, queryParams);
+          return res.json({ 
+            success: true, 
+            data: progress.documents,
+            total: progress.total
+          }, 200, corsHeaders);
+
+        case 'POST':
+          validateRequired(requestBody, ['userId', 'courseId', 'lessonId']);
+          // Check if progress already exists
+          const existingProgress = await databases.listDocuments(DATABASE_ID, COLLECTIONS.USER_PROGRESS, [
+            sdk.Query.equal('userId', requestBody.userId),
+            sdk.Query.equal('courseId', requestBody.courseId),
+            sdk.Query.equal('lessonId', requestBody.lessonId)
+          ]);
+
+          if (existingProgress.documents.length > 0) {
+            // Update existing progress
+            const updated = await databases.updateDocument(
+              DATABASE_ID,
+              COLLECTIONS.USER_PROGRESS,
+              existingProgress.documents[0].$id,
+              {
+                ...requestBody,
+                updatedAt: new Date().toISOString()
+              }
+            );
+            return res.json({ success: true, data: updated }, 200, corsHeaders);
+          } else {
+            // Create new progress
+            const newProgress = await databases.createDocument(
+              DATABASE_ID,
+              COLLECTIONS.USER_PROGRESS,
+              sdk.ID.unique(),
+              {
+                ...requestBody,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+              }
+            );
+            return res.json({ success: true, data: newProgress }, 201, corsHeaders);
+          }
+      }
+    }
+
+    // QUIZ ATTEMPTS ENDPOINTS
+    if (resource === 'quiz-attempts') {
+      switch (req.method) {
+        case 'GET':
+          const userId = url.searchParams.get('userId');
+          const quizId = url.searchParams.get('quizId');
+          const queryParams = [];
+          
+          if (userId) queryParams.push(sdk.Query.equal('userId', userId));
+          if (quizId) queryParams.push(sdk.Query.equal('quizId', quizId));
+          queryParams.push(sdk.Query.orderDesc('$createdAt'));
+          
+          const attempts = await databases.listDocuments(DATABASE_ID, COLLECTIONS.QUIZ_ATTEMPTS, queryParams);
+          return res.json({ 
+            success: true, 
+            data: attempts.documents,
+            total: attempts.total
+          }, 200, corsHeaders);
+
+        case 'POST':
+          validateRequired(requestBody, ['userId', 'quizId', 'answers', 'score', 'totalQuestions']);
+          const newAttempt = await databases.createDocument(
+            DATABASE_ID,
+            COLLECTIONS.QUIZ_ATTEMPTS,
+            sdk.ID.unique(),
+            {
+              ...requestBody,
+              attemptedAt: new Date().toISOString(),
+              passed: requestBody.score >= requestBody.passingScore
+            }
+          );
+          
+          // Update quiz attempt count
+          const quiz = await databases.getDocument(DATABASE_ID, COLLECTIONS.QUIZZES, requestBody.quizId);
+          await databases.updateDocument(
+            DATABASE_ID,
+            COLLECTIONS.QUIZZES,
+            requestBody.quizId,
+            { attemptCount: (quiz.attemptCount || 0) + 1 }
+          );
+
+          return res.json({ success: true, data: newAttempt }, 201, corsHeaders);
+      }
+    }
+
+    // TRANSACTIONS ENDPOINTS
+    if (resource === 'transactions') {
+      switch (req.method) {
+        case 'GET':
+          const userId = url.searchParams.get('userId');
+          const queryParams = userId ? [sdk.Query.equal('userId', userId)] : [];
+          queryParams.push(sdk.Query.orderDesc('$createdAt'));
+          
+          const transactions = await databases.listDocuments(DATABASE_ID, COLLECTIONS.TRANSACTIONS, queryParams);
+          return res.json({ 
+            success: true, 
+            data: transactions.documents,
+            total: transactions.total
+          }, 200, corsHeaders);
+
+        case 'POST':
+          validateRequired(requestBody, ['userId', 'type', 'amount', 'description']);
+          const newTransaction = await databases.createDocument(
+            DATABASE_ID,
+            COLLECTIONS.TRANSACTIONS,
+            sdk.ID.unique(),
+            {
+              ...requestBody,
+              createdAt: new Date().toISOString(),
+              status: 'completed'
+            }
+          );
+          return res.json({ success: true, data: newTransaction }, 201, corsHeaders);
+      }
+    }
+
+    // RANKS ENDPOINTS
+    if (resource === 'ranks') {
+      switch (req.method) {
+        case 'GET':
+          const courseId = url.searchParams.get('courseId');
+          const queryParams = courseId ? [sdk.Query.equal('courseId', courseId)] : [];
+          queryParams.push(sdk.Query.orderAsc('rank'));
+          
+          const ranks = await databases.listDocuments(DATABASE_ID, COLLECTIONS.RANKS, queryParams);
+          return res.json({ 
+            success: true, 
+            data: ranks.documents,
+            total: ranks.total
+          }, 200, corsHeaders);
+
+        case 'POST':
+          validateRequired(requestBody, ['userId', 'courseId', 'score', 'rank']);
+          const newRank = await databases.createDocument(
+            DATABASE_ID,
+            COLLECTIONS.RANKS,
+            sdk.ID.unique(),
+            {
+              ...requestBody,
+              achievedAt: new Date().toISOString()
+            }
+          );
+          return res.json({ success: true, data: newRank }, 201, corsHeaders);
+      }
+    }
+
+    // BADGES ENDPOINTS
+    if (resource === 'badges') {
+      switch (req.method) {
+        case 'GET':
+          const badges = await databases.listDocuments(DATABASE_ID, COLLECTIONS.BADGES, [
+            sdk.Query.orderAsc('name')
+          ]);
+          return res.json({ 
+            success: true, 
+            data: badges.documents,
+            total: badges.total
+          }, 200, corsHeaders);
+
+        case 'POST':
+          validateRequired(requestBody, ['name', 'description', 'criteria', 'icon']);
+          const newBadge = await databases.createDocument(
+            DATABASE_ID,
+            COLLECTIONS.BADGES,
+            sdk.ID.unique(),
+            {
+              ...requestBody,
+              createdAt: new Date().toISOString()
+            }
+          );
+          return res.json({ success: true, data: newBadge }, 201, corsHeaders);
+      }
+    }
+
+    // USER BADGES ENDPOINTS
+    if (resource === 'user-badges') {
+      switch (req.method) {
+        case 'GET':
+          const userId = url.searchParams.get('userId');
+          const queryParams = userId ? [sdk.Query.equal('userId', userId)] : [];
+          queryParams.push(sdk.Query.orderDesc('$createdAt'));
+          
+          const userBadges = await databases.listDocuments(DATABASE_ID, COLLECTIONS.USER_BADGES, queryParams);
+          return res.json({ 
+            success: true, 
+            data: userBadges.documents,
+            total: userBadges.total
+          }, 200, corsHeaders);
+
+        case 'POST':
+          validateRequired(requestBody, ['userId', 'badgeId']);
+          const newUserBadge = await databases.createDocument(
+            DATABASE_ID,
+            COLLECTIONS.USER_BADGES,
+            sdk.ID.unique(),
+            {
+              ...requestBody,
+              earnedAt: new Date().toISOString()
+            }
+          );
+          return res.json({ success: true, data: newUserBadge }, 201, corsHeaders);
+      }
+    }
+
+    // NOTIFICATIONS ENDPOINTS
+    if (resource === 'notifications') {
+      switch (req.method) {
+        case 'GET':
+          const userId = url.searchParams.get('userId');
+          const queryParams = userId ? [sdk.Query.equal('userId', userId)] : [];
+          queryParams.push(sdk.Query.orderDesc('$createdAt'));
+          
+          const notifications = await databases.listDocuments(DATABASE_ID, COLLECTIONS.NOTIFICATIONS, queryParams);
+          return res.json({ 
+            success: true, 
+            data: notifications.documents,
+            total: notifications.total
+          }, 200, corsHeaders);
+
+        case 'POST':
+          validateRequired(requestBody, ['userId', 'title', 'message', 'type']);
+          const newNotification = await databases.createDocument(
+            DATABASE_ID,
+            COLLECTIONS.NOTIFICATIONS,
+            sdk.ID.unique(),
+            {
+              ...requestBody,
+              createdAt: new Date().toISOString(),
+              isRead: false
+            }
+          );
+          return res.json({ success: true, data: newNotification }, 201, corsHeaders);
+
+        case 'PUT':
+          if (!id) throw new Error('Notification ID is required');
+          const updatedNotification = await databases.updateDocument(
+            DATABASE_ID,
+            COLLECTIONS.NOTIFICATIONS,
+            id,
+            { isRead: true, readAt: new Date().toISOString() }
+          );
+          return res.json({ success: true, data: updatedNotification }, 200, corsHeaders);
+      }
+    }
+
+    // FILE UPLOAD ENDPOINTS
+    if (resource === 'upload') {
+      if (req.method === 'POST') {
+        // This would handle file uploads to Appwrite Storage
+        // Implementation depends on how files are sent from frontend
+        return res.json({ 
+          success: false, 
+          error: 'File upload endpoint not implemented yet' 
+        }, 501, corsHeaders);
+      }
+    }
+
+    // Default response for unknown endpoints
+    return res.json({ 
+      success: false, 
+      error: 'Endpoint not found',
+      availableEndpoints: [
+        'GET /health',
+        'GET|POST|PUT|DELETE /courses',
+        'GET|POST|PUT|DELETE /lessons',
+        'GET|POST|PUT|DELETE /quizzes',
+        'GET|POST|PUT|DELETE /quiz-questions',
+        'GET|POST /progress',
+        'GET|POST /quiz-attempts',
+        'GET|POST /transactions',
+        'GET|POST /ranks',
+        'GET|POST /badges',
+        'GET|POST /user-badges',
+        'GET|POST|PUT /notifications'
+      ]
+    }, 404, corsHeaders);
+
+  } catch (err) {
+    return await handleError(err, 'An error occurred processing your request');
   }
-
-  existing.updatedAt = new Date().toISOString();
-  items[itemIndex] = existing;
-  res.json({ data: existing });
-});
-
-// DELETE /items/:id - delete an item
-app.delete('/items/:id', (req, res) => {
-  const id = Number(req.params.id);
-  const itemIndex = items.findIndex((i) => i.id === id);
-  if (itemIndex === -1) {
-    return res.status(404).json({ error: 'Item not found' });
-  }
-
-  items.splice(itemIndex, 1);
-  res.status(204).send();
-});
-
-// Not found handler
-app.use((req, res, next) => {
-  res.status(404).json({ error: 'Route not found' });
-});
-
-// Error handler
-// eslint-disable-next-line no-unused-vars
-app.use((err, req, res, next) => {
-  // In production, avoid leaking stack traces. Keep this simple.
-  console.error(err); // eslint-disable-line no-console
-  res.status(500).json({ error: 'Internal Server Error' });
-});
-
-const port = Number(process.env.PORT) || 3000;
-app.listen(port, () => {
-  console.log(`Server listening on http://localhost:${port}`); // eslint-disable-line no-console
-});
-
-module.exports = { app };
+};
 
 

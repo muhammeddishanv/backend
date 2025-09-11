@@ -1,17 +1,39 @@
 {
-  "name": "backend",
+  "name": "edtech-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "EdTech Platform Backend - Appwrite Function with comprehensive course management, quizzes, progress tracking, gamification, and Discord logging",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node index.js",
+    "start": "node index.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "edtech", 
+    "education", 
+    "appwrite", 
+    "backend", 
+    "api", 
+    "courses", 
+    "quizzes", 
+    "gamification", 
+    "progress-tracking",
+    "discord-logging"
+  ],
+  "author": "EdTech Team",
   "license": "ISC",
   "dependencies": {
-    "appwrite": "^20.0.0",
-    "dotenv": "^17.2.2",
-    "express": "^5.1.0"
-  }
+    "node-appwrite": "^13.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/edtech-backend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/edtech-backend/issues"
+  },
+  "homepage": "https://github.com/your-username/edtech-backend#readme"
 }
