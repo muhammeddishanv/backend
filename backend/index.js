@@ -12,7 +12,6 @@ module.exports = async ({ req, res, log, error }) => {
 
   const databases = new sdk.Databases(client);
   const storage = new sdk.Storage(client);
-  const users = new sdk.Users(client);
 
   // Database and collection IDs
   const DATABASE_ID = process.env.DATABASE_ID || 'edtech_db';

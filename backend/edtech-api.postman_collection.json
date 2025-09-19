@@ -1,24 +1,14 @@
 {
   "info": {
     "name": "EdTech Platform API",
-    "description": "Complete API collection for EdTech Platform backend with Appwrite Functions",
+    "description": "Complete API collection for EdTech Platform backend with Appwrite Functions. Base URL: https://68c2a1d90003e461b539.fra.appwrite.run\n\nFeatures:\n- Comprehensive logging via Discord webhook\n- CORS enabled for all endpoints\n- Consistent error handling with success/error response format\n- All endpoints support HTTPS requests\n- API automatically logs request details, errors, and important operations",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "version": "1.0.0"
   },
   "variable": [
     {
       "key": "base_url",
-      "value": "https://cloud.appwrite.io/v1/functions/YOUR_FUNCTION_ID/executions",
-      "type": "string"
-    },
-    {
-      "key": "project_id",
-      "value": "YOUR_PROJECT_ID",
-      "type": "string"
-    },
-    {
-      "key": "api_key",
-      "value": "YOUR_API_KEY",
+      "value": "https://68c2a1d90003e461b539.fra.appwrite.run",
       "type": "string"
     }
   ],
@@ -30,39 +20,17 @@
           "name": "Get Health Status",
           "request": {
             "method": "GET",
-            "header": [
-              {
-                "key": "X-Appwrite-Project",
-                "value": "{{project_id}}"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{base_url}}/health",
               "host": ["{{base_url}}"],
               "path": ["health"]
             }
           },
-          "response": [
-            {
-              "name": "Success Response",
-              "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/health",
-                  "host": ["{{base_url}}"],
-                  "path": ["health"]
-                }
-              },
-              "status": "OK",
-              "code": 200,
-              "_postman_previewlanguage": "json",
-              "header": [],
-              "body": "{\n  \"success\": true,\n  \"message\": \"EdTech API is running\",\n  \"timestamp\": \"2025-09-11T10:30:00.000Z\"\n}"
-            }
-          ]
+          "response": []
         }
-      ]
+      ],
+      "response": []
     },
     {
       "name": "Courses",
@@ -71,88 +39,33 @@
           "name": "Get All Courses",
           "request": {
             "method": "GET",
-            "header": [
-              {
-                "key": "X-Appwrite-Project",
-                "value": "{{project_id}}"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{base_url}}/courses",
               "host": ["{{base_url}}"],
               "path": ["courses"]
             }
           },
-          "response": [
-            {
-              "name": "Success Response",
-              "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/courses",
-                  "host": ["{{base_url}}"],
-                  "path": ["courses"]
-                }
-              },
-              "status": "OK",
-              "code": 200,
-              "_postman_previewlanguage": "json",
-              "header": [],
-              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"$id\": \"course_123\",\n      \"title\": \"Introduction to JavaScript\",\n      \"description\": \"Learn the basics of JavaScript programming\",\n      \"instructorId\": \"instructor_1\",\n      \"category\": \"Programming\",\n      \"price\": 99.99,\n      \"thumbnail\": \"https://example.com/js-course.jpg\",\n      \"duration\": 120,\n      \"level\": \"Beginner\",\n      \"enrollmentCount\": 1250,\n      \"isPublished\": true,\n      \"createdAt\": \"2025-09-01T10:00:00.000Z\",\n      \"updatedAt\": \"2025-09-11T10:30:00.000Z\"\n    }\n  ],\n  \"total\": 1\n}"
-            }
-          ]
+          "response": []
         },
         {
           "name": "Get Course by ID",
           "request": {
             "method": "GET",
-            "header": [
-              {
-                "key": "X-Appwrite-Project",
-                "value": "{{project_id}}"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{base_url}}/courses/course_123",
               "host": ["{{base_url}}"],
               "path": ["courses", "course_123"]
             }
           },
-          "response": [
-            {
-              "name": "Success Response",
-              "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/courses/course_123",
-                  "host": ["{{base_url}}"],
-                  "path": ["courses", "course_123"]
-                }
-              },
-              "status": "OK",
-              "code": 200,
-              "_postman_previewlanguage": "json",
-              "header": [],
-              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"$id\": \"course_123\",\n    \"title\": \"Introduction to JavaScript\",\n    \"description\": \"Learn the basics of JavaScript programming\",\n    \"instructorId\": \"instructor_1\",\n    \"category\": \"Programming\",\n    \"price\": 99.99,\n    \"lessons\": [\n      {\n        \"$id\": \"lesson_1\",\n        \"courseId\": \"course_123\",\n        \"title\": \"Variables and Data Types\",\n        \"content\": \"Learn about JavaScript variables\",\n        \"type\": \"video\",\n        \"order\": 1,\n        \"duration\": 15\n      }\n    ]\n  }\n}"
-            }
-          ]
+          "response": []
         },
         {
           "name": "Create Course",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "X-Appwrite-Project",
-                "value": "{{project_id}}"
-              }
-            ],
+            "header": [{"key": "Content-Type", "value": "application/json"}],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"title\": \"Advanced React Development\",\n  \"description\": \"Master advanced React concepts and patterns\",\n  \"instructorId\": \"instructor_2\",\n  \"category\": \"Web Development\",\n  \"price\": 149.99,\n  \"thumbnail\": \"https://example.com/react-course.jpg\",\n  \"duration\": 180,\n  \"level\": \"Advanced\"\n}"
@@ -163,44 +76,13 @@
               "path": ["courses"]
             }
           },
-          "response": [
-            {
-              "name": "Success Response",
-              "originalRequest": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"title\": \"Advanced React Development\",\n  \"description\": \"Master advanced React concepts and patterns\",\n  \"instructorId\": \"instructor_2\",\n  \"category\": \"Web Development\",\n  \"price\": 149.99\n}"
-                },
-                "url": {
-                  "raw": "{{base_url}}/courses",
-                  "host": ["{{base_url}}"],
-                  "path": ["courses"]
-                }
-              },
-              "status": "Created",
-              "code": 201,
-              "_postman_previewlanguage": "json",
-              "header": [],
-              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"$id\": \"course_456\",\n    \"title\": \"Advanced React Development\",\n    \"description\": \"Master advanced React concepts and patterns\",\n    \"instructorId\": \"instructor_2\",\n    \"category\": \"Web Development\",\n    \"price\": 149.99,\n    \"enrollmentCount\": 0,\n    \"isPublished\": false,\n    \"createdAt\": \"2025-09-11T10:30:00.000Z\",\n    \"updatedAt\": \"2025-09-11T10:30:00.000Z\"\n  }\n}"
-            }
-          ]
+          "response": []
         },
         {
           "name": "Update Course",
           "request": {
             "method": "PUT",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "X-Appwrite-Project",
-                "value": "{{project_id}}"
-              }
-            ],
+            "header": [{"key": "Content-Type", "value": "application/json"}],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"title\": \"Advanced React Development - Updated\",\n  \"price\": 129.99,\n  \"isPublished\": true\n}"
@@ -210,26 +92,24 @@
               "host": ["{{base_url}}"],
               "path": ["courses", "course_456"]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Delete Course",
           "request": {
             "method": "DELETE",
-            "header": [
-              {
-                "key": "X-Appwrite-Project",
-                "value": "{{project_id}}"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{base_url}}/courses/course_456",
               "host": ["{{base_url}}"],
               "path": ["courses", "course_456"]
             }
-          }
+          },
+          "response": []
         }
-      ]
+      ],
+      "response": []
     },
     {
       "name": "Lessons",
@@ -238,12 +118,7 @@
           "name": "Get Lessons by Course",
           "request": {
             "method": "GET",
-            "header": [
-              {
-                "key": "X-Appwrite-Project",
-                "value": "{{project_id}}"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{base_url}}/lessons?courseId=course_123",
               "host": ["{{base_url}}"],
@@ -256,46 +131,13 @@
               ]
             }
           },
-          "response": [
-            {
-              "name": "Success Response",
-              "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/lessons?courseId=course_123",
-                  "host": ["{{base_url}}"],
-                  "path": ["lessons"],
-                  "query": [
-                    {
-                      "key": "courseId",
-                      "value": "course_123"
-                    }
-                  ]
-                }
-              },
-              "status": "OK",
-              "code": 200,
-              "_postman_previewlanguage": "json",
-              "header": [],
-              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"$id\": \"lesson_1\",\n      \"courseId\": \"course_123\",\n      \"title\": \"Variables and Data Types\",\n      \"content\": \"Learn about JavaScript variables and data types\",\n      \"type\": \"video\",\n      \"order\": 1,\n      \"duration\": 15,\n      \"videoUrl\": \"https://example.com/video1.mp4\",\n      \"completionCount\": 850\n    }\n  ],\n  \"total\": 1\n}"
-            }
-          ]
+          "response": []
         },
         {
           "name": "Create Lesson",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "X-Appwrite-Project",
-                "value": "{{project_id}}"
-              }
-            ],
+            "header": [{"key": "Content-Type", "value": "application/json"}],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"courseId\": \"course_123\",\n  \"title\": \"Functions and Scope\",\n  \"content\": \"Understanding JavaScript functions and variable scope\",\n  \"type\": \"video\",\n  \"order\": 2,\n  \"duration\": 20,\n  \"videoUrl\": \"https://example.com/video2.mp4\"\n}"
@@ -305,9 +147,67 @@
               "host": ["{{base_url}}"],
               "path": ["lessons"]
             }
-          }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Lesson by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/lessons/lesson_123",
+              "host": ["{{base_url}}"],
+              "path": ["lessons", "lesson_123"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Lessons",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/lessons",
+              "host": ["{{base_url}}"],
+              "path": ["lessons"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Lesson",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Lesson Title\",\n  \"content\": \"Updated lesson content\",\n  \"order\": 3\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/lessons/lesson_123",
+              "host": ["{{base_url}}"],
+              "path": ["lessons", "lesson_123"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Lesson",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/lessons/lesson_123",
+              "host": ["{{base_url}}"],
+              "path": ["lessons", "lesson_123"]
+            }
+          },
+          "response": []
         }
-      ]
+      ],
+      "response": []
     },
     {
       "name": "Quizzes",
@@ -316,52 +216,20 @@
           "name": "Get Quiz with Questions",
           "request": {
             "method": "GET",
-            "header": [
-              {
-                "key": "X-Appwrite-Project",
-                "value": "{{project_id}}"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{base_url}}/quizzes/quiz_123",
               "host": ["{{base_url}}"],
               "path": ["quizzes", "quiz_123"]
             }
           },
-          "response": [
-            {
-              "name": "Success Response",
-              "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/quizzes/quiz_123",
-                  "host": ["{{base_url}}"],
-                  "path": ["quizzes", "quiz_123"]
-                }
-              },
-              "status": "OK",
-              "code": 200,
-              "_postman_previewlanguage": "json",
-              "header": [],
-              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"$id\": \"quiz_123\",\n    \"courseId\": \"course_123\",\n    \"title\": \"JavaScript Basics Quiz\",\n    \"description\": \"Test your knowledge of JavaScript fundamentals\",\n    \"timeLimit\": 30,\n    \"passingScore\": 70,\n    \"questions\": [\n      {\n        \"$id\": \"question_1\",\n        \"quizId\": \"quiz_123\",\n        \"question\": \"What is the correct way to declare a variable in JavaScript?\",\n        \"options\": [\"var x = 5;\", \"variable x = 5;\", \"v x = 5;\", \"declare x = 5;\"],\n        \"correctAnswer\": \"var x = 5;\",\n        \"order\": 1,\n        \"points\": 1\n      }\n    ]\n  }\n}"
-            }
-          ]
+          "response": []
         },
         {
           "name": "Create Quiz",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "X-Appwrite-Project",
-                "value": "{{project_id}}"
-              }
-            ],
+            "header": [{"key": "Content-Type", "value": "application/json"}],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"courseId\": \"course_123\",\n  \"title\": \"Advanced JavaScript Quiz\",\n  \"description\": \"Test your advanced JavaScript knowledge\",\n  \"timeLimit\": 45,\n  \"passingScore\": 80,\n  \"maxAttempts\": 3\n}"
@@ -371,9 +239,54 @@
               "host": ["{{base_url}}"],
               "path": ["quizzes"]
             }
-          }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Quizzes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/quizzes",
+              "host": ["{{base_url}}"],
+              "path": ["quizzes"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Quiz",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Quiz Title\",\n  \"description\": \"Updated quiz description\",\n  \"timeLimit\": 60,\n  \"passingScore\": 85\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/quizzes/quiz_123",
+              "host": ["{{base_url}}"],
+              "path": ["quizzes", "quiz_123"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Quiz",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/quizzes/quiz_123",
+              "host": ["{{base_url}}"],
+              "path": ["quizzes", "quiz_123"]
+            }
+          },
+          "response": []
         }
-      ]
+      ],
+      "response": []
     },
     {
       "name": "Quiz Questions",
@@ -382,12 +295,7 @@
           "name": "Get Questions for Quiz",
           "request": {
             "method": "GET",
-            "header": [
-              {
-                "key": "X-Appwrite-Project",
-                "value": "{{project_id}}"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{base_url}}/quiz-questions?quizId=quiz_123",
               "host": ["{{base_url}}"],
@@ -399,22 +307,14 @@
                 }
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Create Quiz Question",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "X-Appwrite-Project",
-                "value": "{{project_id}}"
-              }
-            ],
+            "header": [{"key": "Content-Type", "value": "application/json"}],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"quizId\": \"quiz_123\",\n  \"question\": \"Which of the following is NOT a JavaScript data type?\",\n  \"options\": [\"string\", \"boolean\", \"integer\", \"undefined\"],\n  \"correctAnswer\": \"integer\",\n  \"explanation\": \"JavaScript has number type, not integer type\",\n  \"order\": 2,\n  \"points\": 1\n}"
@@ -424,9 +324,41 @@
               "host": ["{{base_url}}"],
               "path": ["quiz-questions"]
             }
-          }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Quiz Question",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"question\": \"Updated question text?\",\n  \"options\": [\"option1\", \"option2\", \"option3\", \"option4\"],\n  \"correctAnswer\": \"option1\",\n  \"explanation\": \"Updated explanation\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/quiz-questions/question_123",
+              "host": ["{{base_url}}"],
+              "path": ["quiz-questions", "question_123"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Quiz Question",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/quiz-questions/question_123",
+              "host": ["{{base_url}}"],
+              "path": ["quiz-questions", "question_123"]
+            }
+          },
+          "response": []
         }
-      ]
+      ],
+      "response": []
     },
     {
       "name": "User Progress",
@@ -435,12 +367,7 @@
           "name": "Get User Progress",
           "request": {
             "method": "GET",
-            "header": [
-              {
-                "key": "X-Appwrite-Project",
-                "value": "{{project_id}}"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{base_url}}/progress?userId=user_123&courseId=course_123",
               "host": ["{{base_url}}"],
@@ -457,50 +384,13 @@
               ]
             }
           },
-          "response": [
-            {
-              "name": "Success Response",
-              "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/progress?userId=user_123&courseId=course_123",
-                  "host": ["{{base_url}}"],
-                  "path": ["progress"],
-                  "query": [
-                    {
-                      "key": "userId",
-                      "value": "user_123"
-                    },
-                    {
-                      "key": "courseId",
-                      "value": "course_123"
-                    }
-                  ]
-                }
-              },
-              "status": "OK",
-              "code": 200,
-              "_postman_previewlanguage": "json",
-              "header": [],
-              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"$id\": \"progress_1\",\n      \"userId\": \"user_123\",\n      \"courseId\": \"course_123\",\n      \"lessonId\": \"lesson_1\",\n      \"completedAt\": \"2025-09-10T15:30:00.000Z\",\n      \"progress\": 100,\n      \"timeSpent\": 900\n    }\n  ],\n  \"total\": 1\n}"
-            }
-          ]
+          "response": []
         },
         {
           "name": "Update Progress",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "X-Appwrite-Project",
-                "value": "{{project_id}}"
-              }
-            ],
+            "header": [{"key": "Content-Type", "value": "application/json"}],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"userId\": \"user_123\",\n  \"courseId\": \"course_123\",\n  \"lessonId\": \"lesson_2\",\n  \"progress\": 75,\n  \"timeSpent\": 1200\n}"
@@ -510,9 +400,11 @@
               "host": ["{{base_url}}"],
               "path": ["progress"]
             }
-          }
+          },
+          "response": []
         }
-      ]
+      ],
+      "response": []
     },
     {
       "name": "Quiz Attempts",
@@ -521,12 +413,7 @@
           "name": "Get Quiz Attempts",
           "request": {
             "method": "GET",
-            "header": [
-              {
-                "key": "X-Appwrite-Project",
-                "value": "{{project_id}}"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{base_url}}/quiz-attempts?userId=user_123&quizId=quiz_123",
               "host": ["{{base_url}}"],
@@ -542,22 +429,14 @@
                 }
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Submit Quiz Attempt",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "X-Appwrite-Project",
-                "value": "{{project_id}}"
-              }
-            ],
+            "header": [{"key": "Content-Type", "value": "application/json"}],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"userId\": \"user_123\",\n  \"quizId\": \"quiz_123\",\n  \"answers\": [\n    {\n      \"questionId\": \"question_1\",\n      \"selectedAnswer\": \"var x = 5;\",\n      \"isCorrect\": true\n    },\n    {\n      \"questionId\": \"question_2\",\n      \"selectedAnswer\": \"integer\",\n      \"isCorrect\": true\n    }\n  ],\n  \"score\": 85,\n  \"totalQuestions\": 2,\n  \"timeTaken\": 180,\n  \"passingScore\": 70\n}"
@@ -568,31 +447,10 @@
               "path": ["quiz-attempts"]
             }
           },
-          "response": [
-            {
-              "name": "Success Response",
-              "originalRequest": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"userId\": \"user_123\",\n  \"quizId\": \"quiz_123\",\n  \"answers\": [...],\n  \"score\": 85,\n  \"totalQuestions\": 2,\n  \"timeTaken\": 180,\n  \"passingScore\": 70\n}"
-                },
-                "url": {
-                  "raw": "{{base_url}}/quiz-attempts",
-                  "host": ["{{base_url}}"],
-                  "path": ["quiz-attempts"]
-                }
-              },
-              "status": "Created",
-              "code": 201,
-              "_postman_previewlanguage": "json",
-              "header": [],
-              "body": "{\n  \"success\": true,\n  \"data\": {\n    \"$id\": \"attempt_123\",\n    \"userId\": \"user_123\",\n    \"quizId\": \"quiz_123\",\n    \"score\": 85,\n    \"passed\": true,\n    \"attemptedAt\": \"2025-09-11T10:30:00.000Z\"\n  }\n}"
-            }
-          ]
+          "response": []
         }
-      ]
+      ],
+      "response": []
     },
     {
       "name": "Transactions",
@@ -601,12 +459,7 @@
           "name": "Get User Transactions",
           "request": {
             "method": "GET",
-            "header": [
-              {
-                "key": "X-Appwrite-Project",
-                "value": "{{project_id}}"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{base_url}}/transactions?userId=user_123",
               "host": ["{{base_url}}"],
@@ -619,46 +472,13 @@
               ]
             }
           },
-          "response": [
-            {
-              "name": "Success Response",
-              "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/transactions?userId=user_123",
-                  "host": ["{{base_url}}"],
-                  "path": ["transactions"],
-                  "query": [
-                    {
-                      "key": "userId",
-                      "value": "user_123"
-                    }
-                  ]
-                }
-              },
-              "status": "OK",
-              "code": 200,
-              "_postman_previewlanguage": "json",
-              "header": [],
-              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"$id\": \"trans_1\",\n      \"userId\": \"user_123\",\n      \"type\": \"purchase\",\n      \"amount\": 99.99,\n      \"description\": \"Course purchase: Introduction to JavaScript\",\n      \"courseId\": \"course_123\",\n      \"status\": \"completed\",\n      \"paymentMethod\": \"credit_card\",\n      \"createdAt\": \"2025-09-11T10:30:00.000Z\"\n    }\n  ],\n  \"total\": 1\n}"
-            }
-          ]
+          "response": []
         },
         {
           "name": "Create Transaction",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "X-Appwrite-Project",
-                "value": "{{project_id}}"
-              }
-            ],
+            "header": [{"key": "Content-Type", "value": "application/json"}],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"userId\": \"user_123\",\n  \"type\": \"reward\",\n  \"amount\": 50,\n  \"description\": \"Quiz completion reward\",\n  \"courseId\": \"course_123\"\n}"
@@ -668,9 +488,11 @@
               "host": ["{{base_url}}"],
               "path": ["transactions"]
             }
-          }
+          },
+          "response": []
         }
-      ]
+      ],
+      "response": []
     },
     {
       "name": "Ranks",
@@ -679,12 +501,7 @@
           "name": "Get Course Rankings",
           "request": {
             "method": "GET",
-            "header": [
-              {
-                "key": "X-Appwrite-Project",
-                "value": "{{project_id}}"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{base_url}}/ranks?courseId=course_123",
               "host": ["{{base_url}}"],
@@ -697,46 +514,13 @@
               ]
             }
           },
-          "response": [
-            {
-              "name": "Success Response",
-              "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/ranks?courseId=course_123",
-                  "host": ["{{base_url}}"],
-                  "path": ["ranks"],
-                  "query": [
-                    {
-                      "key": "courseId",
-                      "value": "course_123"
-                    }
-                  ]
-                }
-              },
-              "status": "OK",
-              "code": 200,
-              "_postman_previewlanguage": "json",
-              "header": [],
-              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"$id\": \"rank_1\",\n      \"userId\": \"user_123\",\n      \"courseId\": \"course_123\",\n      \"score\": 95,\n      \"rank\": 1,\n      \"totalParticipants\": 100,\n      \"achievedAt\": \"2025-09-11T10:30:00.000Z\"\n    }\n  ],\n  \"total\": 1\n}"
-            }
-          ]
+          "response": []
         },
         {
           "name": "Update User Rank",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "X-Appwrite-Project",
-                "value": "{{project_id}}"
-              }
-            ],
+            "header": [{"key": "Content-Type", "value": "application/json"}],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"userId\": \"user_456\",\n  \"courseId\": \"course_123\",\n  \"score\": 88,\n  \"rank\": 5,\n  \"totalParticipants\": 150\n}"
@@ -746,9 +530,11 @@
               "host": ["{{base_url}}"],
               "path": ["ranks"]
             }
-          }
+          },
+          "response": []
         }
-      ]
+      ],
+      "response": []
     },
     {
       "name": "Badges",
@@ -757,52 +543,20 @@
           "name": "Get All Badges",
           "request": {
             "method": "GET",
-            "header": [
-              {
-                "key": "X-Appwrite-Project",
-                "value": "{{project_id}}"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{base_url}}/badges",
               "host": ["{{base_url}}"],
               "path": ["badges"]
             }
           },
-          "response": [
-            {
-              "name": "Success Response",
-              "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/badges",
-                  "host": ["{{base_url}}"],
-                  "path": ["badges"]
-                }
-              },
-              "status": "OK",
-              "code": 200,
-              "_postman_previewlanguage": "json",
-              "header": [],
-              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"$id\": \"badge_1\",\n      \"name\": \"First Course Completed\",\n      \"description\": \"Complete your first course\",\n      \"criteria\": \"Complete any course with 100% progress\",\n      \"icon\": \"🎓\",\n      \"points\": 10,\n      \"createdAt\": \"2025-09-01T10:00:00.000Z\"\n    }\n  ],\n  \"total\": 1\n}"
-            }
-          ]
+          "response": []
         },
         {
           "name": "Create Badge",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "X-Appwrite-Project",
-                "value": "{{project_id}}"
-              }
-            ],
+            "header": [{"key": "Content-Type", "value": "application/json"}],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"name\": \"Quiz Master\",\n  \"description\": \"Score 100% on any quiz\",\n  \"criteria\": \"Achieve perfect score on a quiz\",\n  \"icon\": \"🏆\",\n  \"points\": 25\n}"
@@ -812,9 +566,11 @@
               "host": ["{{base_url}}"],
               "path": ["badges"]
             }
-          }
+          },
+          "response": []
         }
-      ]
+      ],
+      "response": []
     },
     {
       "name": "User Badges",
@@ -823,12 +579,7 @@
           "name": "Get User Badges",
           "request": {
             "method": "GET",
-            "header": [
-              {
-                "key": "X-Appwrite-Project",
-                "value": "{{project_id}}"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{base_url}}/user-badges?userId=user_123",
               "host": ["{{base_url}}"],
@@ -841,46 +592,13 @@
               ]
             }
           },
-          "response": [
-            {
-              "name": "Success Response",
-              "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/user-badges?userId=user_123",
-                  "host": ["{{base_url}}"],
-                  "path": ["user-badges"],
-                  "query": [
-                    {
-                      "key": "userId",
-                      "value": "user_123"
-                    }
-                  ]
-                }
-              },
-              "status": "OK",
-              "code": 200,
-              "_postman_previewlanguage": "json",
-              "header": [],
-              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"$id\": \"user_badge_1\",\n      \"userId\": \"user_123\",\n      \"badgeId\": \"badge_1\",\n      \"earnedAt\": \"2025-09-11T10:30:00.000Z\"\n    }\n  ],\n  \"total\": 1\n}"
-            }
-          ]
+          "response": []
         },
         {
           "name": "Award Badge to User",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "X-Appwrite-Project",
-                "value": "{{project_id}}"
-              }
-            ],
+            "header": [{"key": "Content-Type", "value": "application/json"}],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"userId\": \"user_123\",\n  \"badgeId\": \"badge_2\"\n}"
@@ -890,9 +608,11 @@
               "host": ["{{base_url}}"],
               "path": ["user-badges"]
             }
-          }
+          },
+          "response": []
         }
-      ]
+      ],
+      "response": []
     },
     {
       "name": "Notifications",
@@ -901,12 +621,7 @@
           "name": "Get User Notifications",
           "request": {
             "method": "GET",
-            "header": [
-              {
-                "key": "X-Appwrite-Project",
-                "value": "{{project_id}}"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{base_url}}/notifications?userId=user_123",
               "host": ["{{base_url}}"],
@@ -919,46 +634,13 @@
               ]
             }
           },
-          "response": [
-            {
-              "name": "Success Response",
-              "originalRequest": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/notifications?userId=user_123",
-                  "host": ["{{base_url}}"],
-                  "path": ["notifications"],
-                  "query": [
-                    {
-                      "key": "userId",
-                      "value": "user_123"
-                    }
-                  ]
-                }
-              },
-              "status": "OK",
-              "code": 200,
-              "_postman_previewlanguage": "json",
-              "header": [],
-              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"$id\": \"notif_1\",\n      \"userId\": \"user_123\",\n      \"title\": \"Course Completed!\",\n      \"message\": \"Congratulations! You have completed the JavaScript course.\",\n      \"type\": \"success\",\n      \"isRead\": false,\n      \"createdAt\": \"2025-09-11T10:30:00.000Z\"\n    }\n  ],\n  \"total\": 1\n}"
-            }
-          ]
+          "response": []
         },
         {
           "name": "Create Notification",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "X-Appwrite-Project",
-                "value": "{{project_id}}"
-              }
-            ],
+            "header": [{"key": "Content-Type", "value": "application/json"}],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"userId\": \"user_123\",\n  \"title\": \"New Course Available\",\n  \"message\": \"A new course 'Advanced React' is now available!\",\n  \"type\": \"info\"\n}"
@@ -968,26 +650,24 @@
               "host": ["{{base_url}}"],
               "path": ["notifications"]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Mark Notification as Read",
           "request": {
             "method": "PUT",
-            "header": [
-              {
-                "key": "X-Appwrite-Project",
-                "value": "{{project_id}}"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{base_url}}/notifications/notif_1",
               "host": ["{{base_url}}"],
               "path": ["notifications", "notif_1"]
             }
-          }
+          },
+          "response": []
         }
-      ]
+      ],
+      "response": []
     }
   ]
 }
