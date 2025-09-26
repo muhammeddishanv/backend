@@ -1,4 +1,4 @@
-import sdk from 'node-appwrite';
+import * as sdk from 'node-appwrite';
 import { logger } from './discord-logger.js';
 
 // This is your Appwrite function
