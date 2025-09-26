@@ -28,6 +28,19 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Test Discord Integration",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/test-discord",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
+              "path": ["test-discord"]
+            }
+          },
+          "response": []
         }
       ],
       "response": []

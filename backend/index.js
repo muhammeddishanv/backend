@@ -82,6 +82,43 @@ export default async ({ req, res, log, error }) => {
       }, 200, corsHeaders);
     }
 
+    // Discord logger test endpoint
+    if (req.method === 'GET' && resource === 'test-discord') {
+      try {
+        await logger.logSuccess('Discord Test', {
+          message: 'Discord webhook is working correctly! 🎉',
+          endpoint: '/test-discord',
+          timestamp: new Date().toISOString(),
+          status: 'Active'
+        });
+        
+        await logger.logInfo('API Test Information', {
+          testType: 'Discord Integration',
+          result: 'Success',
+          webhook: logger.enabled ? 'Enabled' : 'Disabled'
+        });
+        
+        await logger.logWarning('Test Warning', {
+          message: 'This is a test warning message',
+          level: 'Warning'
+        });
+        
+        return res.json({ 
+          success: true, 
+          message: 'Discord test messages sent successfully',
+          webhookEnabled: logger.enabled,
+          timestamp: new Date().toISOString()
+        }, 200, corsHeaders);
+      } catch (error) {
+        await logger.logError('Discord Test Failed', error);
+        return res.json({ 
+          success: false, 
+          message: 'Discord test failed',
+          error: error.message
+        }, 500, corsHeaders);
+      }
+    }
+
     const requestBody = req.bodyRaw ? JSON.parse(req.bodyRaw) : {};
 
     // COURSES ENDPOINTS
