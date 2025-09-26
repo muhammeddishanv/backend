@@ -296,7 +296,7 @@ class DiscordLogger {
 // Create and export a singleton instance
 const logger = new DiscordLogger();
 
-module.exports = {
+export {
   DiscordLogger,
   logger
 };

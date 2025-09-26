@@ -1,8 +1,8 @@
-const sdk = require('node-appwrite');
-const { logger } = require('./discord-logger');
+import sdk from 'node-appwrite';
+import { logger } from './discord-logger.js';
 
 // This is your Appwrite function
-module.exports = async ({ req, res, log, error }) => {
+export default async ({ req, res, log, error }) => {
   // Initialize Appwrite client
   const client = new sdk.Client();
   client

@@ -22,8 +22,8 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/health",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/health",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["health"]
             }
           },
@@ -41,8 +41,8 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/courses",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/courses",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["courses"]
             }
           },
@@ -54,8 +54,8 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/courses/course_123",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/courses/course_123",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["courses", "course_123"]
             }
           },
@@ -71,8 +71,8 @@
               "raw": "{\n  \"title\": \"Advanced React Development\",\n  \"description\": \"Master advanced React concepts and patterns\",\n  \"instructorId\": \"instructor_2\",\n  \"category\": \"Web Development\",\n  \"price\": 149.99,\n  \"thumbnail\": \"https://example.com/react-course.jpg\",\n  \"duration\": 180,\n  \"level\": \"Advanced\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/courses",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/courses",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["courses"]
             }
           },
@@ -88,8 +88,8 @@
               "raw": "{\n  \"title\": \"Advanced React Development - Updated\",\n  \"price\": 129.99,\n  \"isPublished\": true\n}"
             },
             "url": {
-              "raw": "{{base_url}}/courses/course_456",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/courses/course_456",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["courses", "course_456"]
             }
           },
@@ -101,8 +101,8 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/courses/course_456",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/courses/course_456",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["courses", "course_456"]
             }
           },
@@ -120,8 +120,8 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/lessons?courseId=course_123",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/lessons?courseId=course_123",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["lessons"],
               "query": [
                 {
@@ -143,8 +143,8 @@
               "raw": "{\n  \"courseId\": \"course_123\",\n  \"title\": \"Functions and Scope\",\n  \"content\": \"Understanding JavaScript functions and variable scope\",\n  \"type\": \"video\",\n  \"order\": 2,\n  \"duration\": 20,\n  \"videoUrl\": \"https://example.com/video2.mp4\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/lessons",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/lessons",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["lessons"]
             }
           },
@@ -156,8 +156,8 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/lessons/lesson_123",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/lessons/lesson_123",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["lessons", "lesson_123"]
             }
           },
@@ -169,8 +169,8 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/lessons",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/lessons",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["lessons"]
             }
           },
@@ -186,8 +186,8 @@
               "raw": "{\n  \"title\": \"Updated Lesson Title\",\n  \"content\": \"Updated lesson content\",\n  \"order\": 3\n}"
             },
             "url": {
-              "raw": "{{base_url}}/lessons/lesson_123",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/lessons/lesson_123",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["lessons", "lesson_123"]
             }
           },
@@ -199,8 +199,8 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/lessons/lesson_123",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/lessons/lesson_123",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["lessons", "lesson_123"]
             }
           },
@@ -218,8 +218,8 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/quizzes/quiz_123",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/quizzes/quiz_123",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["quizzes", "quiz_123"]
             }
           },
@@ -235,8 +235,8 @@
               "raw": "{\n  \"courseId\": \"course_123\",\n  \"title\": \"Advanced JavaScript Quiz\",\n  \"description\": \"Test your advanced JavaScript knowledge\",\n  \"timeLimit\": 45,\n  \"passingScore\": 80,\n  \"maxAttempts\": 3\n}"
             },
             "url": {
-              "raw": "{{base_url}}/quizzes",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/quizzes",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["quizzes"]
             }
           },
@@ -248,8 +248,8 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/quizzes",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/quizzes",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["quizzes"]
             }
           },
@@ -265,8 +265,8 @@
               "raw": "{\n  \"title\": \"Updated Quiz Title\",\n  \"description\": \"Updated quiz description\",\n  \"timeLimit\": 60,\n  \"passingScore\": 85\n}"
             },
             "url": {
-              "raw": "{{base_url}}/quizzes/quiz_123",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/quizzes/quiz_123",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["quizzes", "quiz_123"]
             }
           },
@@ -278,8 +278,8 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/quizzes/quiz_123",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/quizzes/quiz_123",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["quizzes", "quiz_123"]
             }
           },
@@ -297,8 +297,8 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/quiz-questions?quizId=quiz_123",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/quiz-questions?quizId=quiz_123",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["quiz-questions"],
               "query": [
                 {
@@ -320,8 +320,8 @@
               "raw": "{\n  \"quizId\": \"quiz_123\",\n  \"question\": \"Which of the following is NOT a JavaScript data type?\",\n  \"options\": [\"string\", \"boolean\", \"integer\", \"undefined\"],\n  \"correctAnswer\": \"integer\",\n  \"explanation\": \"JavaScript has number type, not integer type\",\n  \"order\": 2,\n  \"points\": 1\n}"
             },
             "url": {
-              "raw": "{{base_url}}/quiz-questions",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/quiz-questions",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["quiz-questions"]
             }
           },
@@ -337,8 +337,8 @@
               "raw": "{\n  \"question\": \"Updated question text?\",\n  \"options\": [\"option1\", \"option2\", \"option3\", \"option4\"],\n  \"correctAnswer\": \"option1\",\n  \"explanation\": \"Updated explanation\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/quiz-questions/question_123",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/quiz-questions/question_123",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["quiz-questions", "question_123"]
             }
           },
@@ -350,8 +350,8 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/quiz-questions/question_123",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/quiz-questions/question_123",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["quiz-questions", "question_123"]
             }
           },
@@ -369,8 +369,8 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/progress?userId=user_123&courseId=course_123",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/progress?userId=user_123&courseId=course_123",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["progress"],
               "query": [
                 {
@@ -396,8 +396,8 @@
               "raw": "{\n  \"userId\": \"user_123\",\n  \"courseId\": \"course_123\",\n  \"lessonId\": \"lesson_2\",\n  \"progress\": 75,\n  \"timeSpent\": 1200\n}"
             },
             "url": {
-              "raw": "{{base_url}}/progress",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/progress",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["progress"]
             }
           },
@@ -415,8 +415,8 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/quiz-attempts?userId=user_123&quizId=quiz_123",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/quiz-attempts?userId=user_123&quizId=quiz_123",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["quiz-attempts"],
               "query": [
                 {
@@ -442,8 +442,8 @@
               "raw": "{\n  \"userId\": \"user_123\",\n  \"quizId\": \"quiz_123\",\n  \"answers\": [\n    {\n      \"questionId\": \"question_1\",\n      \"selectedAnswer\": \"var x = 5;\",\n      \"isCorrect\": true\n    },\n    {\n      \"questionId\": \"question_2\",\n      \"selectedAnswer\": \"integer\",\n      \"isCorrect\": true\n    }\n  ],\n  \"score\": 85,\n  \"totalQuestions\": 2,\n  \"timeTaken\": 180,\n  \"passingScore\": 70\n}"
             },
             "url": {
-              "raw": "{{base_url}}/quiz-attempts",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/quiz-attempts",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["quiz-attempts"]
             }
           },
@@ -461,8 +461,8 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/transactions?userId=user_123",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/transactions?userId=user_123",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["transactions"],
               "query": [
                 {
@@ -484,8 +484,8 @@
               "raw": "{\n  \"userId\": \"user_123\",\n  \"type\": \"reward\",\n  \"amount\": 50,\n  \"description\": \"Quiz completion reward\",\n  \"courseId\": \"course_123\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/transactions",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/transactions",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["transactions"]
             }
           },
@@ -503,8 +503,8 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/ranks?courseId=course_123",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/ranks?courseId=course_123",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["ranks"],
               "query": [
                 {
@@ -526,8 +526,8 @@
               "raw": "{\n  \"userId\": \"user_456\",\n  \"courseId\": \"course_123\",\n  \"score\": 88,\n  \"rank\": 5,\n  \"totalParticipants\": 150\n}"
             },
             "url": {
-              "raw": "{{base_url}}/ranks",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/ranks",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["ranks"]
             }
           },
@@ -545,8 +545,8 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/badges",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/badges",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["badges"]
             }
           },
@@ -562,8 +562,8 @@
               "raw": "{\n  \"name\": \"Quiz Master\",\n  \"description\": \"Score 100% on any quiz\",\n  \"criteria\": \"Achieve perfect score on a quiz\",\n  \"icon\": \"🏆\",\n  \"points\": 25\n}"
             },
             "url": {
-              "raw": "{{base_url}}/badges",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/badges",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["badges"]
             }
           },
@@ -581,8 +581,8 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/user-badges?userId=user_123",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/user-badges?userId=user_123",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["user-badges"],
               "query": [
                 {
@@ -604,8 +604,8 @@
               "raw": "{\n  \"userId\": \"user_123\",\n  \"badgeId\": \"badge_2\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/user-badges",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/user-badges",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["user-badges"]
             }
           },
@@ -623,8 +623,8 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/notifications?userId=user_123",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/notifications?userId=user_123",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["notifications"],
               "query": [
                 {
@@ -646,8 +646,8 @@
               "raw": "{\n  \"userId\": \"user_123\",\n  \"title\": \"New Course Available\",\n  \"message\": \"A new course 'Advanced React' is now available!\",\n  \"type\": \"info\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/notifications",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/notifications",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["notifications"]
             }
           },
@@ -659,8 +659,8 @@
             "method": "PUT",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/notifications/notif_1",
-              "host": ["{{base_url}}"],
+              "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/notifications/notif_1",
+              "host": ["https://68c2a1d90003e461b539.fra.appwrite.run"],
               "path": ["notifications", "notif_1"]
             }
           },
