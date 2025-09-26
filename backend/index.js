@@ -127,8 +127,6 @@ export default async ({ req, res, log, error }) => {
             sdk.ID.unique(),
             {
               ...requestBody,
-              createdAt: new Date().toISOString(),
-              updatedAt: new Date().toISOString(),
               enrollmentCount: 0,
               isPublished: false
             }
@@ -142,7 +140,7 @@ export default async ({ req, res, log, error }) => {
             DATABASE_ID,
             COLLECTIONS.COURSES,
             id,
-            { ...requestBody, updatedAt: new Date().toISOString() }
+            { ...requestBody }
           );
           await logger.logInfo('Course updated', { courseId: id });
           return res.json({ success: true, data: updatedCourse }, 200, corsHeaders);
@@ -183,8 +181,6 @@ export default async ({ req, res, log, error }) => {
             sdk.ID.unique(),
             {
               ...requestBody,
-              createdAt: new Date().toISOString(),
-              updatedAt: new Date().toISOString(),
               completionCount: 0
             }
           );
@@ -196,7 +192,7 @@ export default async ({ req, res, log, error }) => {
             DATABASE_ID,
             COLLECTIONS.LESSONS,
             id,
-            { ...requestBody, updatedAt: new Date().toISOString() }
+            { ...requestBody }
           );
           return res.json({ success: true, data: updatedLesson }, 200, corsHeaders);
 
@@ -243,8 +239,6 @@ export default async ({ req, res, log, error }) => {
             sdk.ID.unique(),
             {
               ...requestBody,
-              createdAt: new Date().toISOString(),
-              updatedAt: new Date().toISOString(),
               attemptCount: 0
             }
           );
@@ -256,7 +250,7 @@ export default async ({ req, res, log, error }) => {
             DATABASE_ID,
             COLLECTIONS.QUIZZES,
             id,
-            { ...requestBody, updatedAt: new Date().toISOString() }
+            { ...requestBody }
           );
           return res.json({ success: true, data: updatedQuiz }, 200, corsHeaders);
 
@@ -343,8 +337,7 @@ export default async ({ req, res, log, error }) => {
               COLLECTIONS.USER_PROGRESS,
               existingProgress.documents[0].$id,
               {
-                ...requestBody,
-                updatedAt: new Date().toISOString()
+                ...requestBody
               }
             );
             return res.json({ success: true, data: updated }, 200, corsHeaders);
@@ -355,9 +348,7 @@ export default async ({ req, res, log, error }) => {
               COLLECTIONS.USER_PROGRESS,
               sdk.ID.unique(),
               {
-                ...requestBody,
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
+                ...requestBody
               }
             );
             return res.json({ success: true, data: newProgress }, 201, corsHeaders);
@@ -433,7 +424,6 @@ export default async ({ req, res, log, error }) => {
             sdk.ID.unique(),
             {
               ...requestBody,
-              createdAt: new Date().toISOString(),
               status: 'completed'
             }
           );
@@ -491,8 +481,7 @@ export default async ({ req, res, log, error }) => {
             COLLECTIONS.BADGES,
             sdk.ID.unique(),
             {
-              ...requestBody,
-              createdAt: new Date().toISOString()
+              ...requestBody
             }
           );
           return res.json({ success: true, data: newBadge }, 201, corsHeaders);
@@ -552,7 +541,6 @@ export default async ({ req, res, log, error }) => {
             sdk.ID.unique(),
             {
               ...requestBody,
-              createdAt: new Date().toISOString(),
               isRead: false
             }
           );
