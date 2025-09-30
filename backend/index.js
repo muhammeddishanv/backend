@@ -12,6 +12,8 @@ export default async ({ req, res, log, error }) => {
 
   const databases = new sdk.Databases(client);
   const storage = new sdk.Storage(client);
+  const users = new sdk.Users(client);
+  const teams = new sdk.Teams(client);
 
   // Database and collection IDs
   const DATABASE_ID = process.env.DATABASE_ID || 'edtech_db';
@@ -33,8 +35,59 @@ export default async ({ req, res, log, error }) => {
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Appwrite-Project, X-Appwrite-Key',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Appwrite-Project, X-Appwrite-Key, X-User-Id',
     'Access-Control-Max-Age': '86400'
+  };
+
+  // Helper function to generate unique IDs with prefixes
+  const generateId = (prefix) => {
+    return `${prefix}_${sdk.ID.unique()}`;
+  };
+
+  // Helper function to get user and validate authentication
+  const authenticateUser = async (userId) => {
+    if (!userId) {
+      throw new Error('X-User-Id header is required');
+    }
+    
+    try {
+      const user = await users.get(userId);
+      const userRole = user.labels?.role || 'student'; // Default to student if no role set
+      
+      return {
+        userId: user.$id,
+        role: userRole,
+        user: user
+      };
+    } catch (error) {
+      throw new Error('Invalid user ID or user not found');
+    }
+  };
+
+  // Helper function to check permissions
+  const checkPermission = (userRole, operation, resource) => {
+    // Admin can do everything
+    if (userRole === 'admin') {
+      return true;
+    }
+    
+    // Students can only GET operations and specific enrollment operations
+    if (userRole === 'student') {
+      if (operation === 'GET') {
+        return true;
+      }
+      // Allow specific POST operations for students
+      if (operation === 'POST' && (resource === 'enroll' || resource === 'quiz-attempts' || resource === 'progress')) {
+        return true;
+      }
+      // Allow PUT for marking notifications as read
+      if (operation === 'PUT' && resource === 'notifications') {
+        return true;
+      }
+      return false;
+    }
+    
+    return false;
   };
 
   // Handle preflight requests
@@ -72,6 +125,17 @@ export default async ({ req, res, log, error }) => {
       userAgent: req.headers['user-agent'],
       ip: req.headers['x-forwarded-for'] || req.headers['x-real-ip']
     });
+
+    // Extract user ID from headers for authentication (skip for health check and test endpoints)
+    let authData = null;
+    const skipAuthPaths = ['health', 'test-discord'];
+    const needsAuth = resource && !skipAuthPaths.includes(resource);
+    
+    if (needsAuth) {
+      const userId = req.headers['x-user-id'];
+      authData = await authenticateUser(userId);
+      log(`Authenticated user: ${authData.userId} with role: ${authData.role}`);
+    }
 
     // Health check
     if (req.method === 'GET' && (!resource || resource === 'health')) {
@@ -165,21 +229,44 @@ export default async ({ req, res, log, error }) => {
           }
 
         case 'POST':
+          // Check permissions
+          if (!checkPermission(authData.role, 'POST', 'courses')) {
+            return res.json({ success: false, error: 'Insufficient permissions' }, 403, corsHeaders);
+          }
+          
           validateRequired(requestBody, ['title', 'description', 'instructorId', 'category', 'price']);
+          const courseId = generateId('course');
           const newCourse = await databases.createDocument(
             DATABASE_ID,
             COLLECTIONS.COURSES,
-            sdk.ID.unique(),
+            courseId,
             {
               ...requestBody,
               enrollmentCount: 0,
               isPublished: false
             }
           );
+          
+          // Create team for course
+          try {
+            await teams.create(
+              courseId,
+              `Course: ${requestBody.title}`,
+              ['admin', 'student'] // roles
+            );
+            await logger.logInfo('Course team created', { courseId, teamId: courseId });
+          } catch (teamError) {
+            await logger.logWarning('Failed to create course team', { courseId, error: teamError.message });
+          }
           await logger.logInfo('Course created', { courseId: newCourse.$id, title: newCourse.title });
           return res.json({ success: true, data: newCourse }, 201, corsHeaders);
 
         case 'PUT':
+          // Check permissions
+          if (!checkPermission(authData.role, 'PUT', 'courses')) {
+            return res.json({ success: false, error: 'Insufficient permissions' }, 403, corsHeaders);
+          }
+          
           if (!id) throw new Error('Course ID is required');
           const updatedCourse = await databases.updateDocument(
             DATABASE_ID,
@@ -191,10 +278,196 @@ export default async ({ req, res, log, error }) => {
           return res.json({ success: true, data: updatedCourse }, 200, corsHeaders);
 
         case 'DELETE':
+          // Check permissions
+          if (!checkPermission(authData.role, 'DELETE', 'courses')) {
+            return res.json({ success: false, error: 'Insufficient permissions' }, 403, corsHeaders);
+          }
+          
           if (!id) throw new Error('Course ID is required');
           await databases.deleteDocument(DATABASE_ID, COLLECTIONS.COURSES, id);
           await logger.logInfo('Course deleted', { courseId: id });
           return res.json({ success: true, message: 'Course deleted' }, 200, corsHeaders);
+      }
+    }
+
+    // COURSE ENROLLMENT ENDPOINTS
+    if (resource === 'enroll') {
+      switch (req.method) {
+        case 'POST':
+          // Check permissions - students can enroll
+          if (!checkPermission(authData.role, 'POST', 'enroll')) {
+            return res.json({ success: false, error: 'Insufficient permissions' }, 403, corsHeaders);
+          }
+          
+          validateRequired(requestBody, ['courseId']);
+          const { courseId } = requestBody;
+          const enrollStudentId = authData.userId;
+          
+          try {
+            // Check if course exists
+            const course = await databases.getDocument(DATABASE_ID, COLLECTIONS.COURSES, courseId);
+            
+            // Check if user is already enrolled (member of course team)
+            try {
+              const membership = await teams.getMembership(courseId, enrollStudentId);
+              return res.json({ 
+                success: false, 
+                error: 'User already enrolled in this course' 
+              }, 400, corsHeaders);
+            } catch (notFoundError) {
+              // User not enrolled, proceed with enrollment
+            }
+            
+            // Add user to course team
+            await teams.createMembership(
+              courseId,
+              ['student'], // roles
+              'http://localhost', // url (placeholder)
+              enrollStudentId // userId
+            );
+            
+            // Update course enrollment count
+            await databases.updateDocument(
+              DATABASE_ID,
+              COLLECTIONS.COURSES,
+              courseId,
+              { 
+                enrollmentCount: (course.enrollmentCount || 0) + 1 
+              }
+            );
+            
+            // Create enrollment transaction record
+            await databases.createDocument(
+              DATABASE_ID,
+              COLLECTIONS.TRANSACTIONS,
+              generateId('transaction'),
+              {
+                userId: enrollStudentId,
+                courseId: courseId,
+                type: 'enrollment',
+                amount: course.price || 0,
+                description: `Enrolled in course: ${course.title}`,
+                status: 'completed'
+              }
+            );
+            
+            await logger.logSuccess('Student enrolled in course', {
+              studentId: enrollStudentId,
+              courseId,
+              courseTitle: course.title
+            });
+            
+            return res.json({ 
+              success: true, 
+              message: 'Successfully enrolled in course',
+              data: {
+                courseId,
+                courseTitle: course.title,
+                enrolledAt: new Date().toISOString()
+              }
+            }, 201, corsHeaders);
+            
+          } catch (error) {
+            await logger.logError('Course enrollment failed', error, {
+              studentId: enrollStudentId,
+              courseId
+            });
+            return res.json({ 
+              success: false, 
+              error: 'Failed to enroll in course',
+              details: error.message
+            }, 400, corsHeaders);
+          }
+
+        case 'GET':
+          // Get user's enrolled courses
+          const queryStudentId = url.searchParams.get('userId') || authData.userId;
+          
+          try {
+            // Get user's team memberships (enrolled courses)
+            const memberships = await teams.listMemberships(queryStudentId);
+            const enrolledCourseIds = memberships.memberships
+              .filter(m => m.teamId.startsWith('course_'))
+              .map(m => m.teamId);
+            
+            if (enrolledCourseIds.length === 0) {
+              return res.json({ 
+                success: true, 
+                data: [],
+                total: 0
+              }, 200, corsHeaders);
+            }
+            
+            // Get course details for enrolled courses
+            const enrolledCourses = await Promise.all(
+              enrolledCourseIds.map(async (courseId) => {
+                try {
+                  return await databases.getDocument(DATABASE_ID, COLLECTIONS.COURSES, courseId);
+                } catch (error) {
+                  await logger.logWarning('Failed to fetch enrolled course', { courseId, error: error.message });
+                  return null;
+                }
+              })
+            );
+            
+            const validCourses = enrolledCourses.filter(course => course !== null);
+            
+            return res.json({ 
+              success: true, 
+              data: validCourses,
+              total: validCourses.length
+            }, 200, corsHeaders);
+            
+          } catch (error) {
+            await logger.logError('Failed to get enrolled courses', error, { studentId: queryStudentId });
+            return res.json({ 
+              success: false, 
+              error: 'Failed to get enrolled courses'
+            }, 500, corsHeaders);
+          }
+
+        case 'DELETE':
+          // Unenroll from course
+          if (!checkPermission(authData.role, 'DELETE', 'enroll')) {
+            return res.json({ success: false, error: 'Insufficient permissions' }, 403, corsHeaders);
+          }
+          
+          const courseIdToUnenroll = url.searchParams.get('courseId');
+          if (!courseIdToUnenroll) {
+            return res.json({ success: false, error: 'courseId parameter is required' }, 400, corsHeaders);
+          }
+          
+          try {
+            // Remove user from course team
+            await teams.deleteMembership(courseIdToUnenroll, authData.userId);
+            
+            // Update course enrollment count
+            const course = await databases.getDocument(DATABASE_ID, COLLECTIONS.COURSES, courseIdToUnenroll);
+            await databases.updateDocument(
+              DATABASE_ID,
+              COLLECTIONS.COURSES,
+              courseIdToUnenroll,
+              { 
+                enrollmentCount: Math.max((course.enrollmentCount || 1) - 1, 0)
+              }
+            );
+            
+            await logger.logInfo('Student unenrolled from course', {
+              studentId: authData.userId,
+              courseId: courseIdToUnenroll
+            });
+            
+            return res.json({ 
+              success: true, 
+              message: 'Successfully unenrolled from course'
+            }, 200, corsHeaders);
+            
+          } catch (error) {
+            return res.json({ 
+              success: false, 
+              error: 'Failed to unenroll from course'
+            }, 400, corsHeaders);
+          }
       }
     }
 
@@ -219,11 +492,16 @@ export default async ({ req, res, log, error }) => {
           }
 
         case 'POST':
+          // Check permissions
+          if (!checkPermission(authData.role, 'POST', 'lessons')) {
+            return res.json({ success: false, error: 'Insufficient permissions' }, 403, corsHeaders);
+          }
+          
           validateRequired(requestBody, ['courseId', 'title', 'content', 'order']);
           const newLesson = await databases.createDocument(
             DATABASE_ID,
             COLLECTIONS.LESSONS,
-            sdk.ID.unique(),
+            generateId('lesson'),
             {
               ...requestBody,
               completionCount: 0
@@ -232,6 +510,11 @@ export default async ({ req, res, log, error }) => {
           return res.json({ success: true, data: newLesson }, 201, corsHeaders);
 
         case 'PUT':
+          // Check permissions
+          if (!checkPermission(authData.role, 'PUT', 'lessons')) {
+            return res.json({ success: false, error: 'Insufficient permissions' }, 403, corsHeaders);
+          }
+          
           if (!id) throw new Error('Lesson ID is required');
           const updatedLesson = await databases.updateDocument(
             DATABASE_ID,
@@ -242,6 +525,11 @@ export default async ({ req, res, log, error }) => {
           return res.json({ success: true, data: updatedLesson }, 200, corsHeaders);
 
         case 'DELETE':
+          // Check permissions
+          if (!checkPermission(authData.role, 'DELETE', 'lessons')) {
+            return res.json({ success: false, error: 'Insufficient permissions' }, 403, corsHeaders);
+          }
+          
           if (!id) throw new Error('Lesson ID is required');
           await databases.deleteDocument(DATABASE_ID, COLLECTIONS.LESSONS, id);
           return res.json({ success: true, message: 'Lesson deleted' }, 200, corsHeaders);
@@ -277,11 +565,16 @@ export default async ({ req, res, log, error }) => {
           }
 
         case 'POST':
+          // Check permissions
+          if (!checkPermission(authData.role, 'POST', 'quizzes')) {
+            return res.json({ success: false, error: 'Insufficient permissions' }, 403, corsHeaders);
+          }
+          
           validateRequired(requestBody, ['courseId', 'title', 'description', 'timeLimit']);
           const newQuiz = await databases.createDocument(
             DATABASE_ID,
             COLLECTIONS.QUIZZES,
-            sdk.ID.unique(),
+            generateId('quiz'),
             {
               ...requestBody,
               attemptCount: 0
@@ -290,6 +583,11 @@ export default async ({ req, res, log, error }) => {
           return res.json({ success: true, data: newQuiz }, 201, corsHeaders);
 
         case 'PUT':
+          // Check permissions
+          if (!checkPermission(authData.role, 'PUT', 'quizzes')) {
+            return res.json({ success: false, error: 'Insufficient permissions' }, 403, corsHeaders);
+          }
+          
           if (!id) throw new Error('Quiz ID is required');
           const updatedQuiz = await databases.updateDocument(
             DATABASE_ID,
@@ -300,6 +598,11 @@ export default async ({ req, res, log, error }) => {
           return res.json({ success: true, data: updatedQuiz }, 200, corsHeaders);
 
         case 'DELETE':
+          // Check permissions
+          if (!checkPermission(authData.role, 'DELETE', 'quizzes')) {
+            return res.json({ success: false, error: 'Insufficient permissions' }, 403, corsHeaders);
+          }
+          
           if (!id) throw new Error('Quiz ID is required');
           await databases.deleteDocument(DATABASE_ID, COLLECTIONS.QUIZZES, id);
           return res.json({ success: true, message: 'Quiz deleted' }, 200, corsHeaders);
@@ -322,16 +625,26 @@ export default async ({ req, res, log, error }) => {
           }, 200, corsHeaders);
 
         case 'POST':
+          // Check permissions
+          if (!checkPermission(authData.role, 'POST', 'quiz-questions')) {
+            return res.json({ success: false, error: 'Insufficient permissions' }, 403, corsHeaders);
+          }
+          
           validateRequired(requestBody, ['quizId', 'question', 'options', 'correctAnswer', 'order']);
           const newQuestion = await databases.createDocument(
             DATABASE_ID,
             COLLECTIONS.QUIZ_QUESTIONS,
-            sdk.ID.unique(),
+            generateId('question'),
             requestBody
           );
           return res.json({ success: true, data: newQuestion }, 201, corsHeaders);
 
         case 'PUT':
+          // Check permissions
+          if (!checkPermission(authData.role, 'PUT', 'quiz-questions')) {
+            return res.json({ success: false, error: 'Insufficient permissions' }, 403, corsHeaders);
+          }
+          
           if (!id) throw new Error('Question ID is required');
           const updatedQuestion = await databases.updateDocument(
             DATABASE_ID,
@@ -342,6 +655,11 @@ export default async ({ req, res, log, error }) => {
           return res.json({ success: true, data: updatedQuestion }, 200, corsHeaders);
 
         case 'DELETE':
+          // Check permissions
+          if (!checkPermission(authData.role, 'DELETE', 'quiz-questions')) {
+            return res.json({ success: false, error: 'Insufficient permissions' }, 403, corsHeaders);
+          }
+          
           if (!id) throw new Error('Question ID is required');
           await databases.deleteDocument(DATABASE_ID, COLLECTIONS.QUIZ_QUESTIONS, id);
           return res.json({ success: true, message: 'Question deleted' }, 200, corsHeaders);
@@ -367,6 +685,11 @@ export default async ({ req, res, log, error }) => {
           }, 200, corsHeaders);
 
         case 'POST':
+          // Check permissions
+          if (!checkPermission(authData.role, 'POST', 'progress')) {
+            return res.json({ success: false, error: 'Insufficient permissions' }, 403, corsHeaders);
+          }
+          
           validateRequired(requestBody, ['userId', 'courseId', 'lessonId']);
           // Check if progress already exists
           const existingProgress = await databases.listDocuments(DATABASE_ID, COLLECTIONS.USER_PROGRESS, [
@@ -391,7 +714,7 @@ export default async ({ req, res, log, error }) => {
             const newProgress = await databases.createDocument(
               DATABASE_ID,
               COLLECTIONS.USER_PROGRESS,
-              sdk.ID.unique(),
+              generateId('progress'),
               {
                 ...requestBody
               }
@@ -421,31 +744,93 @@ export default async ({ req, res, log, error }) => {
           }, 200, corsHeaders);
 
         case 'POST':
+          // Check permissions
+          if (!checkPermission(authData.role, 'POST', 'quiz-attempts')) {
+            return res.json({ success: false, error: 'Insufficient permissions' }, 403, corsHeaders);
+          }
+          
           try {
-            validateRequired(requestBody, ['userId', 'quizId', 'answers', 'score', 'totalQuestions']);
+            validateRequired(requestBody, ['userId', 'quizId', 'answers']);
             
-            await logger.logInfo('Creating quiz attempt', {
+            // Validate that the student is enrolled in the course containing this quiz
+            const quiz = await databases.getDocument(DATABASE_ID, COLLECTIONS.QUIZZES, requestBody.quizId);
+            
+            // Check if student is enrolled in the course
+            try {
+              await teams.getMembership(quiz.courseId, requestBody.userId);
+            } catch (membershipError) {
+              return res.json({ 
+                success: false, 
+                error: 'Student must be enrolled in the course to take this quiz' 
+              }, 403, corsHeaders);
+            }
+            
+            // Get quiz questions to validate answers and calculate score
+            const questions = await databases.listDocuments(DATABASE_ID, COLLECTIONS.QUIZ_QUESTIONS, [
+              sdk.Query.equal('quizId', requestBody.quizId),
+              sdk.Query.orderAsc('order')
+            ]);
+            
+            if (questions.documents.length === 0) {
+              return res.json({ 
+                success: false, 
+                error: 'No questions found for this quiz' 
+              }, 400, corsHeaders);
+            }
+            
+            // Validate answers format and calculate score
+            let score = 0;
+            const totalQuestions = questions.documents.length;
+            const answers = Array.isArray(requestBody.answers) ? requestBody.answers : [];
+            
+            // Validate that answers are provided for all questions
+            if (answers.length !== totalQuestions) {
+              return res.json({ 
+                success: false, 
+                error: `Expected ${totalQuestions} answers, but received ${answers.length}` 
+              }, 400, corsHeaders);
+            }
+            
+            // Calculate score by comparing student answers with correct answers
+            const detailedAnswers = questions.documents.map((question, index) => {
+              const studentAnswer = answers[index];
+              const isCorrect = studentAnswer === question.correctAnswer;
+              if (isCorrect) score++;
+              
+              return {
+                questionId: question.$id,
+                question: question.question,
+                studentAnswer: studentAnswer,
+                correctAnswer: question.correctAnswer,
+                isCorrect: isCorrect,
+                options: question.options
+              };
+            });
+            
+            await logger.logInfo('Processing quiz attempt', {
               userId: requestBody.userId,
               quizId: requestBody.quizId,
-              score: requestBody.score,
-              totalQuestions: requestBody.totalQuestions,
-              answersType: typeof requestBody.answers,
-              answersIsArray: Array.isArray(requestBody.answers),
-              requestBody: requestBody
+              score: score,
+              totalQuestions: totalQuestions,
+              answers: detailedAnswers
             });
             
             // Ensure answers is properly formatted for storage
             const attemptData = {
-              ...requestBody,
-              answers: typeof requestBody.answers === 'object' ? JSON.stringify(requestBody.answers) : requestBody.answers,
+              userId: requestBody.userId,
+              quizId: requestBody.quizId,
+              answers: JSON.stringify(detailedAnswers),
+              score: score,
+              totalQuestions: totalQuestions,
               attemptedAt: new Date().toISOString(),
-              passed: (requestBody.score / requestBody.totalQuestions) >= 0.6
+              passed: (score / totalQuestions) >= 0.6, // 60% passing grade
+              timeSpent: requestBody.timeSpent || null
             };
             
             const newAttempt = await databases.createDocument(
               DATABASE_ID,
               COLLECTIONS.QUIZ_ATTEMPTS,
-              sdk.ID.unique(),
+              generateId('attempt'),
               attemptData
             );
             
@@ -453,6 +838,8 @@ export default async ({ req, res, log, error }) => {
               attemptId: newAttempt.$id,
               userId: requestBody.userId,
               quizId: requestBody.quizId,
+              score: score,
+              totalQuestions: totalQuestions,
               passed: newAttempt.passed
             });
             
@@ -460,7 +847,6 @@ export default async ({ req, res, log, error }) => {
             await logger.logInfo('Updating quiz attempt count', { quizId: requestBody.quizId });
             
             try {
-              const quiz = await databases.getDocument(DATABASE_ID, COLLECTIONS.QUIZZES, requestBody.quizId);
               await databases.updateDocument(
                 DATABASE_ID,
                 COLLECTIONS.QUIZZES,
@@ -480,7 +866,16 @@ export default async ({ req, res, log, error }) => {
               // Continue anyway since the quiz attempt was created successfully
             }
 
-            return res.json({ success: true, data: newAttempt }, 201, corsHeaders);
+            return res.json({ 
+              success: true, 
+              data: {
+                ...newAttempt,
+                score: score,
+                totalQuestions: totalQuestions,
+                percentage: Math.round((score / totalQuestions) * 100),
+                passed: newAttempt.passed
+              }
+            }, 201, corsHeaders);
           
           } catch (error) {
             await logger.logError('Quiz attempt creation failed', error, {
@@ -513,11 +908,16 @@ export default async ({ req, res, log, error }) => {
           }, 200, corsHeaders);
 
         case 'POST':
+          // Check permissions
+          if (!checkPermission(authData.role, 'POST', 'transactions')) {
+            return res.json({ success: false, error: 'Insufficient permissions' }, 403, corsHeaders);
+          }
+          
           validateRequired(requestBody, ['userId', 'type', 'amount', 'description']);
           const newTransaction = await databases.createDocument(
             DATABASE_ID,
             COLLECTIONS.TRANSACTIONS,
-            sdk.ID.unique(),
+            generateId('transaction'),
             {
               ...requestBody,
               status: 'completed'
@@ -543,11 +943,16 @@ export default async ({ req, res, log, error }) => {
           }, 200, corsHeaders);
 
         case 'POST':
+          // Check permissions
+          if (!checkPermission(authData.role, 'POST', 'ranks')) {
+            return res.json({ success: false, error: 'Insufficient permissions' }, 403, corsHeaders);
+          }
+          
           validateRequired(requestBody, ['userId', 'courseId', 'score', 'rank']);
           const newRank = await databases.createDocument(
             DATABASE_ID,
             COLLECTIONS.RANKS,
-            sdk.ID.unique(),
+            generateId('rank'),
             {
               ...requestBody,
               achievedAt: new Date().toISOString()
@@ -571,11 +976,16 @@ export default async ({ req, res, log, error }) => {
           }, 200, corsHeaders);
 
         case 'POST':
+          // Check permissions
+          if (!checkPermission(authData.role, 'POST', 'badges')) {
+            return res.json({ success: false, error: 'Insufficient permissions' }, 403, corsHeaders);
+          }
+          
           validateRequired(requestBody, ['name', 'description', 'criteria', 'icon']);
           const newBadge = await databases.createDocument(
             DATABASE_ID,
             COLLECTIONS.BADGES,
-            sdk.ID.unique(),
+            generateId('badge'),
             {
               ...requestBody
             }
@@ -600,11 +1010,16 @@ export default async ({ req, res, log, error }) => {
           }, 200, corsHeaders);
 
         case 'POST':
+          // Check permissions
+          if (!checkPermission(authData.role, 'POST', 'user-badges')) {
+            return res.json({ success: false, error: 'Insufficient permissions' }, 403, corsHeaders);
+          }
+          
           validateRequired(requestBody, ['userId', 'badgeId']);
           const newUserBadge = await databases.createDocument(
             DATABASE_ID,
             COLLECTIONS.USER_BADGES,
-            sdk.ID.unique(),
+            generateId('userbadge'),
             {
               ...requestBody,
               earnedAt: new Date().toISOString()
@@ -630,11 +1045,16 @@ export default async ({ req, res, log, error }) => {
           }, 200, corsHeaders);
 
         case 'POST':
+          // Check permissions
+          if (!checkPermission(authData.role, 'POST', 'notifications')) {
+            return res.json({ success: false, error: 'Insufficient permissions' }, 403, corsHeaders);
+          }
+          
           validateRequired(requestBody, ['userId', 'title', 'message', 'type']);
           const newNotification = await databases.createDocument(
             DATABASE_ID,
             COLLECTIONS.NOTIFICATIONS,
-            sdk.ID.unique(),
+            generateId('notification'),
             {
               ...requestBody,
               isRead: false
@@ -643,6 +1063,11 @@ export default async ({ req, res, log, error }) => {
           return res.json({ success: true, data: newNotification }, 201, corsHeaders);
 
         case 'PUT':
+          // Check permissions (students can mark their own notifications as read)
+          if (!checkPermission(authData.role, 'PUT', 'notifications')) {
+            return res.json({ success: false, error: 'Insufficient permissions' }, 403, corsHeaders);
+          }
+          
           if (!id) throw new Error('Notification ID is required');
           const updatedNotification = await databases.updateDocument(
             DATABASE_ID,
@@ -672,17 +1097,18 @@ export default async ({ req, res, log, error }) => {
       error: 'Endpoint not found',
       availableEndpoints: [
         'GET /health',
-        'GET|POST|PUT|DELETE /courses',
-        'GET|POST|PUT|DELETE /lessons',
-        'GET|POST|PUT|DELETE /quizzes',
-        'GET|POST|PUT|DELETE /quiz-questions',
-        'GET|POST /progress',
-        'GET|POST /quiz-attempts',
-        'GET|POST /transactions',
-        'GET|POST /ranks',
-        'GET|POST /badges',
-        'GET|POST /user-badges',
-        'GET|POST|PUT /notifications'
+        'GET|POST|PUT|DELETE /courses (admin only for POST/PUT/DELETE)',
+        'GET|POST|DELETE /enroll (students can enroll/unenroll)',
+        'GET|POST|PUT|DELETE /lessons (admin only for POST/PUT/DELETE)',
+        'GET|POST|PUT|DELETE /quizzes (admin only for POST/PUT/DELETE)', 
+        'GET|POST|PUT|DELETE /quiz-questions (admin only for POST/PUT/DELETE)',
+        'GET|POST /progress (students can POST their progress)',
+        'GET|POST /quiz-attempts (students can POST their attempts)',
+        'GET|POST /transactions (admin only for POST)',
+        'GET|POST /ranks (admin only for POST)',
+        'GET|POST /badges (admin only for POST)',
+        'GET|POST /user-badges (admin only for POST)',
+        'GET|POST|PUT /notifications (students can PUT to mark as read)'
       ]
     }, 404, corsHeaders);
 
