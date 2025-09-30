@@ -52,7 +52,11 @@ export default async ({ req, res, log, error }) => {
     
     try {
       const user = await users.get(userId);
-      const userRole = user.labels?.role; // Default to student if no role set
+      log(`User fetched: ${JSON.stringify(user, null, 2)}`);
+      
+      // Check labels and get role
+      const userRole = user.labels?.role || 'student'; // Default to student if no role set
+      log(`User role determined: ${userRole} from labels: ${JSON.stringify(user.labels)}`);
       
       return {
         userId: user.$id,
@@ -60,33 +64,42 @@ export default async ({ req, res, log, error }) => {
         user: user
       };
     } catch (error) {
+      error(`Failed to authenticate user: ${error.message}`);
       throw new Error('Invalid user ID or user not found');
     }
   };
 
   // Helper function to check permissions
   const checkPermission = (userRole, operation, resource) => {
+    log(`Checking permission: role=${userRole}, operation=${operation}, resource=${resource}`);
+    
     // Admin can do everything
     if (userRole === 'admin') {
+      log('Permission granted: admin role');
       return true;
     }
     
     // Students can only GET operations and specific enrollment operations
     if (userRole === 'student') {
       if (operation === 'GET') {
+        log('Permission granted: student GET operation');
         return true;
       }
       // Allow specific POST operations for students
       if (operation === 'POST' && (resource === 'enroll' || resource === 'quiz-attempts' || resource === 'progress')) {
+        log('Permission granted: student allowed POST operation');
         return true;
       }
       // Allow PUT for marking notifications as read
       if (operation === 'PUT' && resource === 'notifications') {
+        log('Permission granted: student notification update');
         return true;
       }
+      log('Permission denied: student role, operation not allowed');
       return false;
     }
     
+    log('Permission denied: unknown role or operation');
     return false;
   };
 
