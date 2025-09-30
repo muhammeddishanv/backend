@@ -457,15 +457,30 @@ export default async ({ req, res, log, error }) => {
             });
             
             // Update quiz attempt count
-            const quiz = await databases.getDocument(DATABASE_ID, COLLECTIONS.QUIZZES, requestBody.quizId);
-            await databases.updateDocument(
-              DATABASE_ID,
-              COLLECTIONS.QUIZZES,
-            requestBody.quizId,
-            { attemptCount: (quiz.attemptCount || 0) + 1 }
-          );
+            await logger.logInfo('Updating quiz attempt count', { quizId: requestBody.quizId });
+            
+            try {
+              const quiz = await databases.getDocument(DATABASE_ID, COLLECTIONS.QUIZZES, requestBody.quizId);
+              await databases.updateDocument(
+                DATABASE_ID,
+                COLLECTIONS.QUIZZES,
+                requestBody.quizId,
+                { attemptCount: (quiz.attemptCount || 0) + 1 }
+              );
+              
+              await logger.logSuccess('Quiz attempt count updated', { 
+                quizId: requestBody.quizId, 
+                newAttemptCount: (quiz.attemptCount || 0) + 1 
+              });
+            } catch (quizError) {
+              await logger.logWarning('Failed to update quiz attempt count', { 
+                quizId: requestBody.quizId, 
+                error: quizError.message 
+              });
+              // Continue anyway since the quiz attempt was created successfully
+            }
 
-          return res.json({ success: true, data: newAttempt }, 201, corsHeaders);
+            return res.json({ success: true, data: newAttempt }, 201, corsHeaders);
           
           } catch (error) {
             await logger.logError('Quiz attempt creation failed', error, {
