@@ -52,7 +52,7 @@ export default async ({ req, res, log, error }) => {
     
     try {
       const user = await users.get(userId);
-      const userRole = user.labels?.role || 'student'; // Default to student if no role set
+      const userRole = user.labels?.role; // Default to student if no role set
       
       return {
         userId: user.$id,
