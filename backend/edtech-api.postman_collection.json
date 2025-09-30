@@ -245,7 +245,7 @@
             "header": [{"key": "Content-Type", "value": "application/json"}],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"courseId\": \"course_123\",\n  \"title\": \"Advanced JavaScript Quiz\",\n  \"description\": \"Test your advanced JavaScript knowledge\",\n  \"timeLimit\": 45,\n  \"passingScore\": 80,\n  \"maxAttempts\": 3\n}"
+              "raw": "{\n  \"courseId\": \"course_123\",\n  \"title\": \"Advanced JavaScript Quiz\",\n  \"description\": \"Test your advanced JavaScript knowledge\",\n  \"timeLimit\": 45,\n  \"maxAttempts\": 3\n}"
             },
             "url": {
               "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/quizzes",
@@ -275,7 +275,7 @@
             "header": [{"key": "Content-Type", "value": "application/json"}],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"Updated Quiz Title\",\n  \"description\": \"Updated quiz description\",\n  \"timeLimit\": 60,\n  \"passingScore\": 85\n}"
+              "raw": "{\n  \"title\": \"Updated Quiz Title\",\n  \"description\": \"Updated quiz description\",\n  \"timeLimit\": 60\n}"
             },
             "url": {
               "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/quizzes/quiz_123",
@@ -452,7 +452,7 @@
             "header": [{"key": "Content-Type", "value": "application/json"}],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"userId\": \"user_123\",\n  \"quizId\": \"quiz_123\",\n  \"answers\": [\n    {\n      \"questionId\": \"question_1\",\n      \"selectedAnswer\": \"var x = 5;\",\n      \"isCorrect\": true\n    },\n    {\n      \"questionId\": \"question_2\",\n      \"selectedAnswer\": \"integer\",\n      \"isCorrect\": true\n    }\n  ],\n  \"score\": 85,\n  \"totalQuestions\": 2,\n  \"timeTaken\": 180,\n  \"passingScore\": 70\n}"
+              "raw": "{\n  \"userId\": \"user_123\",\n  \"quizId\": \"quiz_123\",\n  \"answers\": [\n    {\n      \"questionId\": \"question_1\",\n      \"selectedAnswer\": \"var x = 5;\",\n      \"isCorrect\": true\n    },\n    {\n      \"questionId\": \"question_2\",\n      \"selectedAnswer\": \"integer\",\n      \"isCorrect\": true\n    }\n  ],\n  \"score\": 2,\n  \"totalQuestions\": 2,\n  \"timeTaken\": 180\n}"
             },
             "url": {
               "raw": "https://68c2a1d90003e461b539.fra.appwrite.run/quiz-attempts",

@@ -269,7 +269,7 @@ export default async ({ req, res, log, error }) => {
           }
 
         case 'POST':
-          validateRequired(requestBody, ['courseId', 'title', 'description', 'timeLimit', 'passingScore']);
+          validateRequired(requestBody, ['courseId', 'title', 'description', 'timeLimit']);
           const newQuiz = await databases.createDocument(
             DATABASE_ID,
             COLLECTIONS.QUIZZES,
@@ -421,7 +421,7 @@ export default async ({ req, res, log, error }) => {
             {
               ...requestBody,
               attemptedAt: new Date().toISOString(),
-              passed: requestBody.score >= requestBody.passingScore
+              passed: (requestBody.score / requestBody.totalQuestions) >= 0.6
             }
           );
           
