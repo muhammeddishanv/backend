@@ -120,6 +120,14 @@ export default async ({ req, res, log, error }) => {
     }
 
     const requestBody = req.bodyRaw ? JSON.parse(req.bodyRaw) : {};
+    
+    // Remove any fields that don't exist in database schema to prevent errors
+    const forbiddenFields = ['passingScore', 'createdAt', 'updatedAt'];
+    forbiddenFields.forEach(field => {
+      if (requestBody.hasOwnProperty(field)) {
+        delete requestBody[field];
+      }
+    });
 
     // COURSES ENDPOINTS
     if (resource === 'courses') {
@@ -275,13 +283,7 @@ export default async ({ req, res, log, error }) => {
             COLLECTIONS.QUIZZES,
             sdk.ID.unique(),
             {
-              courseId: requestBody.courseId,
-              title: requestBody.title,
-              description: requestBody.description,
-              timeLimit: requestBody.timeLimit,
-              maxAttempts: requestBody.maxAttempts || 3,
-              difficulty: requestBody.difficulty || 'medium',
-              isActive: requestBody.isActive !== undefined ? requestBody.isActive : true,
+              ...requestBody,
               attemptCount: 0
             }
           );
@@ -425,12 +427,7 @@ export default async ({ req, res, log, error }) => {
             COLLECTIONS.QUIZ_ATTEMPTS,
             sdk.ID.unique(),
             {
-              userId: requestBody.userId,
-              quizId: requestBody.quizId,
-              answers: requestBody.answers,
-              score: requestBody.score,
-              totalQuestions: requestBody.totalQuestions,
-              timeTaken: requestBody.timeTaken || 0,
+              ...requestBody,
               attemptedAt: new Date().toISOString(),
               passed: (requestBody.score / requestBody.totalQuestions) >= 0.6
             }
