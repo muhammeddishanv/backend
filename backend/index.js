@@ -275,7 +275,13 @@ export default async ({ req, res, log, error }) => {
             COLLECTIONS.QUIZZES,
             sdk.ID.unique(),
             {
-              ...requestBody,
+              courseId: requestBody.courseId,
+              title: requestBody.title,
+              description: requestBody.description,
+              timeLimit: requestBody.timeLimit,
+              maxAttempts: requestBody.maxAttempts || 3,
+              difficulty: requestBody.difficulty || 'medium',
+              isActive: requestBody.isActive !== undefined ? requestBody.isActive : true,
               attemptCount: 0
             }
           );
@@ -419,7 +425,12 @@ export default async ({ req, res, log, error }) => {
             COLLECTIONS.QUIZ_ATTEMPTS,
             sdk.ID.unique(),
             {
-              ...requestBody,
+              userId: requestBody.userId,
+              quizId: requestBody.quizId,
+              answers: requestBody.answers,
+              score: requestBody.score,
+              totalQuestions: requestBody.totalQuestions,
+              timeTaken: requestBody.timeTaken || 0,
               attemptedAt: new Date().toISOString(),
               passed: (requestBody.score / requestBody.totalQuestions) >= 0.6
             }
