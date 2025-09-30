@@ -421,28 +421,64 @@ export default async ({ req, res, log, error }) => {
           }, 200, corsHeaders);
 
         case 'POST':
-          validateRequired(requestBody, ['userId', 'quizId', 'answers', 'score', 'totalQuestions']);
-          const newAttempt = await databases.createDocument(
-            DATABASE_ID,
-            COLLECTIONS.QUIZ_ATTEMPTS,
-            sdk.ID.unique(),
-            {
+          try {
+            validateRequired(requestBody, ['userId', 'quizId', 'answers', 'score', 'totalQuestions']);
+            
+            await logger.logInfo('Creating quiz attempt', {
+              userId: requestBody.userId,
+              quizId: requestBody.quizId,
+              score: requestBody.score,
+              totalQuestions: requestBody.totalQuestions,
+              answersType: typeof requestBody.answers,
+              answersIsArray: Array.isArray(requestBody.answers),
+              requestBody: requestBody
+            });
+            
+            // Ensure answers is properly formatted for storage
+            const attemptData = {
               ...requestBody,
+              answers: typeof requestBody.answers === 'object' ? JSON.stringify(requestBody.answers) : requestBody.answers,
               attemptedAt: new Date().toISOString(),
               passed: (requestBody.score / requestBody.totalQuestions) >= 0.6
-            }
-          );
-          
-          // Update quiz attempt count
-          const quiz = await databases.getDocument(DATABASE_ID, COLLECTIONS.QUIZZES, requestBody.quizId);
-          await databases.updateDocument(
-            DATABASE_ID,
-            COLLECTIONS.QUIZZES,
+            };
+            
+            const newAttempt = await databases.createDocument(
+              DATABASE_ID,
+              COLLECTIONS.QUIZ_ATTEMPTS,
+              sdk.ID.unique(),
+              attemptData
+            );
+            
+            await logger.logSuccess('Quiz attempt created successfully', {
+              attemptId: newAttempt.$id,
+              userId: requestBody.userId,
+              quizId: requestBody.quizId,
+              passed: newAttempt.passed
+            });
+            
+            // Update quiz attempt count
+            const quiz = await databases.getDocument(DATABASE_ID, COLLECTIONS.QUIZZES, requestBody.quizId);
+            await databases.updateDocument(
+              DATABASE_ID,
+              COLLECTIONS.QUIZZES,
             requestBody.quizId,
             { attemptCount: (quiz.attemptCount || 0) + 1 }
           );
 
           return res.json({ success: true, data: newAttempt }, 201, corsHeaders);
+          
+          } catch (error) {
+            await logger.logError('Quiz attempt creation failed', error, {
+              userId: requestBody.userId,
+              quizId: requestBody.quizId,
+              requestBody: requestBody
+            });
+            return res.json({ 
+              success: false, 
+              error: error.message,
+              details: 'Failed to create quiz attempt'
+            }, 400, corsHeaders);
+          }
       }
     }
 
