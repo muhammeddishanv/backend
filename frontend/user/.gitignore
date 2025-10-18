@@ -33,6 +33,26 @@ migrate_working_dir/
 .pub/
 /build/
 
+# Exclude generated plugin files (Linux)
+linux/flutter/generated_plugins.cmake
+linux/flutter/generated_plugin_registrant.cc
+linux/flutter/generated_plugin_registrant.h
+
+# Exclude generated plugin files (iOS)
+ios/Runner/GeneratedPluginRegistrant.h
+ios/Runner/GeneratedPluginRegistrant.m
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+ios/Flutter/ephemeral/
+
+# Exclude generated plugin files (Android)
+android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
+
+# Exclude generated plugin files (Linux)
+linux/flutter/generated_plugins.cmake
+linux/flutter/generated_plugin_registrant.cc
+linux/flutter/generated_plugin_registrant.h
+
 # Symbolication related
 app.*.symbols
 
