@@ -25,6 +25,7 @@ abstract class Routes {
   static const LESSON = _Paths.LESSON;
   static const NOT_FOUND = _Paths.NOT_FOUND;
   static const CONTACT_US = _Paths.HOME + _Paths.CONTACT_US;
+  static const NOTIFICATION = _Paths.NOTIFICATION;
 }
 
 abstract class _Paths {
@@ -44,4 +45,5 @@ abstract class _Paths {
   static const LESSON = '/lesson';
   static const NOT_FOUND = '/not-found';
   static const CONTACT_US = '/contact-us';
+  static const NOTIFICATION = '/notification';
 }

@@ -8,6 +8,8 @@ import '../modules/lesson/lesson.binding.dart';
 import '../modules/lesson/lesson.view.dart';
 import '../modules/not_found/not_found.binding.dart';
 import '../modules/not_found/not_found.view.dart';
+import '../modules/notification/notification.binding.dart';
+import '../modules/notification/notification.view.dart';
 import '../modules/payment/payment.binding.dart';
 import '../modules/payment/payment.view.dart';
 import '../modules/quiz/quiz.binding.dart';
@@ -52,7 +54,7 @@ class AppPages {
       name: _Paths.AUTH,
       page: () => AuthView(),
       binding: AuthBinding(),
-     // middlewares: [AuthMiddleware()],
+      // middlewares: [AuthMiddleware()],
     ),
     GetPage(
       name: _Paths.COURSE_DETAILS,
@@ -85,7 +87,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.HISTORY,
-      page: () =>  HistoryView(),
+      page: () => HistoryView(),
       binding: HistoryBinding(),
       middlewares: [AuthMiddleware()],
     ),
@@ -112,6 +114,11 @@ class AppPages {
       page: () => LessonView(),
       binding: LessonBinding(),
       middlewares: [AuthMiddleware()],
+    ),
+    GetPage(
+      name: _Paths.NOTIFICATION,
+      page: () => NotificationsView(),
+      binding: NotificationBinding(),
     ),
   ];
 }

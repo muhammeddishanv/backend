@@ -205,7 +205,7 @@ class DashboardView extends GetResponsiveView<DashboardController> {
                                 color: Get.theme.colorScheme.onPrimary,
                               ),
                             ),
-                            onPressed: () {},
+                            onPressed: () => Get.toNamed(Routes.NOTIFICATION),
                             icon: Badge.count(
                               smallSize: 10,
                               isLabelVisible: true,
