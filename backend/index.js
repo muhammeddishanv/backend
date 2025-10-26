@@ -53,6 +53,12 @@ export default async ({ req, res, log, error }) => {
     }, 500, corsHeaders);
   };
 
+  // Helper function to generate custom IDs
+  const generateCustomId = (prefix) => {
+    const randomNum = Math.floor(10000 + Math.random() * 90000); // Generate 5-digit random number
+    return `${prefix}_${randomNum}`;
+  };
+
   // Helper function to validate required fields
   const validateRequired = (data, fields) => {
     const missing = fields.filter(field => !data[field]);
@@ -161,7 +167,7 @@ export default async ({ req, res, log, error }) => {
           const newCourse = await databases.createDocument(
             DATABASE_ID,
             COLLECTIONS.COURSES,
-            sdk.ID.unique(),
+            generateCustomId('COURSE'),
             {
               ...requestBody,
               enrollmentCount: 0,
@@ -215,7 +221,7 @@ export default async ({ req, res, log, error }) => {
           const newLesson = await databases.createDocument(
             DATABASE_ID,
             COLLECTIONS.LESSONS,
-            sdk.ID.unique(),
+            generateCustomId('LESSON'),
             {
               ...requestBody,
               completionCount: 0
@@ -273,7 +279,7 @@ export default async ({ req, res, log, error }) => {
           const newQuiz = await databases.createDocument(
             DATABASE_ID,
             COLLECTIONS.QUIZZES,
-            sdk.ID.unique(),
+            generateCustomId('QUIZ'),
             {
               ...requestBody,
               attemptCount: 0
@@ -318,7 +324,7 @@ export default async ({ req, res, log, error }) => {
           const newQuestion = await databases.createDocument(
             DATABASE_ID,
             COLLECTIONS.QUIZ_QUESTIONS,
-            sdk.ID.unique(),
+            generateCustomId('QUESTION'),
             requestBody
           );
           return res.json({ success: true, data: newQuestion }, 201, corsHeaders);
@@ -383,7 +389,7 @@ export default async ({ req, res, log, error }) => {
             const newProgress = await databases.createDocument(
               DATABASE_ID,
               COLLECTIONS.USER_PROGRESS,
-              sdk.ID.unique(),
+              generateCustomId('PROGRESS'),
               {
                 ...requestBody
               }
@@ -417,7 +423,7 @@ export default async ({ req, res, log, error }) => {
           const newAttempt = await databases.createDocument(
             DATABASE_ID,
             COLLECTIONS.QUIZ_ATTEMPTS,
-            sdk.ID.unique(),
+            generateCustomId('ATTEMPT'),
             {
               ...requestBody,
               attemptedAt: new Date().toISOString(),
@@ -458,7 +464,7 @@ export default async ({ req, res, log, error }) => {
           const newTransaction = await databases.createDocument(
             DATABASE_ID,
             COLLECTIONS.TRANSACTIONS,
-            sdk.ID.unique(),
+            generateCustomId('TRANSACTION'),
             {
               ...requestBody,
               status: 'completed'
@@ -488,7 +494,7 @@ export default async ({ req, res, log, error }) => {
           const newRank = await databases.createDocument(
             DATABASE_ID,
             COLLECTIONS.RANKS,
-            sdk.ID.unique(),
+            generateCustomId('RANK'),
             {
               ...requestBody,
               achievedAt: new Date().toISOString()
@@ -516,7 +522,7 @@ export default async ({ req, res, log, error }) => {
           const newBadge = await databases.createDocument(
             DATABASE_ID,
             COLLECTIONS.BADGES,
-            sdk.ID.unique(),
+            generateCustomId('BADGE'),
             {
               ...requestBody
             }
@@ -545,7 +551,7 @@ export default async ({ req, res, log, error }) => {
           const newUserBadge = await databases.createDocument(
             DATABASE_ID,
             COLLECTIONS.USER_BADGES,
-            sdk.ID.unique(),
+            generateCustomId('USERBADGE'),
             {
               ...requestBody,
               earnedAt: new Date().toISOString()
@@ -575,7 +581,7 @@ export default async ({ req, res, log, error }) => {
           const newNotification = await databases.createDocument(
             DATABASE_ID,
             COLLECTIONS.NOTIFICATIONS,
-            sdk.ID.unique(),
+            generateCustomId('NOTIFICATION'),
             {
               ...requestBody,
               isRead: false
