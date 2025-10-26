@@ -67,6 +67,19 @@ export default async ({ req, res, log, error }) => {
     }
   };
 
+  // Helper function to validate foreign key existence
+  const validateForeignKey = async (collection, id, fieldName) => {
+    if (!id) return; // Skip if ID is not provided
+    try {
+      await databases.getDocument(DATABASE_ID, collection, id);
+    } catch (err) {
+      if (err.code === 404 || err.message?.includes('not found')) {
+        throw new Error(`Invalid ${fieldName}: ${id} does not exist in ${collection} collection`);
+      }
+      throw err;
+    }
+  };
+
   try {
     // Parse URL path
     const url = new URL(req.url, 'http://localhost');
@@ -218,6 +231,8 @@ export default async ({ req, res, log, error }) => {
 
         case 'POST':
           validateRequired(requestBody, ['courseId', 'title', 'content', 'order']);
+          // Validate courseId exists
+          await validateForeignKey(COLLECTIONS.COURSES, requestBody.courseId, 'courseId');
           const newLesson = await databases.createDocument(
             DATABASE_ID,
             COLLECTIONS.LESSONS,
@@ -231,6 +246,10 @@ export default async ({ req, res, log, error }) => {
 
         case 'PUT':
           if (!id) throw new Error('Lesson ID is required');
+          // Validate courseId if being updated
+          if (requestBody.courseId) {
+            await validateForeignKey(COLLECTIONS.COURSES, requestBody.courseId, 'courseId');
+          }
           const updatedLesson = await databases.updateDocument(
             DATABASE_ID,
             COLLECTIONS.LESSONS,
@@ -276,6 +295,8 @@ export default async ({ req, res, log, error }) => {
 
         case 'POST':
           validateRequired(requestBody, ['courseId', 'title', 'description', 'timeLimit', 'passingScore']);
+          // Validate courseId exists
+          await validateForeignKey(COLLECTIONS.COURSES, requestBody.courseId, 'courseId');
           const newQuiz = await databases.createDocument(
             DATABASE_ID,
             COLLECTIONS.QUIZZES,
@@ -289,6 +310,10 @@ export default async ({ req, res, log, error }) => {
 
         case 'PUT':
           if (!id) throw new Error('Quiz ID is required');
+          // Validate courseId if being updated
+          if (requestBody.courseId) {
+            await validateForeignKey(COLLECTIONS.COURSES, requestBody.courseId, 'courseId');
+          }
           const updatedQuiz = await databases.updateDocument(
             DATABASE_ID,
             COLLECTIONS.QUIZZES,
@@ -321,6 +346,8 @@ export default async ({ req, res, log, error }) => {
 
         case 'POST':
           validateRequired(requestBody, ['quizId', 'question', 'options', 'correctAnswer', 'order']);
+          // Validate quizId exists
+          await validateForeignKey(COLLECTIONS.QUIZZES, requestBody.quizId, 'quizId');
           const newQuestion = await databases.createDocument(
             DATABASE_ID,
             COLLECTIONS.QUIZ_QUESTIONS,
@@ -331,6 +358,10 @@ export default async ({ req, res, log, error }) => {
 
         case 'PUT':
           if (!id) throw new Error('Question ID is required');
+          // Validate quizId if being updated
+          if (requestBody.quizId) {
+            await validateForeignKey(COLLECTIONS.QUIZZES, requestBody.quizId, 'quizId');
+          }
           const updatedQuestion = await databases.updateDocument(
             DATABASE_ID,
             COLLECTIONS.QUIZ_QUESTIONS,
@@ -366,6 +397,9 @@ export default async ({ req, res, log, error }) => {
 
         case 'POST':
           validateRequired(requestBody, ['userId', 'courseId', 'lessonId']);
+          // Validate foreign keys exist
+          await validateForeignKey(COLLECTIONS.COURSES, requestBody.courseId, 'courseId');
+          await validateForeignKey(COLLECTIONS.LESSONS, requestBody.lessonId, 'lessonId');
           // Check if progress already exists
           const existingProgress = await databases.listDocuments(DATABASE_ID, COLLECTIONS.USER_PROGRESS, [
             sdk.Query.equal('userId', requestBody.userId),
@@ -420,6 +454,8 @@ export default async ({ req, res, log, error }) => {
 
         case 'POST':
           validateRequired(requestBody, ['userId', 'quizId', 'answers', 'score', 'totalQuestions']);
+          // Validate quizId exists
+          await validateForeignKey(COLLECTIONS.QUIZZES, requestBody.quizId, 'quizId');
           const newAttempt = await databases.createDocument(
             DATABASE_ID,
             COLLECTIONS.QUIZ_ATTEMPTS,
@@ -491,6 +527,8 @@ export default async ({ req, res, log, error }) => {
 
         case 'POST':
           validateRequired(requestBody, ['userId', 'courseId', 'score', 'rank']);
+          // Validate courseId exists
+          await validateForeignKey(COLLECTIONS.COURSES, requestBody.courseId, 'courseId');
           const newRank = await databases.createDocument(
             DATABASE_ID,
             COLLECTIONS.RANKS,
@@ -548,6 +586,8 @@ export default async ({ req, res, log, error }) => {
 
         case 'POST':
           validateRequired(requestBody, ['userId', 'badgeId']);
+          // Validate badgeId exists
+          await validateForeignKey(COLLECTIONS.BADGES, requestBody.badgeId, 'badgeId');
           const newUserBadge = await databases.createDocument(
             DATABASE_ID,
             COLLECTIONS.USER_BADGES,
