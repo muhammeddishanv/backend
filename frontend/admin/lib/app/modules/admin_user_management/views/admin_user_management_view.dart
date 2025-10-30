@@ -431,6 +431,8 @@ class AdminUserManagementView
   Widget _standardDialogShell({
     required Widget child,
     double maxWidth = _dialogMaxWidth,
+    // New optional parameter for the close button
+    bool showCloseButton = true,
   }) {
     final colorScheme = Theme.of(Get.context!).colorScheme;
     return Dialog(
@@ -439,7 +441,25 @@ class AdminUserManagementView
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: maxWidth),
-        child: Padding(padding: const EdgeInsets.all(24), child: child),
+        child: Stack(
+          // Use Stack to layer the content and the close button
+          children: [
+            Padding(padding: const EdgeInsets.all(24), child: child),
+            if (showCloseButton)
+              Positioned(
+                // Position the button at the top right
+                top: 8,
+                right: 8,
+                child: IconButton(
+                  icon: Icon(
+                    Icons.close_rounded,
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                  onPressed: () => Get.back(), // Closes the dialog
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
