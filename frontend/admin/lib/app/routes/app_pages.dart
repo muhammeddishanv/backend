@@ -1,9 +1,5 @@
 import 'package:get/get.dart';
 
-// Route and page registrations for the admin app. Uses GetX's `GetPage`
-// abstraction which allows associating a page with a Binding. Bindings are
-// executed when the route is pushed and are the recommended place to
-// register controllers and dependencies for that page.
 import '../global_widgets/unknown_view.dart';
 import '../modules/admin_create_lesson/bindings/admin_create_lesson_binding.dart';
 import '../modules/admin_create_lesson/views/admin_create_lesson_view.dart';
@@ -19,6 +15,8 @@ import '../modules/admin_edit_subject/bindings/admin_edit_subject_binding.dart';
 import '../modules/admin_edit_subject/views/admin_edit_subject_view.dart';
 import '../modules/admin_performance_analysis/bindings/admin_performance_analysis_binding.dart';
 import '../modules/admin_performance_analysis/views/admin_performance_analysis_view.dart';
+import '../modules/admin_quiz_management/bindings/admin_quiz_management_binding.dart';
+import '../modules/admin_quiz_management/views/admin_quiz_management_view.dart';
 import '../modules/admin_students_rank_zone/bindings/admin_students_rank_zone_binding.dart';
 import '../modules/admin_students_rank_zone/views/admin_students_rank_zone_view.dart';
 import '../modules/admin_subject_management/bindings/admin_subject_management_binding.dart';
@@ -31,6 +29,11 @@ import '../modules/admin_user_management/bindings/admin_user_management_binding.
 import '../modules/admin_user_management/views/admin_user_management_view.dart';
 import '../modules/signin_screen/signin/bindings/signin_screen_signin_binding.dart';
 import '../modules/signin_screen/signin/views/signin_screen_signin_view.dart';
+
+// Route and page registrations for the admin app. Uses GetX's `GetPage`
+// abstraction which allows associating a page with a Binding. Bindings are
+// executed when the route is pushed and are the recommended place to
+// register controllers and dependencies for that page.
 
 part 'app_routes.dart';
 
@@ -111,6 +114,11 @@ class AppPages {
       name: _Paths.SIGNIN_SCREEN_SIGNIN,
       page: () => SigninScreenSigninView(),
       binding: SigninScreenSigninBinding(),
+    ),
+    GetPage(
+      name: _Paths.ADMIN_QUIZ_MANAGEMENT,
+      page: () => AdminQuizManagementView(),
+      binding: AdminQuizManagementBinding(),
     ),
   ];
 

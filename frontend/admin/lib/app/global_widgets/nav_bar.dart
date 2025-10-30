@@ -115,6 +115,12 @@ class AdminSidebar extends StatelessWidget {
             active: selectedIndex == 11,
             onTap: () => onMenuSelected(11),
           ),
+          _SidebarMenuItem(
+            icon: Icons.settings,
+            title: 'Quiz Management',
+            active: selectedIndex == 12,
+            onTap: () => onMenuSelected(12),
+          ),
           const Spacer(),
           Padding(
             padding: const EdgeInsets.only(bottom: 20),
