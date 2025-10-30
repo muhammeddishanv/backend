@@ -193,10 +193,12 @@ class DashboardView extends GetResponsiveView<DashboardController> {
                         children: [
                           IconButton(
                             icon: Icon(
-                              Icons.menu,
+                              Icons.add,
                               color: Get.theme.colorScheme.onPrimary,
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              Get.toNamed(Routes.ON_BOARDING);
+                            },
                           ),
                           const Spacer(),
                           OutlinedButton.icon(

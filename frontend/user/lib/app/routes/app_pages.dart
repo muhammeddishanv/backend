@@ -4,6 +4,8 @@ import '../modules/auth/auth.binding.dart';
 import '../modules/auth/auth.view.dart';
 import '../modules/home/home.binding.dart';
 import '../modules/home/home.view.dart';
+import '../modules/on_boarding/on_boarding.binding.dart';
+import '../modules/on_boarding/on_boarding.view.dart';
 import '../modules/lesson/lesson.binding.dart';
 import '../modules/lesson/lesson.view.dart';
 import '../modules/not_found/not_found.binding.dart';
@@ -119,6 +121,12 @@ class AppPages {
       name: _Paths.NOTIFICATION,
       page: () => NotificationsView(),
       binding: NotificationBinding(),
+    ),
+    GetPage(
+      name: _Paths.ON_BOARDING,
+      page: () => OnBoardingView(),
+      binding: OnBoardingBinding(),
+      middlewares: [AuthMiddleware()],
     ),
   ];
 }
