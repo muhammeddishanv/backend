@@ -81,19 +81,13 @@ class AdminSidebar extends StatelessWidget {
           ),
           _SidebarMenuItem(
             icon: Icons.video_library,
-            title: 'Create Lesson',
+            title: 'Lesson Management',
             active: selectedIndex == 6,
             onTap: () => onMenuSelected(6),
           ),
           _SidebarMenuItem(
-            icon: Icons.edit_note,
-            title: 'Edit Lesson',
-            active: selectedIndex == 7,
-            onTap: () => onMenuSelected(7),
-          ),
-          _SidebarMenuItem(
             icon: Icons.quiz,
-            title: 'Create Quiz',
+            title: 'Quiz Management',
             active: selectedIndex == 8,
             onTap: () => onMenuSelected(8),
           ),
@@ -105,7 +99,7 @@ class AdminSidebar extends StatelessWidget {
           ),
           _SidebarMenuItem(
             icon: Icons.analytics,
-            title: 'Performance Analysis',
+            title: 'Performance History',
             active: selectedIndex == 10,
             onTap: () => onMenuSelected(10),
           ),
@@ -114,12 +108,6 @@ class AdminSidebar extends StatelessWidget {
             title: 'Student Rank Zone',
             active: selectedIndex == 11,
             onTap: () => onMenuSelected(11),
-          ),
-          _SidebarMenuItem(
-            icon: Icons.settings,
-            title: 'Quiz Management',
-            active: selectedIndex == 12,
-            onTap: () => onMenuSelected(12),
           ),
           const Spacer(),
           Padding(
@@ -151,7 +139,7 @@ class AdminSidebar extends StatelessWidget {
 
 // Private helper widget used to render each item. Marked private (leading
 // underscore) because it's only relevant to this file; it exposes a simple
-// `active` flag and an `onTap` callback.
+// active flag and an onTap callback.
 class _SidebarMenuItem extends StatelessWidget {
   final IconData icon;
   final String title;

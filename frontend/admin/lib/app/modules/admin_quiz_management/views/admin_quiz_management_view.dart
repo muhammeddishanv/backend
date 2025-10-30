@@ -199,7 +199,7 @@ class AdminQuizManagementView extends GetResponsiveView {
       body: Row(
         children: [
           AdminSidebar(
-            selectedIndex: 8,
+            selectedIndex: 12, // Ensure index 12 for Quiz Management
             onMenuSelected: (index) {
               _navigateToPage(index);
             },
@@ -338,6 +338,9 @@ class AdminQuizManagementView extends GetResponsiveView {
         break;
       case 11:
         Get.toNamed(Routes.ADMIN_STUDENTS_RANK_ZONE);
+        break;
+      case 12:
+        Get.toNamed(Routes.ADMIN_QUIZ_MANAGEMENT);
         break;
     }
   }
