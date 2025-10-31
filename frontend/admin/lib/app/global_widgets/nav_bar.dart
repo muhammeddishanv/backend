@@ -81,19 +81,13 @@ class AdminSidebar extends StatelessWidget {
           ),
           _SidebarMenuItem(
             icon: Icons.video_library,
-            title: 'Create Lesson',
+            title: 'Lesson Management',
             active: selectedIndex == 6,
             onTap: () => onMenuSelected(6),
           ),
           _SidebarMenuItem(
-            icon: Icons.edit_note,
-            title: 'Edit Lesson',
-            active: selectedIndex == 7,
-            onTap: () => onMenuSelected(7),
-          ),
-          _SidebarMenuItem(
             icon: Icons.quiz,
-            title: 'Create Quiz',
+            title: 'Quiz Management',
             active: selectedIndex == 8,
             onTap: () => onMenuSelected(8),
           ),
@@ -105,7 +99,7 @@ class AdminSidebar extends StatelessWidget {
           ),
           _SidebarMenuItem(
             icon: Icons.analytics,
-            title: 'Performance Analysis',
+            title: 'Performance History',
             active: selectedIndex == 10,
             onTap: () => onMenuSelected(10),
           ),
