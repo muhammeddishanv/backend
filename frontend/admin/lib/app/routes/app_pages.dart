@@ -1,18 +1,10 @@
 import 'package:get/get.dart';
 
 import '../global_widgets/unknown_view.dart';
-import '../modules/admin_create_lesson/bindings/admin_create_lesson_binding.dart';
-import '../modules/admin_create_lesson/views/admin_create_lesson_view.dart';
-import '../modules/admin_create_quiz/bindings/admin_create_quiz_binding.dart';
-import '../modules/admin_create_quiz/views/admin_create_quiz_view.dart';
-import '../modules/admin_create_subject/bindings/admin_create_subject_binding.dart';
-import '../modules/admin_create_subject/views/admin_create_subject_view.dart';
 import '../modules/admin_dashboard/bindings/admin_dashboard_binding.dart';
 import '../modules/admin_dashboard/views/admin_dashboard_view.dart';
-import '../modules/admin_edit_lesson/bindings/admin_edit_lesson_binding.dart';
-import '../modules/admin_edit_lesson/views/admin_edit_lesson_view.dart';
-import '../modules/admin_edit_subject/bindings/admin_edit_subject_binding.dart';
-import '../modules/admin_edit_subject/views/admin_edit_subject_view.dart';
+import '../modules/admin_lesson_management/bindings/admin_lesson_management_binding.dart';
+import '../modules/admin_lesson_management/views/admin_lesson_management_view.dart';
 import '../modules/admin_performance_analysis/bindings/admin_performance_analysis_binding.dart';
 import '../modules/admin_performance_analysis/views/admin_performance_analysis_view.dart';
 import '../modules/admin_students_rank_zone/bindings/admin_students_rank_zone_binding.dart';
@@ -86,29 +78,9 @@ class AppPages {
       binding: AdminSubjectManagementBinding(),
     ),
     GetPage(
-      name: _Paths.ADMIN_CREATE_SUBJECT,
-      page: () => AdminCreateSubjectView(),
-      binding: AdminCreateSubjectBinding(),
-    ),
-    GetPage(
-      name: _Paths.ADMIN_EDIT_SUBJECT,
-      page: () => AdminEditSubjectView(),
-      binding: AdminEditSubjectBinding(),
-    ),
-    GetPage(
-      name: _Paths.ADMIN_CREATE_QUIZ,
-      page: () => AdminCreateQuizView(),
-      binding: AdminCreateQuizBinding(),
-    ),
-    GetPage(
-      name: _Paths.ADMIN_EDIT_LESSON,
-      page: () => AdminEditLessonView(),
-      binding: AdminEditLessonBinding(),
-    ),
-    GetPage(
-      name: _Paths.ADMIN_CREATE_LESSON,
-      page: () => AdminCreateLessonView(),
-      binding: AdminCreateLessonBinding(),
+      name: _Paths.ADMIN_LESSON_MANAGEMENT,
+      page: () => AdminLessonManagementView(),
+      binding: AdminLessonManagementBinding(),
     ),
     GetPage(
       name: _Paths.SIGNIN_SCREEN_SIGNIN,

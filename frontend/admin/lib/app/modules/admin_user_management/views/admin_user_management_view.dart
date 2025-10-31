@@ -2,6 +2,8 @@
 // Purpose: List and manage users (create/edit/block). Keep business logic in controllers/services.
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 import '../controllers/admin_user_management_controller.dart';
 import '../../../global_widgets/nav_bar.dart';
 import '../../../global_widgets/search_bar.dart';
@@ -404,13 +406,13 @@ class AdminUserManagementView
         Get.toNamed(Routes.ADMIN_SUBJECT_MANAGEMENT);
         break;
       case 6:
-        Get.toNamed(Routes.ADMIN_CREATE_LESSON);
+        Get.toNamed(Routes.ADMIN_LESSON_MANAGEMENT);
         break;
       case 7:
-        Get.toNamed(Routes.ADMIN_EDIT_LESSON);
+        // TODO: Implement edit lesson functionality
         break;
       case 8:
-        Get.toNamed(Routes.ADMIN_CREATE_QUIZ);
+        Get.toNamed(Routes.QUIZ_MANAGEMENT);
         break;
       case 9:
         Get.toNamed(Routes.ADMIN_TRANSACTION_HISTORY);
@@ -466,6 +468,30 @@ class AdminUserManagementView
 
   void _showEditUserDialog(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final Rx<File?> selectedImage = Rx<File?>(null);
+    final ImagePicker picker = ImagePicker();
+
+    Future<void> pickImage() async {
+      try {
+        final XFile? image = await picker.pickImage(
+          source: ImageSource.gallery,
+          maxWidth: 1800,
+          maxHeight: 1800,
+          imageQuality: 85,
+        );
+        if (image != null) {
+          selectedImage.value = File(image.path);
+        }
+      } catch (e) {
+        Get.snackbar(
+          'Error',
+          'Failed to pick image: $e',
+          backgroundColor: colorScheme.error,
+          colorText: colorScheme.onError,
+          snackPosition: SnackPosition.TOP,
+        );
+      }
+    }
 
     Get.dialog(
       _standardDialogShell(
@@ -482,6 +508,66 @@ class AdminUserManagementView
                 ),
               ),
               const SizedBox(height: 24),
+
+              const Text(
+                "Profile Photo",
+                style: TextStyle(fontWeight: FontWeight.w500),
+              ),
+              const SizedBox(height: 8),
+              Obx(
+                () => GestureDetector(
+                  onTap: pickImage,
+                  child: Container(
+                    height: 120,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: colorScheme.surface,
+                      border: Border.all(
+                        color: colorScheme.outlineVariant,
+                        width: 2,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: selectedImage.value != null
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(6),
+                            child: Image.file(
+                              selectedImage.value!,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        : Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.cloud_upload_outlined,
+                                size: 40,
+                                color: colorScheme.primary,
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                "Click to upload new profile photo",
+                                style: TextStyle(
+                                  color: colorScheme.onSurfaceVariant,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                "PNG, JPG up to 10MB",
+                                style: TextStyle(
+                                  color: colorScheme.onSurfaceVariant
+                                      .withOpacity(0.6),
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+
               _field(label: "Full Name", hintText: "Enter Full Name"),
               const SizedBox(height: 16),
               _field(label: "Email", hintText: "Enter Email"),
@@ -531,6 +617,30 @@ class AdminUserManagementView
   void _showAddUserDialog(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final RxString selectedGender = 'Male'.obs;
+    final Rx<File?> selectedImage = Rx<File?>(null);
+    final ImagePicker picker = ImagePicker();
+
+    Future<void> pickImage() async {
+      try {
+        final XFile? image = await picker.pickImage(
+          source: ImageSource.gallery,
+          maxWidth: 1800,
+          maxHeight: 1800,
+          imageQuality: 85,
+        );
+        if (image != null) {
+          selectedImage.value = File(image.path);
+        }
+      } catch (e) {
+        Get.snackbar(
+          'Error',
+          'Failed to pick image: $e',
+          backgroundColor: colorScheme.error,
+          colorText: colorScheme.onError,
+          snackPosition: SnackPosition.TOP,
+        );
+      }
+    }
 
     Get.dialog(
       _standardDialogShell(
@@ -553,15 +663,57 @@ class AdminUserManagementView
                 style: TextStyle(fontWeight: FontWeight.w500),
               ),
               const SizedBox(height: 8),
-              Container(
-                height: 40,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: colorScheme.surface,
-                  border: Border.all(color: colorScheme.outlineVariant),
-                  borderRadius: BorderRadius.circular(8),
+              Obx(
+                () => GestureDetector(
+                  onTap: pickImage,
+                  child: Container(
+                    height: 120,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: colorScheme.surface,
+                      border: Border.all(
+                        color: colorScheme.outlineVariant,
+                        width: 2,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: selectedImage.value != null
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(6),
+                            child: Image.file(
+                              selectedImage.value!,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        : Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.cloud_upload_outlined,
+                                size: 40,
+                                color: colorScheme.primary,
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                "Click to upload profile photo",
+                                style: TextStyle(
+                                  color: colorScheme.onSurfaceVariant,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                "PNG, JPG up to 10MB",
+                                style: TextStyle(
+                                  color: colorScheme.onSurfaceVariant
+                                      .withOpacity(0.6),
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
+                  ),
                 ),
-                child: const Center(child: Text("Upload Profile photo")),
               ),
               const SizedBox(height: 16),
 

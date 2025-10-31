@@ -60,8 +60,11 @@ class AdminStudentsRankZoneView extends GetResponsiveView {
     ].obs;
 
     // ---------- Pagination Table Builder ----------
-    Widget rankTable(BuildContext context, List<Map<String, dynamic>> data,
-        RxInt currentPage) {
+    Widget rankTable(
+      BuildContext context,
+      List<Map<String, dynamic>> data,
+      RxInt currentPage,
+    ) {
       const int itemsPerPage = 8;
       int totalPages = (data.length / itemsPerPage).ceil();
 
@@ -84,14 +87,18 @@ class AdminStudentsRankZoneView extends GetResponsiveView {
                 color: colorScheme.surface,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                    color: colorScheme.outline.withOpacity(0.2), width: 1),
+                  color: colorScheme.outline.withOpacity(0.2),
+                  width: 1,
+                ),
               ),
               child: Column(
                 children: [
                   // ---------- HEADER ----------
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 16,
+                    ),
                     decoration: BoxDecoration(
                       color: colorScheme.surfaceVariant,
                       borderRadius: const BorderRadius.only(
@@ -109,48 +116,52 @@ class AdminStudentsRankZoneView extends GetResponsiveView {
                       children: [
                         SizedBox(
                           width: 60,
-                          child: Text("RANK",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelMedium
-                                  ?.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                      color: colorScheme.onSurfaceVariant)),
+                          child: Text(
+                            "RANK",
+                            style: Theme.of(context).textTheme.labelMedium
+                                ?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: colorScheme.onSurfaceVariant,
+                                ),
+                          ),
                         ),
                         Expanded(
                           flex: 4,
                           child: Padding(
                             padding: const EdgeInsets.only(left: 16),
-                            child: Text("STUDENT",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelMedium
-                                    ?.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                        color: colorScheme.onSurfaceVariant)),
+                            child: Text(
+                              "STUDENT",
+                              style: Theme.of(context).textTheme.labelMedium
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: colorScheme.onSurfaceVariant,
+                                  ),
+                            ),
                           ),
                         ),
                         SizedBox(
                           width: 80,
-                          child: Text("SCORE",
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelMedium
-                                  ?.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                      color: colorScheme.onSurfaceVariant)),
+                          child: Text(
+                            "SCORE",
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.labelMedium
+                                ?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: colorScheme.onSurfaceVariant,
+                                ),
+                          ),
                         ),
                         Expanded(
                           flex: 4,
-                          child: Text("PROGRESS",
-                              textAlign: TextAlign.right,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelMedium
-                                  ?.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                      color: colorScheme.onSurfaceVariant)),
+                          child: Text(
+                            "PROGRESS",
+                            textAlign: TextAlign.right,
+                            style: Theme.of(context).textTheme.labelMedium
+                                ?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: colorScheme.onSurfaceVariant,
+                                ),
+                          ),
                         ),
                       ],
                     ),
@@ -161,7 +172,9 @@ class AdminStudentsRankZoneView extends GetResponsiveView {
                     children: paginatedData.map((s) {
                       return Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 24, vertical: 20),
+                          horizontal: 24,
+                          vertical: 20,
+                        ),
                         decoration: BoxDecoration(
                           border: Border(
                             bottom: BorderSide(
@@ -173,34 +186,33 @@ class AdminStudentsRankZoneView extends GetResponsiveView {
                         child: Row(
                           children: [
                             SizedBox(
-                                width: 60,
-                                child: Text("${s["rank"]}",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium
-                                        ?.copyWith(
-                                            fontWeight: FontWeight.w500))),
+                              width: 60,
+                              child: Text(
+                                "${s["rank"]}",
+                                style: Theme.of(context).textTheme.bodyMedium
+                                    ?.copyWith(fontWeight: FontWeight.w500),
+                              ),
+                            ),
                             Expanded(
                               flex: 4,
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 16),
-                                child: Text(s["student"],
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium
-                                        ?.copyWith(
-                                            fontWeight: FontWeight.w500)),
+                                child: Text(
+                                  s["student"],
+                                  style: Theme.of(context).textTheme.bodyMedium
+                                      ?.copyWith(fontWeight: FontWeight.w500),
+                                ),
                               ),
                             ),
                             SizedBox(
-                                width: 80,
-                                child: Text("${s["score"]}",
-                                    textAlign: TextAlign.center,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium
-                                        ?.copyWith(
-                                            fontWeight: FontWeight.w500))),
+                              width: 80,
+                              child: Text(
+                                "${s["score"]}",
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.bodyMedium
+                                    ?.copyWith(fontWeight: FontWeight.w500),
+                              ),
+                            ),
                             Expanded(
                               flex: 4,
                               child: Row(
@@ -215,7 +227,8 @@ class AdminStudentsRankZoneView extends GetResponsiveView {
                                         minHeight: 10,
                                         valueColor:
                                             AlwaysStoppedAnimation<Color>(
-                                                colorScheme.primary),
+                                              colorScheme.primary,
+                                            ),
                                         backgroundColor:
                                             colorScheme.surfaceVariant,
                                       ),
@@ -224,13 +237,16 @@ class AdminStudentsRankZoneView extends GetResponsiveView {
                                   const SizedBox(width: 16),
                                   SizedBox(
                                     width: 40,
-                                    child: Text("${s["progress"]}%",
-                                        textAlign: TextAlign.end,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium
-                                            ?.copyWith(
-                                                fontWeight: FontWeight.w600)),
+                                    child: Text(
+                                      "${s["progress"]}%",
+                                      textAlign: TextAlign.end,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -244,6 +260,82 @@ class AdminStudentsRankZoneView extends GetResponsiveView {
               ),
             ),
           ],
+        );
+      });
+    }
+
+    // ---------- PAGINATION WIDGET ----------
+    Widget _buildPagination(
+      BuildContext context,
+      RxInt currentPage,
+      int totalItems,
+    ) {
+      int totalPages = (totalItems / 8).ceil().clamp(1, 9999);
+
+      return Obx(() {
+        List<Widget> pages = [];
+        pages.add(
+          IconButton(
+            onPressed: currentPage.value > 1 ? () => currentPage.value-- : null,
+            icon: Icon(
+              Icons.chevron_left,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+          ),
+        );
+
+        for (int i = 1; i <= totalPages; i++) {
+          final isActive = i == currentPage.value;
+          pages.add(
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: SizedBox(
+                height: 28,
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    backgroundColor: isActive
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(Get.context!).colorScheme.surfaceVariant,
+                    minimumSize: const Size(28, 28),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                  ),
+                  onPressed: () => currentPage.value = i,
+                  child: Text(
+                    i.toString(),
+                    style: TextStyle(
+                      color: isActive
+                          ? Theme.of(context).colorScheme.onPrimary
+                          : Theme.of(context).colorScheme.onSurface,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        }
+
+        pages.add(
+          IconButton(
+            onPressed: currentPage.value < totalPages
+                ? () => currentPage.value++
+                : null,
+            icon: Icon(
+              Icons.chevron_right,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+          ),
+        );
+
+        return Align(
+          alignment: Alignment.center,
+          child: Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: pages,
+          ),
         );
       });
     }
@@ -290,18 +382,18 @@ class AdminStudentsRankZoneView extends GetResponsiveView {
                           alignment: Alignment.centerLeft,
                           child: TabBar(
                             isScrollable: true,
-                            labelPadding:
-                                const EdgeInsets.symmetric(horizontal: 16),
-                            labelColor: Theme.of(Get.context!)
-                                .colorScheme
-                                .primary,
-                            unselectedLabelColor: Theme.of(Get.context!)
-                                .colorScheme
-                                .onSurface
-                                .withOpacity(0.6),
-                            indicatorColor: Theme.of(Get.context!)
-                                .colorScheme
-                                .primary,
+                            labelPadding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                            ),
+                            labelColor: Theme.of(
+                              Get.context!,
+                            ).colorScheme.primary,
+                            unselectedLabelColor: Theme.of(
+                              Get.context!,
+                            ).colorScheme.onSurface.withOpacity(0.6),
+                            indicatorColor: Theme.of(
+                              Get.context!,
+                            ).colorScheme.primary,
                             indicatorWeight: 3.0,
                             tabs: const [
                               Tab(text: "Overall"),
@@ -316,13 +408,17 @@ class AdminStudentsRankZoneView extends GetResponsiveView {
                         Expanded(
                           child: TabBarView(
                             children: [
-                              rankTable(Get.context!, overallRanks,
-                                  currentOverallPage),
+                              rankTable(
+                                Get.context!,
+                                overallRanks,
+                                currentOverallPage,
+                              ),
                               Column(
                                 children: [
                                   Padding(
-                                    padding:
-                                        const EdgeInsets.only(bottom: 16.0),
+                                    padding: const EdgeInsets.only(
+                                      bottom: 16.0,
+                                    ),
                                     child: Row(
                                       children: [
                                         const Spacer(),
@@ -330,47 +426,57 @@ class AdminStudentsRankZoneView extends GetResponsiveView {
                                           width: 200,
                                           child:
                                               DropdownButtonFormField<String>(
-                                            decoration: InputDecoration(
-                                              filled: true,
-                                              fillColor: Theme.of(Get.context!)
-                                                  .colorScheme
-                                                  .surfaceVariant,
-                                              border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                                borderSide: BorderSide.none,
+                                                decoration: InputDecoration(
+                                                  filled: true,
+                                                  fillColor: Theme.of(
+                                                    Get.context!,
+                                                  ).colorScheme.surfaceVariant,
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          8,
+                                                        ),
+                                                    borderSide: BorderSide.none,
+                                                  ),
+                                                ),
+                                                hint: Text(
+                                                  "Select Subject",
+                                                  style: TextStyle(
+                                                    color:
+                                                        Theme.of(Get.context!)
+                                                            .colorScheme
+                                                            .onSurface
+                                                            .withOpacity(0.6),
+                                                  ),
+                                                ),
+                                                items: categories
+                                                    .map(
+                                                      (String value) =>
+                                                          DropdownMenuItem<
+                                                            String
+                                                          >(
+                                                            value: value,
+                                                            child: Text(value),
+                                                          ),
+                                                    )
+                                                    .toList(),
+                                                onChanged: (String? newValue) {
+                                                  if (newValue != null) {
+                                                    selectedCategory.value =
+                                                        newValue;
+                                                  }
+                                                },
                                               ),
-                                            ),
-                                            hint: Text(
-                                              "Select Subject",
-                                              style: TextStyle(
-                                                color: Theme.of(Get.context!)
-                                                    .colorScheme
-                                                    .onSurface
-                                                    .withOpacity(0.6),
-                                              ),
-                                            ),
-                                            items: categories
-                                                .map((String value) =>
-                                                    DropdownMenuItem<String>(
-                                                      value: value,
-                                                      child: Text(value),
-                                                    ))
-                                                .toList(),
-                                            onChanged: (String? newValue) {
-                                              if (newValue != null) {
-                                                selectedCategory.value =
-                                                    newValue;
-                                              }
-                                            },
-                                          ),
                                         ),
                                       ],
                                     ),
                                   ),
                                   Expanded(
-                                    child: rankTable(Get.context!,
-                                        subjectRanks, currentSubjectPage),
+                                    child: rankTable(
+                                      Get.context!,
+                                      subjectRanks,
+                                      currentSubjectPage,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -393,49 +499,10 @@ class AdminStudentsRankZoneView extends GetResponsiveView {
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 12),
               color: Theme.of(Get.context!).colorScheme.surface,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Obx(() {
-                    int totalPages = (overallRanks.length / 8).ceil();
-                    return Row(
-                      children: [
-                        for (int i = 1; i <= totalPages; i++)
-                          GestureDetector(
-                            onTap: () => currentOverallPage.value = i,
-                            child: Container(
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 4),
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: currentOverallPage.value == i
-                                    ? Theme.of(Get.context!)
-                                        .colorScheme
-                                        .primary
-                                    : Theme.of(Get.context!)
-                                        .colorScheme
-                                        .surfaceVariant,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text(
-                                '$i',
-                                style: TextStyle(
-                                  color: currentOverallPage.value == i
-                                      ? Theme.of(Get.context!)
-                                          .colorScheme
-                                          .onPrimary
-                                      : Theme.of(Get.context!)
-                                          .colorScheme
-                                          .onSurface,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          ),
-                      ],
-                    );
-                  }),
-                ],
+              child: _buildPagination(
+                Get.context!,
+                currentOverallPage,
+                overallRanks.length,
               ),
             ),
           ),
@@ -459,13 +526,13 @@ class AdminStudentsRankZoneView extends GetResponsiveView {
         Get.toNamed(Routes.ADMIN_SUBJECT_MANAGEMENT);
         break;
       case 6:
-        Get.toNamed(Routes.ADMIN_CREATE_LESSON);
+        Get.toNamed(Routes.ADMIN_LESSON_MANAGEMENT);
         break;
       case 7:
-        Get.toNamed(Routes.ADMIN_EDIT_LESSON);
+        // TODO: Implement edit lesson functionality
         break;
       case 8:
-        Get.toNamed(Routes.ADMIN_CREATE_QUIZ);
+        Get.toNamed(Routes.QUIZ_MANAGEMENT);
         break;
       case 9:
         Get.toNamed(Routes.ADMIN_TRANSACTION_HISTORY);

@@ -10,14 +10,10 @@ abstract class Routes {
   static const ADMIN_PERFORMANCE_ANALYSIS = _Paths.ADMIN_PERFORMANCE_ANALYSIS;
   static const ADMIN_STUDENTS_RANK_ZONE = _Paths.ADMIN_STUDENTS_RANK_ZONE;
   static const ADMIN_SUBJECT_MANAGEMENT = _Paths.ADMIN_SUBJECT_MANAGEMENT;
-  static const ADMIN_CREATE_SUBJECT = _Paths.ADMIN_CREATE_SUBJECT;
-  static const ADMIN_EDIT_SUBJECT = _Paths.ADMIN_EDIT_SUBJECT;
-  static const ADMIN_CREATE_QUIZ = _Paths.ADMIN_CREATE_QUIZ;
+  static const ADMIN_LESSON_MANAGEMENT = _Paths.ADMIN_LESSON_MANAGEMENT;
 
   static var HOME;
   static const THEME = _Paths.THEME;
-  static const ADMIN_EDIT_LESSON = _Paths.ADMIN_EDIT_LESSON;
-  static const ADMIN_CREATE_LESSON = _Paths.ADMIN_CREATE_LESSON;
   static const SIGNIN = _Paths.SIGNIN;
   static const SIGNIN_SCREEN_SIGNIN =
       _Paths.SIGNIN_SCREEN_SIGNIN + _Paths.SIGNIN;
@@ -33,12 +29,8 @@ abstract class _Paths {
   static const ADMIN_PERFORMANCE_ANALYSIS = '/admin-performance-analysis';
   static const ADMIN_STUDENTS_RANK_ZONE = '/admin-students-rank-zone';
   static const ADMIN_SUBJECT_MANAGEMENT = '/admin-subject-management';
-  static const ADMIN_CREATE_SUBJECT = '/admin-create-subject';
-  static const ADMIN_EDIT_SUBJECT = '/admin-edit-subject';
-  static const ADMIN_CREATE_QUIZ = '/admin-create-quiz';
+  static const ADMIN_LESSON_MANAGEMENT = '/admin-lesson-management';
   static const THEME = '/theme';
-  static const ADMIN_EDIT_LESSON = '/admin-edit-lesson';
-  static const ADMIN_CREATE_LESSON = '/admin-create-lesson';
   static const SIGNIN = '/signin';
   static const SIGNIN_SCREEN_SIGNIN = '/signin';
   static const QUIZ_MANAGEMENT = '/quiz-management';

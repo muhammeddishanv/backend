@@ -9,7 +9,8 @@ import '../../../global_widgets/search_bar.dart';
 import '../../../routes/app_pages.dart';
 import '../controllers/admin_lesson_management_controller.dart';
 
-class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementController> {
+class AdminLessonManagementView
+    extends GetResponsiveView<AdminLessonManagementController> {
   AdminLessonManagementView({super.key});
 
   // Lesson data at class level
@@ -19,21 +20,21 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
       "desc": "Learn the basics of coding with Python.",
       "subject": "Computer",
       "chapter": "1",
-      "lesson": "1"
+      "lesson": "1",
     },
     {
       "title": "Advanced Data Structures",
       "desc": "Explore complex data structures and algorithms.",
       "subject": "Maths",
       "chapter": "5",
-      "lesson": "3"
+      "lesson": "3",
     },
     {
       "title": "Subject Name",
       "desc": "Subject description",
       "subject": "Subject",
       "chapter": "2",
-      "lesson": "4"
+      "lesson": "4",
     },
   ].obs;
 
@@ -59,7 +60,10 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
       builder: (BuildContext context) {
         return Dialog(
           backgroundColor: Theme.of(context).colorScheme.surface,
-          insetPadding: const EdgeInsets.symmetric(horizontal: 150, vertical: 80),
+          insetPadding: const EdgeInsets.symmetric(
+            horizontal: 150,
+            vertical: 80,
+          ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(32),
           ),
@@ -73,9 +77,7 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                   children: [
                     Text(
                       "Create Lesson",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineSmall
+                      style: Theme.of(context).textTheme.headlineSmall
                           ?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     IconButton(
@@ -101,7 +103,9 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                             decoration: InputDecoration(
                               hintText: "enter lesson title...",
                               filled: true,
-                              fillColor: Theme.of(context).colorScheme.surfaceVariant,
+                              fillColor: Theme.of(
+                                context,
+                              ).colorScheme.surfaceVariant,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide.none,
@@ -117,7 +121,9 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                             decoration: InputDecoration(
                               hintText: "enter lesson description...",
                               filled: true,
-                              fillColor: Theme.of(context).colorScheme.surfaceVariant,
+                              fillColor: Theme.of(
+                                context,
+                              ).colorScheme.surfaceVariant,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide.none,
@@ -129,7 +135,9 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                             padding: const EdgeInsets.all(20),
                             decoration: BoxDecoration(
                               border: Border.all(
-                                color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.outline.withOpacity(0.2),
                                 width: 1,
                               ),
                               borderRadius: BorderRadius.circular(12),
@@ -161,7 +169,9 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                             decoration: InputDecoration(
                               hintText: "enter video links...",
                               filled: true,
-                              fillColor: Theme.of(context).colorScheme.surfaceVariant,
+                              fillColor: Theme.of(
+                                context,
+                              ).colorScheme.surfaceVariant,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide.none,
@@ -181,7 +191,9 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                             padding: const EdgeInsets.all(20),
                             decoration: BoxDecoration(
                               border: Border.all(
-                                color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.outline.withOpacity(0.2),
                                 width: 1,
                               ),
                               borderRadius: BorderRadius.circular(12),
@@ -209,18 +221,25 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                           const Text("Category"),
                           const SizedBox(height: 8),
                           DropdownButtonFormField<String>(
-                            value: categoryRx.value.isEmpty ? null : categoryRx.value,
+                            value: categoryRx.value.isEmpty
+                                ? null
+                                : categoryRx.value,
                             decoration: InputDecoration(
                               hintText: "select category",
                               filled: true,
-                              fillColor: Theme.of(context).colorScheme.surfaceVariant,
+                              fillColor: Theme.of(
+                                context,
+                              ).colorScheme.surfaceVariant,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide.none,
                               ),
                             ),
                             items: const [
-                              DropdownMenuItem(value: "Category 1", child: Text("Category 1")),
+                              DropdownMenuItem(
+                                value: "Category 1",
+                                child: Text("Category 1"),
+                              ),
                             ],
                             onChanged: (val) => categoryRx.value = val ?? '',
                           ),
@@ -228,18 +247,25 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                           const Text("Subcategory"),
                           const SizedBox(height: 8),
                           DropdownButtonFormField<String>(
-                            value: subcategoryRx.value.isEmpty ? null : subcategoryRx.value,
+                            value: subcategoryRx.value.isEmpty
+                                ? null
+                                : subcategoryRx.value,
                             decoration: InputDecoration(
                               hintText: "select subcategory",
                               filled: true,
-                              fillColor: Theme.of(context).colorScheme.surfaceVariant,
+                              fillColor: Theme.of(
+                                context,
+                              ).colorScheme.surfaceVariant,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide.none,
                               ),
                             ),
                             items: const [
-                              DropdownMenuItem(value: "Subcategory 1", child: Text("Subcategory 1")),
+                              DropdownMenuItem(
+                                value: "Subcategory 1",
+                                child: Text("Subcategory 1"),
+                              ),
                             ],
                             onChanged: (val) => subcategoryRx.value = val ?? '',
                           ),
@@ -247,18 +273,25 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                           const Text("Subject"),
                           const SizedBox(height: 8),
                           DropdownButtonFormField<String>(
-                            value: subjectRx.value.isEmpty ? null : subjectRx.value,
+                            value: subjectRx.value.isEmpty
+                                ? null
+                                : subjectRx.value,
                             decoration: InputDecoration(
                               hintText: "select subject",
                               filled: true,
-                              fillColor: Theme.of(context).colorScheme.surfaceVariant,
+                              fillColor: Theme.of(
+                                context,
+                              ).colorScheme.surfaceVariant,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide.none,
                               ),
                             ),
                             items: const [
-                              DropdownMenuItem(value: "Subject 1", child: Text("Subject 1")),
+                              DropdownMenuItem(
+                                value: "Subject 1",
+                                child: Text("Subject 1"),
+                              ),
                             ],
                             onChanged: (val) => subjectRx.value = val ?? '',
                           ),
@@ -266,18 +299,25 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                           const Text("Subject Chapter"),
                           const SizedBox(height: 8),
                           DropdownButtonFormField<String>(
-                            value: chapterRx.value.isEmpty ? null : chapterRx.value,
+                            value: chapterRx.value.isEmpty
+                                ? null
+                                : chapterRx.value,
                             decoration: InputDecoration(
                               hintText: "select chapter",
                               filled: true,
-                              fillColor: Theme.of(context).colorScheme.surfaceVariant,
+                              fillColor: Theme.of(
+                                context,
+                              ).colorScheme.surfaceVariant,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide.none,
                               ),
                             ),
                             items: const [
-                              DropdownMenuItem(value: "Chapter 1", child: Text("Chapter 1")),
+                              DropdownMenuItem(
+                                value: "Chapter 1",
+                                child: Text("Chapter 1"),
+                              ),
                             ],
                             onChanged: (val) => chapterRx.value = val ?? '',
                           ),
@@ -285,18 +325,25 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                           const Text("Subject Lesson"),
                           const SizedBox(height: 8),
                           DropdownButtonFormField<String>(
-                            value: lessonRx.value.isEmpty ? null : lessonRx.value,
+                            value: lessonRx.value.isEmpty
+                                ? null
+                                : lessonRx.value,
                             decoration: InputDecoration(
                               hintText: "select lesson",
                               filled: true,
-                              fillColor: Theme.of(context).colorScheme.surfaceVariant,
+                              fillColor: Theme.of(
+                                context,
+                              ).colorScheme.surfaceVariant,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide.none,
                               ),
                             ),
                             items: const [
-                              DropdownMenuItem(value: "Lesson 1", child: Text("Lesson 1")),
+                              DropdownMenuItem(
+                                value: "Lesson 1",
+                                child: Text("Lesson 1"),
+                              ),
                             ],
                             onChanged: (val) => lessonRx.value = val ?? '',
                           ),
@@ -313,8 +360,13 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                       onPressed: addNewLesson,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Theme.of(context).colorScheme.primary,
-                        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                        foregroundColor: Theme.of(
+                          context,
+                        ).colorScheme.onPrimary,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 12,
+                        ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -339,7 +391,10 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
       builder: (BuildContext context) {
         return Dialog(
           backgroundColor: Theme.of(context).colorScheme.surface,
-          insetPadding: const EdgeInsets.symmetric(horizontal: 150, vertical: 80),
+          insetPadding: const EdgeInsets.symmetric(
+            horizontal: 150,
+            vertical: 80,
+          ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(32),
           ),
@@ -350,10 +405,9 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
               children: [
                 Text(
                   "Create Lesson",
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineSmall
-                      ?.copyWith(fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 25),
                 // Form fields with controllers
@@ -398,7 +452,9 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                       onPressed: addNewLesson,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Theme.of(context).colorScheme.primary,
-                        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                        foregroundColor: Theme.of(
+                          context,
+                        ).colorScheme.onPrimary,
                       ),
                       child: const Text("Create lesson"),
                     ),
@@ -421,13 +477,13 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
         Get.toNamed(Routes.ADMIN_SUBJECT_MANAGEMENT);
         break;
       case 6:
-        Get.toNamed(Routes.ADMIN_CREATE_LESSON);
+        Get.toNamed(Routes.ADMIN_LESSON_MANAGEMENT);
         break;
       case 7:
-        Get.toNamed(Routes.ADMIN_EDIT_LESSON);
+        // TODO: Implement edit lesson functionality
         break;
       case 8:
-        Get.toNamed(Routes.ADMIN_CREATE_QUIZ);
+        Get.toNamed(Routes.QUIZ_MANAGEMENT);
         break;
       case 9:
         Get.toNamed(Routes.ADMIN_TRANSACTION_HISTORY);
@@ -487,6 +543,86 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
 
   @override
   Widget desktop() {
+    // Pagination state
+    final int itemsPerPage = 7; // each page shows 7 lessons
+    final RxInt currentPage = 1.obs;
+
+    int totalPages() => ((lessons.length + itemsPerPage - 1) / itemsPerPage)
+        .ceil()
+        .clamp(1, 9999)
+        .toInt();
+
+    Widget _buildPagination(BuildContext context) {
+      return Obx(() {
+        final tp = totalPages();
+        // Always show the pagination control, even when there's only a single page.
+
+        List<Widget> pages = [];
+        pages.add(
+          IconButton(
+            onPressed: currentPage.value > 1 ? () => currentPage.value-- : null,
+            icon: Icon(
+              Icons.chevron_left,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+          ),
+        );
+
+        for (int i = 1; i <= tp; i++) {
+          final isActive = i == currentPage.value;
+          pages.add(
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: SizedBox(
+                height: 28,
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    backgroundColor: isActive
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(Get.context!).colorScheme.surfaceVariant,
+                    minimumSize: const Size(28, 28),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                  ),
+                  onPressed: () => currentPage.value = i,
+                  child: Text(
+                    i.toString(),
+                    style: TextStyle(
+                      color: isActive
+                          ? Theme.of(context).colorScheme.onPrimary
+                          : Theme.of(context).colorScheme.onSurface,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        }
+
+        pages.add(
+          IconButton(
+            onPressed: currentPage.value < tp
+                ? () => currentPage.value++
+                : null,
+            icon: Icon(
+              Icons.chevron_right,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+          ),
+        );
+
+        return Align(
+          alignment: Alignment.center,
+          child: Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: pages,
+          ),
+        );
+      });
+    }
 
     /// Function to add new lesson
     void addNewLesson() {
@@ -560,8 +696,9 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
       final lesson = Map<String, String>.from(lessons[index]);
 
       // modal-level controllers
-      final TextEditingController editTitleController =
-          TextEditingController(text: lesson["title"] ?? "");
+      final TextEditingController editTitleController = TextEditingController(
+        text: lesson["title"] ?? "",
+      );
       final TextEditingController editDescriptionController =
           TextEditingController(text: lesson["desc"] ?? "");
       final TextEditingController editVideoLinksController =
@@ -587,7 +724,10 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
         builder: (BuildContext ctx) {
           return Dialog(
             backgroundColor: Theme.of(ctx).colorScheme.surface,
-            insetPadding: const EdgeInsets.symmetric(horizontal: 80, vertical: 40),
+            insetPadding: const EdgeInsets.symmetric(
+              horizontal: 80,
+              vertical: 40,
+            ),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(36),
             ),
@@ -606,9 +746,7 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                           children: [
                             Text(
                               "Edit Lesson",
-                              style: Theme.of(ctx)
-                                  .textTheme
-                                  .headlineSmall
+                              style: Theme.of(ctx).textTheme.headlineSmall
                                   ?.copyWith(fontWeight: FontWeight.bold),
                             ),
                             IconButton(
@@ -638,12 +776,18 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                                     decoration: InputDecoration(
                                       hintText: "enter Lesson title.....",
                                       filled: true,
-                                      fillColor: Theme.of(ctx).colorScheme.surfaceVariant,
+                                      fillColor: Theme.of(
+                                        ctx,
+                                      ).colorScheme.surfaceVariant,
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
                                         borderSide: BorderSide.none,
                                       ),
-                                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                            horizontal: 16,
+                                            vertical: 14,
+                                          ),
                                     ),
                                   ),
                                   const SizedBox(height: 16),
@@ -657,12 +801,18 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                                     decoration: InputDecoration(
                                       hintText: "enter Lesson description.....",
                                       filled: true,
-                                      fillColor: Theme.of(ctx).colorScheme.surfaceVariant,
+                                      fillColor: Theme.of(
+                                        ctx,
+                                      ).colorScheme.surfaceVariant,
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
                                         borderSide: BorderSide.none,
                                       ),
-                                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                            horizontal: 16,
+                                            vertical: 14,
+                                          ),
                                     ),
                                   ),
                                   const SizedBox(height: 18),
@@ -670,10 +820,15 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                                   // Upload thumbnail box
                                   Container(
                                     width: double.infinity,
-                                    padding: const EdgeInsets.symmetric(vertical: 22, horizontal: 16),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 22,
+                                      horizontal: 16,
+                                    ),
                                     decoration: BoxDecoration(
                                       border: Border.all(
-                                        color: Theme.of(ctx).colorScheme.outline.withOpacity(0.45),
+                                        color: Theme.of(
+                                          ctx,
+                                        ).colorScheme.outline.withOpacity(0.45),
                                         style: BorderStyle.solid,
                                         width: 1.6,
                                       ),
@@ -682,9 +837,16 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Text("Upload Thumbnail", style: TextStyle(fontWeight: FontWeight.bold)),
+                                        Text(
+                                          "Upload Thumbnail",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
                                         const SizedBox(height: 10),
-                                        const Text("Drag and drop or browse to upload a thumbnail image for the Lesson."),
+                                        const Text(
+                                          "Drag and drop or browse to upload a thumbnail image for the Lesson.",
+                                        ),
                                         const SizedBox(height: 14),
                                         ElevatedButton(
                                           onPressed: () {
@@ -710,12 +872,18 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                                     decoration: InputDecoration(
                                       hintText: "enter video links.....",
                                       filled: true,
-                                      fillColor: Theme.of(ctx).colorScheme.surfaceVariant,
+                                      fillColor: Theme.of(
+                                        ctx,
+                                      ).colorScheme.surfaceVariant,
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
                                         borderSide: BorderSide.none,
                                       ),
-                                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                            horizontal: 16,
+                                            vertical: 14,
+                                          ),
                                     ),
                                   ),
                                 ],
@@ -731,15 +899,28 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                                 children: [
                                   // Lesson Materials header with + icon
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      const Text("Lesson Materials", style: TextStyle(fontWeight: FontWeight.bold)),
+                                      const Text(
+                                        "Lesson Materials",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                       IconButton(
-                                        icon: Icon(Icons.add_circle_outline, color: Theme.of(ctx).colorScheme.primary),
+                                        icon: Icon(
+                                          Icons.add_circle_outline,
+                                          color: Theme.of(
+                                            ctx,
+                                          ).colorScheme.primary,
+                                        ),
                                         onPressed: () {
                                           // add new placeholder material (could open file picker)
                                           setState(() {
-                                            materials.add("NewMaterial-${materials.length + 1}.pdf");
+                                            materials.add(
+                                              "NewMaterial-${materials.length + 1}.pdf",
+                                            );
                                           });
                                         },
                                       ),
@@ -750,44 +931,67 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                                   // materials list
                                   Container(
                                     width: double.infinity,
-                                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 12,
+                                      horizontal: 12,
+                                    ),
                                     decoration: BoxDecoration(
-                                      color: Theme.of(ctx).colorScheme.surfaceVariant,
+                                      color: Theme.of(
+                                        ctx,
+                                      ).colorScheme.surfaceVariant,
                                       borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(color: Theme.of(ctx).colorScheme.outline.withOpacity(0.15)),
+                                      border: Border.all(
+                                        color: Theme.of(
+                                          ctx,
+                                        ).colorScheme.outline.withOpacity(0.15),
+                                      ),
                                     ),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: materials.isEmpty
-                                          ? [
-                                              Text("No materials uploaded.")
-                                            ]
-                                          : materials.asMap().entries.map((entry) {
+                                          ? [Text("No materials uploaded.")]
+                                          : materials.asMap().entries.map((
+                                              entry,
+                                            ) {
                                               final i = entry.key;
                                               final name = entry.value;
                                               return Padding(
-                                                padding: const EdgeInsets.symmetric(vertical: 6),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      vertical: 6,
+                                                    ),
                                                 child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                   children: [
                                                     Flexible(
                                                       child: Text(
                                                         name,
-                                                        overflow: TextOverflow.ellipsis,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                       ),
                                                     ),
                                                     Row(
                                                       children: [
                                                         IconButton(
-                                                          icon: Icon(Icons.remove_circle_outline, color: Theme.of(ctx).colorScheme.error),
+                                                          icon: Icon(
+                                                            Icons
+                                                                .remove_circle_outline,
+                                                            color: Theme.of(
+                                                              ctx,
+                                                            ).colorScheme.error,
+                                                          ),
                                                           onPressed: () {
                                                             setState(() {
-                                                              materials.removeAt(i);
+                                                              materials
+                                                                  .removeAt(i);
                                                             });
                                                           },
                                                         ),
                                                       ],
-                                                    )
+                                                    ),
                                                   ],
                                                 ),
                                               );
@@ -800,23 +1004,38 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                                   Text("Category"),
                                   const SizedBox(height: 8),
                                   DropdownButtonFormField<String>(
-                                    value: editCategory.value.isEmpty ? null : editCategory.value,
+                                    value: editCategory.value.isEmpty
+                                        ? null
+                                        : editCategory.value,
                                     decoration: InputDecoration(
                                       hintText: "select class",
                                       filled: true,
-                                      fillColor: Theme.of(ctx).colorScheme.surfaceVariant,
+                                      fillColor: Theme.of(
+                                        ctx,
+                                      ).colorScheme.surfaceVariant,
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
                                         borderSide: BorderSide.none,
                                       ),
-                                      contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                            horizontal: 12,
+                                          ),
                                     ),
                                     items: const [
-                                      DropdownMenuItem(value: "Class 1", child: Text("Class 1")),
-                                      DropdownMenuItem(value: "Class 2", child: Text("Class 2")),
+                                      DropdownMenuItem(
+                                        value: "Class 1",
+                                        child: Text("Class 1"),
+                                      ),
+                                      DropdownMenuItem(
+                                        value: "Class 2",
+                                        child: Text("Class 2"),
+                                      ),
                                     ],
                                     onChanged: (val) {
-                                      setState(() => editCategory.value = val ?? '');
+                                      setState(
+                                        () => editCategory.value = val ?? '',
+                                      );
                                     },
                                   ),
                                   const SizedBox(height: 12),
@@ -825,21 +1044,33 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                                   Text("Subcategory"),
                                   const SizedBox(height: 8),
                                   DropdownButtonFormField<String>(
-                                    value: editSubcategory.value.isEmpty ? null : editSubcategory.value,
+                                    value: editSubcategory.value.isEmpty
+                                        ? null
+                                        : editSubcategory.value,
                                     decoration: InputDecoration(
                                       hintText: "select class",
                                       filled: true,
-                                      fillColor: Theme.of(ctx).colorScheme.surfaceVariant,
+                                      fillColor: Theme.of(
+                                        ctx,
+                                      ).colorScheme.surfaceVariant,
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
                                         borderSide: BorderSide.none,
                                       ),
-                                      contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                            horizontal: 12,
+                                          ),
                                     ),
                                     items: const [
-                                      DropdownMenuItem(value: "Subcat 1", child: Text("Subcat 1")),
+                                      DropdownMenuItem(
+                                        value: "Subcat 1",
+                                        child: Text("Subcat 1"),
+                                      ),
                                     ],
-                                    onChanged: (val) => setState(() => editSubcategory.value = val ?? ''),
+                                    onChanged: (val) => setState(
+                                      () => editSubcategory.value = val ?? '',
+                                    ),
                                   ),
                                   const SizedBox(height: 12),
 
@@ -847,22 +1078,37 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                                   Text("Subject"),
                                   const SizedBox(height: 8),
                                   DropdownButtonFormField<String>(
-                                    value: editSubject.value.isEmpty ? null : editSubject.value,
+                                    value: editSubject.value.isEmpty
+                                        ? null
+                                        : editSubject.value,
                                     decoration: InputDecoration(
                                       hintText: "select subject",
                                       filled: true,
-                                      fillColor: Theme.of(ctx).colorScheme.surfaceVariant,
+                                      fillColor: Theme.of(
+                                        ctx,
+                                      ).colorScheme.surfaceVariant,
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
                                         borderSide: BorderSide.none,
                                       ),
-                                      contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                            horizontal: 12,
+                                          ),
                                     ),
                                     items: const [
-                                      DropdownMenuItem(value: "Computer", child: Text("Computer")),
-                                      DropdownMenuItem(value: "Maths", child: Text("Maths")),
+                                      DropdownMenuItem(
+                                        value: "Computer",
+                                        child: Text("Computer"),
+                                      ),
+                                      DropdownMenuItem(
+                                        value: "Maths",
+                                        child: Text("Maths"),
+                                      ),
                                     ],
-                                    onChanged: (val) => setState(() => editSubject.value = val ?? ''),
+                                    onChanged: (val) => setState(
+                                      () => editSubject.value = val ?? '',
+                                    ),
                                   ),
                                   const SizedBox(height: 12),
 
@@ -870,22 +1116,37 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                                   Text("Subject Chapter"),
                                   const SizedBox(height: 8),
                                   DropdownButtonFormField<String>(
-                                    value: editChapter.value.isEmpty ? null : editChapter.value,
+                                    value: editChapter.value.isEmpty
+                                        ? null
+                                        : editChapter.value,
                                     decoration: InputDecoration(
                                       hintText: "select chapter",
                                       filled: true,
-                                      fillColor: Theme.of(ctx).colorScheme.surfaceVariant,
+                                      fillColor: Theme.of(
+                                        ctx,
+                                      ).colorScheme.surfaceVariant,
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
                                         borderSide: BorderSide.none,
                                       ),
-                                      contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                            horizontal: 12,
+                                          ),
                                     ),
                                     items: const [
-                                      DropdownMenuItem(value: "1", child: Text("Chapter 1")),
-                                      DropdownMenuItem(value: "2", child: Text("Chapter 2")),
+                                      DropdownMenuItem(
+                                        value: "1",
+                                        child: Text("Chapter 1"),
+                                      ),
+                                      DropdownMenuItem(
+                                        value: "2",
+                                        child: Text("Chapter 2"),
+                                      ),
                                     ],
-                                    onChanged: (val) => setState(() => editChapter.value = val ?? ''),
+                                    onChanged: (val) => setState(
+                                      () => editChapter.value = val ?? '',
+                                    ),
                                   ),
                                   const SizedBox(height: 12),
 
@@ -893,22 +1154,37 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                                   Text("Subject Lesson"),
                                   const SizedBox(height: 8),
                                   DropdownButtonFormField<String>(
-                                    value: editLesson.value.isEmpty ? null : editLesson.value,
+                                    value: editLesson.value.isEmpty
+                                        ? null
+                                        : editLesson.value,
                                     decoration: InputDecoration(
                                       hintText: "select lesson",
                                       filled: true,
-                                      fillColor: Theme.of(ctx).colorScheme.surfaceVariant,
+                                      fillColor: Theme.of(
+                                        ctx,
+                                      ).colorScheme.surfaceVariant,
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
                                         borderSide: BorderSide.none,
                                       ),
-                                      contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                            horizontal: 12,
+                                          ),
                                     ),
                                     items: const [
-                                      DropdownMenuItem(value: "1", child: Text("Lesson 1")),
-                                      DropdownMenuItem(value: "2", child: Text("Lesson 2")),
+                                      DropdownMenuItem(
+                                        value: "1",
+                                        child: Text("Lesson 1"),
+                                      ),
+                                      DropdownMenuItem(
+                                        value: "2",
+                                        child: Text("Lesson 2"),
+                                      ),
                                     ],
-                                    onChanged: (val) => setState(() => editLesson.value = val ?? ''),
+                                    onChanged: (val) => setState(
+                                      () => editLesson.value = val ?? '',
+                                    ),
                                   ),
                                 ],
                               ),
@@ -931,18 +1207,27 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                                 Get.snackbar(
                                   'Deleted',
                                   'Lesson deleted successfully',
-                                  backgroundColor: Theme.of(ctx).colorScheme.error,
+                                  backgroundColor: Theme.of(
+                                    ctx,
+                                  ).colorScheme.error,
                                   colorText: Theme.of(ctx).colorScheme.onError,
                                   snackPosition: SnackPosition.TOP,
                                 );
                               },
                               style: TextButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 18,
+                                  vertical: 12,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
                               ),
                               child: Text(
                                 "Delete Lesson",
-                                style: TextStyle(color: Theme.of(ctx).colorScheme.error),
+                                style: TextStyle(
+                                  color: Theme.of(ctx).colorScheme.error,
+                                ),
                               ),
                             ),
                             const SizedBox(width: 12),
@@ -951,12 +1236,18 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                               onPressed: () {
                                 // Validate (simple validation)
                                 if (editTitleController.text.trim().isEmpty ||
-                                    editDescriptionController.text.trim().isEmpty) {
+                                    editDescriptionController.text
+                                        .trim()
+                                        .isEmpty) {
                                   Get.snackbar(
                                     'Error',
                                     'Please fill in title and description',
-                                    backgroundColor: Theme.of(ctx).colorScheme.error,
-                                    colorText: Theme.of(ctx).colorScheme.onError,
+                                    backgroundColor: Theme.of(
+                                      ctx,
+                                    ).colorScheme.error,
+                                    colorText: Theme.of(
+                                      ctx,
+                                    ).colorScheme.onError,
                                     snackPosition: SnackPosition.TOP,
                                   );
                                   return;
@@ -970,7 +1261,8 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                                   "chapter": editChapter.value,
                                   "lesson": editLesson.value,
                                   // store videoLinks and materials as strings if needed
-                                  "videoLinks": editVideoLinksController.text.trim(),
+                                  "videoLinks": editVideoLinksController.text
+                                      .trim(),
                                   "materials": materials.join(','),
                                   "category": editCategory.value,
                                   "subcategory": editSubcategory.value,
@@ -981,19 +1273,32 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                                 Get.snackbar(
                                   'Success',
                                   'Lesson updated successfully',
-                                  backgroundColor: Theme.of(ctx).colorScheme.primaryContainer,
-                                  colorText: Theme.of(ctx).colorScheme.onPrimaryContainer,
+                                  backgroundColor: Theme.of(
+                                    ctx,
+                                  ).colorScheme.primaryContainer,
+                                  colorText: Theme.of(
+                                    ctx,
+                                  ).colorScheme.onPrimaryContainer,
                                   snackPosition: SnackPosition.TOP,
                                 );
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Theme.of(ctx).colorScheme.primary,
-                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                backgroundColor: Theme.of(
+                                  ctx,
+                                ).colorScheme.primary,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                  vertical: 12,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
                               ),
                               child: Text(
                                 "Save Changes",
-                                style: TextStyle(color: Theme.of(ctx).colorScheme.onPrimary),
+                                style: TextStyle(
+                                  color: Theme.of(ctx).colorScheme.onPrimary,
+                                ),
                               ),
                             ),
                           ],
@@ -1010,10 +1315,12 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
     }
 
     /// ---------------- SEARCH BAR & DROPDOWNS ----------------
-    Widget _buildSearchRowWithDropdowns(BuildContext context,
-        {required String searchHint,
-        required String addLabel,
-        required VoidCallback onAdd}) {
+    Widget _buildSearchRowWithDropdowns(
+      BuildContext context, {
+      required String searchHint,
+      required String addLabel,
+      required VoidCallback onAdd,
+    }) {
       return Row(
         children: [
           Flexible(
@@ -1077,13 +1384,17 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                 items: const [
                   DropdownMenuItem(
                     value: "Subcategory 1",
-                    child: Text("Subcategory 1: Python Basics",
-                        overflow: TextOverflow.ellipsis),
+                    child: Text(
+                      "Subcategory 1: Python Basics",
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                   DropdownMenuItem(
                     value: "Subcategory 2",
-                    child: Text("Subcategory 2: Advanced Control Flow",
-                        overflow: TextOverflow.ellipsis),
+                    child: Text(
+                      "Subcategory 2: Advanced Control Flow",
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ],
                 onChanged: (value) {},
@@ -1103,7 +1414,8 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                   backgroundColor: Theme.of(context).colorScheme.primary,
                   foregroundColor: Theme.of(context).colorScheme.onPrimary,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8)),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
               ),
             ),
@@ -1124,124 +1436,159 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
           DataCell(Text(lesson["subject"] ?? "")),
           DataCell(Text(lesson["chapter"] ?? "")),
           DataCell(Text(lesson["lesson"] ?? "")),
-          DataCell(Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // EDIT ICON -> opens the new Edit Lesson modal (pixel-perfect)
-              IconButton(
-                onPressed: () {
-                  _showEditLessonModal(context, index);
-                },
-                icon: Icon(Icons.edit, color: Theme.of(context).colorScheme.primary),
-              ),
+          DataCell(
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // EDIT ICON -> opens the new Edit Lesson modal (pixel-perfect)
+                IconButton(
+                  onPressed: () {
+                    _showEditLessonModal(context, index);
+                  },
+                  icon: Icon(
+                    Icons.edit,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
 
-              IconButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return Dialog(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(32),
-                        ),
-                        child: Container(
-                          padding: const EdgeInsets.all(24),
-                          width: 400,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "Delete Lesson",
-                                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.close),
-                                    onPressed: () => Navigator.pop(context),
-                                    padding: EdgeInsets.zero,
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 16),
-                              const Text(
-                                "Are you sure you want to delete this lesson?",
-                                style: TextStyle(fontSize: 16),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                "This action cannot be undone — lesson and related data will be permanently removed.",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              const SizedBox(height: 24),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  TextButton(
-                                    onPressed: () => Navigator.pop(context),
-                                    style: TextButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    ),
-                                    child: const Text("Cancel"),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      lessons.removeAt(index);
-                                      Navigator.pop(context);
-                                      Get.snackbar(
-                                        'Success',
-                                        'Lesson deleted successfully',
-                                        backgroundColor: Theme.of(context).colorScheme.error,
-                                        colorText: Theme.of(context).colorScheme.onError,
-                                        snackPosition: SnackPosition.TOP,
-                                      );
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Theme.of(context).colorScheme.error,
-                                      foregroundColor: Theme.of(context).colorScheme.onError,
-                                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    ),
-                                    child: const Text("Confirm"),
-                                  ),
-                                ],
-                              ),
-                            ],
+                IconButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Dialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(32),
                           ),
-                        ),
-                      );
-                    },
-                  );
-                },
-                icon: Icon(Icons.delete, color: Theme.of(context).colorScheme.error),
-              ),
+                          child: Container(
+                            padding: const EdgeInsets.all(24),
+                            width: 400,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Delete Lesson",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.close),
+                                      onPressed: () => Navigator.pop(context),
+                                      padding: EdgeInsets.zero,
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 16),
+                                const Text(
+                                  "Are you sure you want to delete this lesson?",
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  "This action cannot be undone — lesson and related data will be permanently removed.",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurfaceVariant,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: 24),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      style: TextButton.styleFrom(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 24,
+                                          vertical: 12,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                        ),
+                                      ),
+                                      child: const Text("Cancel"),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        lessons.removeAt(index);
+                                        Navigator.pop(context);
+                                        Get.snackbar(
+                                          'Success',
+                                          'Lesson deleted successfully',
+                                          backgroundColor: Theme.of(
+                                            context,
+                                          ).colorScheme.error,
+                                          colorText: Theme.of(
+                                            context,
+                                          ).colorScheme.onError,
+                                          snackPosition: SnackPosition.TOP,
+                                        );
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Theme.of(
+                                          context,
+                                        ).colorScheme.error,
+                                        foregroundColor: Theme.of(
+                                          context,
+                                        ).colorScheme.onError,
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 24,
+                                          vertical: 12,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                        ),
+                                      ),
+                                      child: const Text("Confirm"),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  icon: Icon(
+                    Icons.delete,
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+                ),
 
-              // Upload placeholder action
-              IconButton(
-                onPressed: () {
-                  Get.snackbar(
-                    'Info',
-                    'Upload action not implemented in demo.',
-                    snackPosition: SnackPosition.TOP,
-                  );
-                },
-                icon: Icon(Icons.upload, color: Theme.of(context).colorScheme.primary),
-              ),
-            ],
-          )),
+                // Upload placeholder action
+                IconButton(
+                  onPressed: () {
+                    Get.snackbar(
+                      'Info',
+                      'Upload action not implemented in demo.',
+                      snackPosition: SnackPosition.TOP,
+                    );
+                  },
+                  icon: Icon(
+                    Icons.upload,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       );
     }
@@ -1254,8 +1601,10 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
         builder: (BuildContext context) {
           return Dialog(
             backgroundColor: Theme.of(context).colorScheme.surface,
-            insetPadding:
-                const EdgeInsets.symmetric(horizontal: 250, vertical: 80),
+            insetPadding: const EdgeInsets.symmetric(
+              horizontal: 250,
+              vertical: 80,
+            ),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(32),
             ),
@@ -1271,9 +1620,7 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                     children: [
                       Text(
                         "Create Lesson",
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineSmall
+                        style: Theme.of(context).textTheme.headlineSmall
                             ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 25),
@@ -1295,16 +1642,17 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                                   decoration: InputDecoration(
                                     hintText: "enter lesson title…..",
                                     filled: true,
-                                    fillColor: Theme.of(context)
-                                        .colorScheme
-                                        .surfaceVariant,
+                                    fillColor: Theme.of(
+                                      context,
+                                    ).colorScheme.surfaceVariant,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                       borderSide: BorderSide.none,
                                     ),
-                                    contentPadding:
-                                        const EdgeInsets.symmetric(
-                                            horizontal: 16, vertical: 12),
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 12,
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(height: 16),
@@ -1316,16 +1664,17 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                                   decoration: InputDecoration(
                                     hintText: "enter lesson description…..",
                                     filled: true,
-                                    fillColor: Theme.of(context)
-                                        .colorScheme
-                                        .surfaceVariant,
+                                    fillColor: Theme.of(
+                                      context,
+                                    ).colorScheme.surfaceVariant,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                       borderSide: BorderSide.none,
                                     ),
-                                    contentPadding:
-                                        const EdgeInsets.symmetric(
-                                            horizontal: 16, vertical: 12),
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 12,
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(height: 16),
@@ -1334,10 +1683,9 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                                   padding: const EdgeInsets.all(20),
                                   decoration: BoxDecoration(
                                     border: Border.all(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .outline
-                                          .withOpacity(0.4),
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.outline.withOpacity(0.4),
                                       style: BorderStyle.solid,
                                     ),
                                     borderRadius: BorderRadius.circular(12),
@@ -1347,11 +1695,13 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                                       const Text(
                                         "Upload Thumbnail",
                                         style: TextStyle(
-                                            fontWeight: FontWeight.bold),
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                       const SizedBox(height: 8),
                                       const Text(
-                                          "Drag and drop or browse to upload a thumbnail image for the lesson."),
+                                        "Drag and drop or browse to upload a thumbnail image for the lesson.",
+                                      ),
                                       const SizedBox(height: 12),
                                       ElevatedButton(
                                         onPressed: () {},
@@ -1368,14 +1718,17 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                                   decoration: InputDecoration(
                                     hintText: "enter video links…..",
                                     filled: true,
-                                    fillColor: Theme.of(context).colorScheme.surfaceVariant,
+                                    fillColor: Theme.of(
+                                      context,
+                                    ).colorScheme.surfaceVariant,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                       borderSide: BorderSide.none,
                                     ),
-                                    contentPadding:
-                                        const EdgeInsets.symmetric(
-                                            horizontal: 16, vertical: 12),
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 12,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -1394,10 +1747,9 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                                   padding: const EdgeInsets.all(20),
                                   decoration: BoxDecoration(
                                     border: Border.all(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .outline
-                                          .withOpacity(0.4),
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.outline.withOpacity(0.4),
                                     ),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
@@ -1406,11 +1758,13 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                                       const Text(
                                         "Upload Subject Materials",
                                         style: TextStyle(
-                                            fontWeight: FontWeight.bold),
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                       const SizedBox(height: 8),
                                       const Text(
-                                          "Drag and drop or browse to upload lesson materials."),
+                                        "Drag and drop or browse to upload lesson materials.",
+                                      ),
                                       const SizedBox(height: 12),
                                       ElevatedButton(
                                         onPressed: () {},
@@ -1421,13 +1775,15 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                                 ),
                                 const SizedBox(height: 20),
                                 DropdownButtonFormField<String>(
-                                  value: categoryRx.value.isEmpty ? null : categoryRx.value,
+                                  value: categoryRx.value.isEmpty
+                                      ? null
+                                      : categoryRx.value,
                                   decoration: InputDecoration(
                                     hintText: "select category",
                                     filled: true,
-                                    fillColor: Theme.of(context)
-                                        .colorScheme
-                                        .surfaceVariant,
+                                    fillColor: Theme.of(
+                                      context,
+                                    ).colorScheme.surfaceVariant,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                       borderSide: BorderSide.none,
@@ -1435,10 +1791,12 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                                   ),
                                   items: const [
                                     DropdownMenuItem(
-                                        value: "Category 1",
-                                        child: Text("Category 1")),
+                                      value: "Category 1",
+                                      child: Text("Category 1"),
+                                    ),
                                   ],
-                                  onChanged: (val) => categoryRx.value = val ?? '',
+                                  onChanged: (val) =>
+                                      categoryRx.value = val ?? '',
                                 ),
                                 const SizedBox(height: 12),
                                 DropdownButtonFormField<String>(
@@ -1450,18 +1808,23 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                                   ),
                                   items: const [
                                     DropdownMenuItem(
-                                        value: "Subcategory 1",
-                                        child: Text("Subcategory 1")),
+                                      value: "Subcategory 1",
+                                      child: Text("Subcategory 1"),
+                                    ),
                                   ],
                                   onChanged: (val) {},
                                 ),
                                 const SizedBox(height: 12),
                                 DropdownButtonFormField<String>(
-                                  value: subjectRx.value.isEmpty ? null : subjectRx.value,
+                                  value: subjectRx.value.isEmpty
+                                      ? null
+                                      : subjectRx.value,
                                   decoration: InputDecoration(
                                     hintText: "select subject",
                                     filled: true,
-                                    fillColor: Theme.of(context).colorScheme.surfaceVariant,
+                                    fillColor: Theme.of(
+                                      context,
+                                    ).colorScheme.surfaceVariant,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                       borderSide: BorderSide.none,
@@ -1469,18 +1832,24 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                                   ),
                                   items: const [
                                     DropdownMenuItem(
-                                        value: "Subject 1",
-                                        child: Text("Subject 1")),
+                                      value: "Subject 1",
+                                      child: Text("Subject 1"),
+                                    ),
                                   ],
-                                  onChanged: (val) => subjectRx.value = val ?? '',
+                                  onChanged: (val) =>
+                                      subjectRx.value = val ?? '',
                                 ),
                                 const SizedBox(height: 12),
                                 DropdownButtonFormField<String>(
-                                  value: chapterRx.value.isEmpty ? null : chapterRx.value,
+                                  value: chapterRx.value.isEmpty
+                                      ? null
+                                      : chapterRx.value,
                                   decoration: InputDecoration(
                                     hintText: "select chapter",
                                     filled: true,
-                                    fillColor: Theme.of(context).colorScheme.surfaceVariant,
+                                    fillColor: Theme.of(
+                                      context,
+                                    ).colorScheme.surfaceVariant,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                       borderSide: BorderSide.none,
@@ -1488,10 +1857,12 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                                   ),
                                   items: const [
                                     DropdownMenuItem(
-                                        value: "Chapter 1",
-                                        child: Text("Chapter 1")),
+                                      value: "Chapter 1",
+                                      child: Text("Chapter 1"),
+                                    ),
                                   ],
-                                  onChanged: (val) => chapterRx.value = val ?? '',
+                                  onChanged: (val) =>
+                                      chapterRx.value = val ?? '',
                                 ),
                                 const SizedBox(height: 12),
                                 DropdownButtonFormField<String>(
@@ -1503,8 +1874,9 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                                   ),
                                   items: const [
                                     DropdownMenuItem(
-                                        value: "Lesson 1",
-                                        child: Text("Lesson 1")),
+                                      value: "Lesson 1",
+                                      child: Text("Lesson 1"),
+                                    ),
                                   ],
                                   onChanged: (val) {},
                                 ),
@@ -1522,20 +1894,25 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                           ElevatedButton(
                             onPressed: addNewLesson,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.primary,
-                              foregroundColor:
-                                  Theme.of(context).colorScheme.onPrimary,
+                              backgroundColor: Theme.of(
+                                context,
+                              ).colorScheme.primary,
+                              foregroundColor: Theme.of(
+                                context,
+                              ).colorScheme.onPrimary,
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 25, vertical: 14),
+                                horizontal: 25,
+                                vertical: 14,
+                              ),
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8)),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
                             ),
                             child: Text(
                               "Create lesson",
                               style: TextStyle(
-                                  color:
-                                      Theme.of(context).colorScheme.onPrimary),
+                                color: Theme.of(context).colorScheme.onPrimary,
+                              ),
                             ),
                           ),
                           const SizedBox(width: 10),
@@ -1543,9 +1920,12 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
                             onPressed: () => Get.back(),
                             style: TextButton.styleFrom(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 25, vertical: 14),
+                                horizontal: 25,
+                                vertical: 14,
+                              ),
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8)),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
                             ),
                             child: const Text("Cancel"),
                           ),
@@ -1576,108 +1956,69 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
               backgroundColor: Theme.of(Get.context!).colorScheme.background,
               body: Padding(
                 padding: const EdgeInsets.all(32.0),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Lesson Management",
-                          style: Theme.of(Get.context!)
-                              .textTheme
-                              .headlineSmall
-                              ?.copyWith(fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 30),
-                      Text("Lesson List",
-                          style: Theme.of(Get.context!)
-                              .textTheme
-                              .titleLarge
-                              ?.copyWith(fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 15),
-                      _buildSearchRowWithDropdowns(
-                        Get.context!,
-                        searchHint: "Search lessons",
-                        addLabel: "Add Lesson",
-                        onAdd: () => showCreateLessonModal(Get.context!),
-                      ),
-                      const SizedBox(height: 15),
-                      _buildCard(
-                        Get.context!,
-                        child: Obx(
-                          () => DataTable(
-                            showCheckboxColumn: false,
-                            headingRowHeight: 45,
-                            dataRowHeight: 55,
-                            headingTextStyle: Theme.of(Get.context!)
-                                .textTheme
-                                .titleMedium
-                                ?.copyWith(fontWeight: FontWeight.bold),
-                            columns: const [
-                              DataColumn(label: Text("Lesson Title")),
-                              DataColumn(label: Text("Description")),
-                              DataColumn(label: Text("Subject")),
-                              DataColumn(label: Text("Chapter")),
-                              DataColumn(label: Text("Lesson")),
-                              DataColumn(label: Text("Actions")),
-                            ],
-                            rows: List.generate(
-                              lessons.length,
-                              (i) => _buildLessonRow(Get.context!, i),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Lesson Management",
+                              style: Theme.of(Get.context!)
+                                  .textTheme
+                                  .headlineSmall
+                                  ?.copyWith(fontWeight: FontWeight.bold),
                             ),
-                          ),
+                            const SizedBox(height: 30),
+                            Text(
+                              "Lesson List",
+                              style: Theme.of(Get.context!).textTheme.titleLarge
+                                  ?.copyWith(fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 15),
+                            _buildSearchRowWithDropdowns(
+                              Get.context!,
+                              searchHint: "Search lessons",
+                              addLabel: "Add Lesson",
+                              onAdd: () => showCreateLessonModal(Get.context!),
+                            ),
+                            const SizedBox(height: 15),
+                            _buildCard(
+                              Get.context!,
+                              child: Obx(
+                                () => DataTable(
+                                  showCheckboxColumn: false,
+                                  headingRowHeight: 45,
+                                  dataRowHeight: 55,
+                                  headingTextStyle: Theme.of(Get.context!)
+                                      .textTheme
+                                      .titleMedium
+                                      ?.copyWith(fontWeight: FontWeight.bold),
+                                  columns: const [
+                                    DataColumn(label: Text("Lesson Title")),
+                                    DataColumn(label: Text("Description")),
+                                    DataColumn(label: Text("Subject")),
+                                    DataColumn(label: Text("Chapter")),
+                                    DataColumn(label: Text("Lesson")),
+                                    DataColumn(label: Text("Actions")),
+                                  ],
+                                  rows: List.generate(
+                                    lessons.length,
+                                    (i) => _buildLessonRow(Get.context!, i),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      const SizedBox(height: 24),
-                      // Pagination dots at the bottom
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: Theme.of(Get.context!).colorScheme.surfaceVariant,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                // Previous page button
-                                IconButton(
-                                  icon: const Icon(Icons.arrow_back_ios, size: 16),
-                                  onPressed: () {
-                                    // Implement previous page logic
-                                  },
-                                  visualDensity: VisualDensity.compact,
-                                ),
-                                // Page dots
-                                ...List.generate(4, (index) {
-                                  bool isActive = index == 0; // First page is active
-                                  return Container(
-                                    width: 8,
-                                    height: 8,
-                                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: isActive 
-                                        ? Theme.of(Get.context!).colorScheme.primary
-                                        : Theme.of(Get.context!).colorScheme.outline.withOpacity(0.5),
-                                    ),
-                                  );
-                                }),
-                                // Next page button
-                                IconButton(
-                                  icon: const Icon(Icons.arrow_forward_ios, size: 16),
-                                  onPressed: () {
-                                    // Implement next page logic
-                                  },
-                                  visualDensity: VisualDensity.compact,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 24),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: 24),
+                    // pagination centered at bottom of page
+                    Center(child: _buildPagination(Get.context!)),
+                  ],
                 ),
               ),
             ),
@@ -1686,5 +2027,4 @@ class AdminLessonManagementView extends GetResponsiveView<AdminLessonManagementC
       ),
     );
   }
-
-}  
+}

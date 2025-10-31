@@ -718,13 +718,13 @@ class AdminTransactionHistoryView extends GetResponsiveView {
         Get.toNamed(Routes.ADMIN_SUBJECT_MANAGEMENT);
         break;
       case 6:
-        Get.toNamed(Routes.ADMIN_CREATE_LESSON);
+        Get.toNamed(Routes.ADMIN_LESSON_MANAGEMENT);
         break;
       case 7:
-        Get.toNamed(Routes.ADMIN_EDIT_LESSON);
+        // TODO: Implement edit lesson functionality
         break;
       case 8:
-        Get.toNamed(Routes.ADMIN_CREATE_QUIZ);
+        Get.toNamed(Routes.QUIZ_MANAGEMENT);
         break;
       case 9:
         Get.toNamed(Routes.ADMIN_TRANSACTION_HISTORY);

@@ -32,7 +32,8 @@ class AdminSubjectManagementView extends GetResponsiveView {
       },
       {
         "title": "Machine Learning Fundamentals",
-        "desc": "Dive into the world of machine learning with practical examples.",
+        "desc":
+            "Dive into the world of machine learning with practical examples.",
         "uploaded": "false",
       },
     ].obs;
@@ -40,11 +41,14 @@ class AdminSubjectManagementView extends GetResponsiveView {
     /// Track edit state
     final RxSet<int> editingSubjects = <int>{}.obs;
 
-  // Pagination state
-  final int itemsPerPage = 7; // each page shows 8 subjects
+    // Pagination state
+    final int itemsPerPage = 7; // each page shows 8 subjects
     final RxInt currentPage = 1.obs;
 
-    int totalPages() => ((subjects.length + itemsPerPage - 1) / itemsPerPage).ceil().clamp(1, 9999).toInt();
+    int totalPages() => ((subjects.length + itemsPerPage - 1) / itemsPerPage)
+        .ceil()
+        .clamp(1, 9999)
+        .toInt();
 
     Widget _buildPagination(BuildContext context) {
       return Obx(() {
@@ -53,41 +57,61 @@ class AdminSubjectManagementView extends GetResponsiveView {
         // This ensures the pager is visible when there is e.g. only one subject.
 
         List<Widget> pages = [];
-        pages.add(IconButton(
-          onPressed: currentPage.value > 1 ? () => currentPage.value-- : null,
-          icon: Icon(Icons.chevron_left, color: Theme.of(context).colorScheme.onSurfaceVariant),
-        ));
+        pages.add(
+          IconButton(
+            onPressed: currentPage.value > 1 ? () => currentPage.value-- : null,
+            icon: Icon(
+              Icons.chevron_left,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+          ),
+        );
 
         for (int i = 1; i <= tp; i++) {
           final isActive = i == currentPage.value;
-          pages.add(Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: SizedBox(
-              height: 28,
-              child: TextButton(
-                style: TextButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  backgroundColor: isActive ? Theme.of(context).colorScheme.primary : Theme.of(Get.context!).colorScheme.surfaceVariant,
-                  minimumSize: const Size(28, 28),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-                ),
-                onPressed: () => currentPage.value = i,
-                child: Text(
-                  i.toString(),
-                  style: TextStyle(
-                    color: isActive ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).colorScheme.onSurface,
-                    fontSize: 12,
+          pages.add(
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: SizedBox(
+                height: 28,
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    backgroundColor: isActive
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(Get.context!).colorScheme.surfaceVariant,
+                    minimumSize: const Size(28, 28),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                  ),
+                  onPressed: () => currentPage.value = i,
+                  child: Text(
+                    i.toString(),
+                    style: TextStyle(
+                      color: isActive
+                          ? Theme.of(context).colorScheme.onPrimary
+                          : Theme.of(context).colorScheme.onSurface,
+                      fontSize: 12,
+                    ),
                   ),
                 ),
               ),
             ),
-          ));
+          );
         }
 
-        pages.add(IconButton(
-          onPressed: currentPage.value < tp ? () => currentPage.value++ : null,
-          icon: Icon(Icons.chevron_right, color: Theme.of(context).colorScheme.onSurfaceVariant),
-        ));
+        pages.add(
+          IconButton(
+            onPressed: currentPage.value < tp
+                ? () => currentPage.value++
+                : null,
+            icon: Icon(
+              Icons.chevron_right,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+          ),
+        );
 
         return Align(
           alignment: Alignment.center,
@@ -115,8 +139,6 @@ class AdminSubjectManagementView extends GetResponsiveView {
             ),
           ],
         ),
-
-
 
         padding: const EdgeInsets.all(12),
         child: child,
@@ -201,18 +223,20 @@ class AdminSubjectManagementView extends GetResponsiveView {
                   suffixIcon: isPassword
                       ? IconButton(
                           icon: Icon(
-                            ob ? Icons.visibility_off_rounded : Icons.visibility_rounded,
+                            ob
+                                ? Icons.visibility_off_rounded
+                                : Icons.visibility_rounded,
                             color: colorScheme.onSurfaceVariant,
                           ),
                           onPressed: () => obscure.value = !ob,
                         )
                       : isDateField
-                          ? Icon(
-                              Icons.calendar_today_rounded,
-                              size: 20,
-                              color: colorScheme.onSurfaceVariant,
-                            )
-                          : null,
+                      ? Icon(
+                          Icons.calendar_today_rounded,
+                          size: 20,
+                          color: colorScheme.onSurfaceVariant,
+                        )
+                      : null,
                 ),
               );
             },
@@ -233,10 +257,7 @@ class AdminSubjectManagementView extends GetResponsiveView {
         children: [
           Flexible(
             flex: 3,
-            child: AdminSearchBar(
-              onChanged: (value) {},
-              hintText: searchHint,
-            ),
+            child: AdminSearchBar(onChanged: (value) {}, hintText: searchHint),
           ),
           const SizedBox(width: 10),
           if (showCategory) ...[
@@ -255,11 +276,26 @@ class AdminSubjectManagementView extends GetResponsiveView {
                 ),
                 hint: const Text("select category"),
                 items: const [
-                  DropdownMenuItem(value: "Category 1", child: Text("Category 1")),
-                  DropdownMenuItem(value: "Category 2", child: Text("Category 2")),
-                  DropdownMenuItem(value: "Category 3", child: Text("Category 3")),
-                  DropdownMenuItem(value: "Category 4", child: Text("Category 4")),
-                  DropdownMenuItem(value: "Category 5", child: Text("Category 5")),
+                  DropdownMenuItem(
+                    value: "Category 1",
+                    child: Text("Category 1"),
+                  ),
+                  DropdownMenuItem(
+                    value: "Category 2",
+                    child: Text("Category 2"),
+                  ),
+                  DropdownMenuItem(
+                    value: "Category 3",
+                    child: Text("Category 3"),
+                  ),
+                  DropdownMenuItem(
+                    value: "Category 4",
+                    child: Text("Category 4"),
+                  ),
+                  DropdownMenuItem(
+                    value: "Category 5",
+                    child: Text("Category 5"),
+                  ),
                 ],
                 onChanged: (value) {},
               ),
@@ -282,11 +318,26 @@ class AdminSubjectManagementView extends GetResponsiveView {
                 ),
                 hint: const Text("select subcategory"),
                 items: const [
-                  DropdownMenuItem(value: "Subcategory 1", child: Text("Subcategory 1")),
-                  DropdownMenuItem(value: "Subcategory 2", child: Text("Subcategory 2")),
-                  DropdownMenuItem(value: "Subcategory 3", child: Text("Subcategory 3")),
-                  DropdownMenuItem(value: "Subcategory 4", child: Text("Subcategory 4")),
-                  DropdownMenuItem(value: "Subcategory 5", child: Text("Subcategory 5")),
+                  DropdownMenuItem(
+                    value: "Subcategory 1",
+                    child: Text("Subcategory 1"),
+                  ),
+                  DropdownMenuItem(
+                    value: "Subcategory 2",
+                    child: Text("Subcategory 2"),
+                  ),
+                  DropdownMenuItem(
+                    value: "Subcategory 3",
+                    child: Text("Subcategory 3"),
+                  ),
+                  DropdownMenuItem(
+                    value: "Subcategory 4",
+                    child: Text("Subcategory 4"),
+                  ),
+                  DropdownMenuItem(
+                    value: "Subcategory 5",
+                    child: Text("Subcategory 5"),
+                  ),
                 ],
                 onChanged: (value) {},
               ),
@@ -300,8 +351,12 @@ class AdminSubjectManagementView extends GetResponsiveView {
               child: ElevatedButton.icon(
                 onPressed: onAdd,
                 icon: const Icon(Icons.add, size: 18),
-                label: Text(addLabel,
-                    style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
+                label: Text(
+                  addLabel,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.primary,
                   foregroundColor: Theme.of(context).colorScheme.onPrimary,
@@ -319,711 +374,969 @@ class AdminSubjectManagementView extends GetResponsiveView {
     }
 
     /// ---------------- ADD SUBJECT MODAL ----------------
-  Future<void> _showAddSubjectDialog(BuildContext context) async {
-  final colorScheme = Theme.of(context).colorScheme;
-  final TextEditingController titleCtrl = TextEditingController();
-  final TextEditingController descCtrl = TextEditingController();
-  final TextEditingController instructorCtrl = TextEditingController();
-  final TextEditingController durationCtrl = TextEditingController();
-  final TextEditingController levelCtrl = TextEditingController();
-  final TextEditingController priceCtrl = TextEditingController();
-  final Rx<Uint8List?> thumbnail = Rx<Uint8List?>(null);
-  final ImagePicker _picker = ImagePicker();
+    Future<void> _showAddSubjectDialog(BuildContext context) async {
+      final colorScheme = Theme.of(context).colorScheme;
+      final TextEditingController titleCtrl = TextEditingController();
+      final TextEditingController descCtrl = TextEditingController();
+      final TextEditingController instructorCtrl = TextEditingController();
+      final TextEditingController durationCtrl = TextEditingController();
+      final TextEditingController levelCtrl = TextEditingController();
+      final TextEditingController priceCtrl = TextEditingController();
+      final Rx<Uint8List?> thumbnail = Rx<Uint8List?>(null);
+      final ImagePicker _picker = ImagePicker();
 
-  Future<void> _pickThumbnail() async {
-    final XFile? image = await _picker.pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 80,
-    );
-    if (image != null) {
-      final bytes = await image.readAsBytes();
-      thumbnail.value = bytes;
+      Future<void> _pickThumbnail() async {
+        final XFile? image = await _picker.pickImage(
+          source: ImageSource.gallery,
+          imageQuality: 80,
+        );
+        if (image != null) {
+          final bytes = await image.readAsBytes();
+          thumbnail.value = bytes;
+        }
+      }
+
+      Get.dialog(
+        _standardDialogShell(
+          maxWidth: 900,
+          innerPadding: 24,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 750),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // ---------- HEADER ----------
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Add Subject',
+                            style: Theme.of(context).textTheme.headlineSmall
+                                ?.copyWith(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () => Get.back(),
+                          icon: Icon(
+                            Icons.close_rounded,
+                            color: colorScheme.primary,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+
+                    // ---------- TITLE & DESCRIPTION ----------
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: _field(
+                                    label: 'Subject Title',
+                                    hintText: 'Enter title',
+                                    controller: titleCtrl,
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: _field(
+                                    label: 'Subject Description',
+                                    hintText: 'Enter description',
+                                    controller: descCtrl,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+
+                            // ---------- THUMBNAIL (styled like fields; upload button themed like Create) ----------
+                            Text(
+                              'Thumbnail',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 12,
+                              ),
+                              decoration: BoxDecoration(
+                                color: colorScheme.surface,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: colorScheme.outlineVariant,
+                                ),
+                              ),
+                              child: Obx(() {
+                                // When no image: center instruction + Upload button.
+                                // When image present: show preview near the top and pin the button to the bottom of the box.
+                                if (thumbnail.value == null) {
+                                  return Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Drag and drop or browse to upload a thumbnail image for the subject.',
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          color: colorScheme.onSurfaceVariant,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      const SizedBox(height: 12),
+                                      SizedBox(
+                                        height: 36,
+                                        child: ElevatedButton(
+                                          onPressed: _pickThumbnail,
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                colorScheme.primary,
+                                            foregroundColor:
+                                                colorScheme.onPrimary,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 20,
+                                              vertical: 8,
+                                            ),
+                                          ),
+                                          child: const Text('Upload'),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                }
+
+                                // image is present
+                                return Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    // preview centered near the top
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Container(
+                                        width: 160,
+                                        height: 90,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                            4,
+                                          ),
+                                          border: Border.all(
+                                            color: colorScheme.outline
+                                                .withOpacity(0.3),
+                                          ),
+                                        ),
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                            4,
+                                          ),
+                                          child: Image.memory(
+                                            thumbnail.value!,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    // add explicit spacing between the image preview and the button
+                                    const SizedBox(height: 12),
+                                    // button (placed after the preview with some gap)
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        bottom: 8.0,
+                                      ),
+                                      child: SizedBox(
+                                        height: 36,
+                                        child: ElevatedButton(
+                                          onPressed: _pickThumbnail,
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                colorScheme.primary,
+                                            foregroundColor:
+                                                colorScheme.onPrimary,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 20,
+                                              vertical: 8,
+                                            ),
+                                          ),
+                                          child: const Text('Change'),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }),
+                            ),
+                            const SizedBox(height: 16),
+
+                            // ---------- CATEGORY + SUBCATEGORY ----------
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        'Category',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      DropdownButtonFormField<String>(
+                                        decoration: InputDecoration(
+                                          filled: true,
+                                          fillColor: colorScheme.surface,
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                                horizontal: 12,
+                                                vertical: 12,
+                                              ),
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                            borderSide: BorderSide(
+                                              color: colorScheme.outlineVariant,
+                                            ),
+                                          ),
+                                        ),
+                                        hint: const Text('select category'),
+                                        items: const [
+                                          DropdownMenuItem(
+                                            value: "Cat1",
+                                            child: Text("Category 1"),
+                                          ),
+                                          DropdownMenuItem(
+                                            value: "Cat2",
+                                            child: Text("Category 2"),
+                                          ),
+                                        ],
+                                        onChanged: (_) {},
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        'Subcategory',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      DropdownButtonFormField<String>(
+                                        decoration: InputDecoration(
+                                          filled: true,
+                                          fillColor: colorScheme.surface,
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                                horizontal: 12,
+                                                vertical: 12,
+                                              ),
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                            borderSide: BorderSide(
+                                              color: colorScheme.outlineVariant,
+                                            ),
+                                          ),
+                                        ),
+                                        hint: const Text('select subcategory'),
+                                        items: const [
+                                          DropdownMenuItem(
+                                            value: "Sub1",
+                                            child: Text("Subcategory 1"),
+                                          ),
+                                          DropdownMenuItem(
+                                            value: "Sub2",
+                                            child: Text("Subcategory 2"),
+                                          ),
+                                        ],
+                                        onChanged: (_) {},
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+
+                            // ---------- INSTRUCTOR + DURATION ----------
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: _field(
+                                    label: 'Instructor',
+                                    hintText: 'Enter Instructor name',
+                                    controller: instructorCtrl,
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: _field(
+                                    label: 'Duration',
+                                    hintText: 'Enter Duration',
+                                    controller: durationCtrl,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+
+                            // ---------- LEVEL + PRICE ----------
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: _field(
+                                    label: 'Level',
+                                    hintText: 'Enter Level',
+                                    controller: levelCtrl,
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: _field(
+                                    label: 'Price',
+                                    hintText: 'Enter Price',
+                                    controller: priceCtrl,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            // ---------- CREATE BUTTON (scrolls into view) ----------
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: colorScheme.primary,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 16,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  final title = titleCtrl.text.trim();
+                                  final desc = descCtrl.text.trim();
+                                  if (title.isEmpty) {
+                                    Get.snackbar(
+                                      'Validation',
+                                      'Please enter a subject title',
+                                      snackPosition: SnackPosition.BOTTOM,
+                                    );
+                                    return;
+                                  }
+
+                                  // add minimal subject data to the subjects list so it appears in the table
+                                  subjects.add({
+                                    'title': title,
+                                    'desc': desc,
+                                    'uploaded': 'false',
+                                  });
+
+                                  // keep the user on the current page after creating a subject
+                                  Get.back();
+                                },
+                                child: Text(
+                                  'Create Subject',
+                                  style: TextStyle(
+                                    color: colorScheme.onPrimary,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ),
+        barrierDismissible: true,
+      );
     }
-  }
 
-  Get.dialog(
-    _standardDialogShell(
-      maxWidth: 900,
-      innerPadding: 24,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxHeight: 750),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return Column(
+    // Edit subject modal (mirrors Add modal but pre-fills fields and saves back)
+    Future<void> _showEditSubjectDialog(BuildContext context, int index) async {
+      final colorScheme = Theme.of(context).colorScheme;
+      final subj = subjects[index];
+
+      final TextEditingController titleCtrl = TextEditingController(
+        text: subj['title'] ?? '',
+      );
+      final TextEditingController descCtrl = TextEditingController(
+        text: subj['desc'] ?? '',
+      );
+      final TextEditingController instructorCtrl = TextEditingController(
+        text: subj['instructor'] ?? '',
+      );
+      final TextEditingController durationCtrl = TextEditingController(
+        text: subj['duration'] ?? '',
+      );
+      final TextEditingController levelCtrl = TextEditingController(
+        text: subj['level'] ?? '',
+      );
+      final TextEditingController priceCtrl = TextEditingController(
+        text: subj['price'] ?? '',
+      );
+      final Rx<Uint8List?> thumbnail = Rx<Uint8List?>(null);
+      final ImagePicker _picker = ImagePicker();
+
+      Future<void> _pickThumbnail() async {
+        final XFile? image = await _picker.pickImage(
+          source: ImageSource.gallery,
+          imageQuality: 80,
+        );
+        if (image != null) {
+          final bytes = await image.readAsBytes();
+          thumbnail.value = bytes;
+        }
+      }
+
+      Get.dialog(
+        _standardDialogShell(
+          maxWidth: 900,
+          innerPadding: 24,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 750),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Edit Subject',
+                            style: Theme.of(context).textTheme.headlineSmall
+                                ?.copyWith(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () => Get.back(),
+                          icon: Icon(
+                            Icons.close_rounded,
+                            color: colorScheme.primary,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: _field(
+                                    label: 'Subject Title',
+                                    hintText: 'Enter title',
+                                    controller: titleCtrl,
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: _field(
+                                    label: 'Subject Description',
+                                    hintText: 'Enter description',
+                                    controller: descCtrl,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              'Thumbnail',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 12,
+                              ),
+                              decoration: BoxDecoration(
+                                color: colorScheme.surface,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: colorScheme.outlineVariant,
+                                ),
+                              ),
+                              child: Obx(() {
+                                if (thumbnail.value == null) {
+                                  return Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Drag and drop or browse to upload a thumbnail image for the subject.',
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          color: colorScheme.onSurfaceVariant,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      const SizedBox(height: 12),
+                                      SizedBox(
+                                        height: 36,
+                                        child: ElevatedButton(
+                                          onPressed: _pickThumbnail,
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                colorScheme.primary,
+                                            foregroundColor:
+                                                colorScheme.onPrimary,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 20,
+                                              vertical: 8,
+                                            ),
+                                          ),
+                                          child: const Text('Change'),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                }
+
+                                return Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Container(
+                                        width: 160,
+                                        height: 90,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                            4,
+                                          ),
+                                          border: Border.all(
+                                            color: colorScheme.outline
+                                                .withOpacity(0.3),
+                                          ),
+                                        ),
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                            4,
+                                          ),
+                                          child: Image.memory(
+                                            thumbnail.value!,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 12),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        bottom: 8.0,
+                                      ),
+                                      child: SizedBox(
+                                        height: 36,
+                                        child: ElevatedButton(
+                                          onPressed: _pickThumbnail,
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                colorScheme.primary,
+                                            foregroundColor:
+                                                colorScheme.onPrimary,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 20,
+                                              vertical: 8,
+                                            ),
+                                          ),
+                                          child: const Text('Change'),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }),
+                            ),
+                            const SizedBox(height: 16),
+                            // ---------- CATEGORY + SUBCATEGORY ----------
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        'Category',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      DropdownButtonFormField<String>(
+                                        decoration: InputDecoration(
+                                          filled: true,
+                                          fillColor: colorScheme.surface,
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                                horizontal: 12,
+                                                vertical: 12,
+                                              ),
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                            borderSide: BorderSide(
+                                              color: colorScheme.outlineVariant,
+                                            ),
+                                          ),
+                                        ),
+                                        hint: const Text('select category'),
+                                        items: const [
+                                          DropdownMenuItem(
+                                            value: "Cat1",
+                                            child: Text("Category 1"),
+                                          ),
+                                          DropdownMenuItem(
+                                            value: "Cat2",
+                                            child: Text("Category 2"),
+                                          ),
+                                        ],
+                                        onChanged: (_) {},
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        'Subcategory',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      DropdownButtonFormField<String>(
+                                        decoration: InputDecoration(
+                                          filled: true,
+                                          fillColor: colorScheme.surface,
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                                horizontal: 12,
+                                                vertical: 12,
+                                              ),
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                            borderSide: BorderSide(
+                                              color: colorScheme.outlineVariant,
+                                            ),
+                                          ),
+                                        ),
+                                        hint: const Text('select subcategory'),
+                                        items: const [
+                                          DropdownMenuItem(
+                                            value: "Sub1",
+                                            child: Text("Subcategory 1"),
+                                          ),
+                                          DropdownMenuItem(
+                                            value: "Sub2",
+                                            child: Text("Subcategory 2"),
+                                          ),
+                                        ],
+                                        onChanged: (_) {},
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: _field(
+                                    label: 'Instructor',
+                                    hintText: 'Enter Instructor name',
+                                    controller: instructorCtrl,
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: _field(
+                                    label: 'Duration',
+                                    hintText: 'Enter Duration',
+                                    controller: durationCtrl,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: _field(
+                                    label: 'Level',
+                                    hintText: 'Enter Level',
+                                    controller: levelCtrl,
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: _field(
+                                    label: 'Price',
+                                    hintText: 'Enter Price',
+                                    controller: priceCtrl,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: colorScheme.primary,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 16,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  // apply changes back to the subjects list (minimal fields)
+                                  subj['title'] = titleCtrl.text;
+                                  subj['desc'] = descCtrl.text;
+                                  // optional fields
+                                  subj['instructor'] = instructorCtrl.text;
+                                  subj['duration'] = durationCtrl.text;
+                                  subj['level'] = levelCtrl.text;
+                                  subj['price'] = priceCtrl.text;
+                                  // thumbnail handling not persisted in current subjects map
+                                  subjects.refresh();
+                                  Get.back();
+                                },
+                                child: Text(
+                                  'Save Changes',
+                                  style: TextStyle(
+                                    color: colorScheme.onPrimary,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ),
+        barrierDismissible: true,
+      );
+    }
+
+    // Delete confirmation dialog (scoped to desktop so it can access `subjects`)
+    Future<void> _showDeleteSubjectDialog(
+      BuildContext context,
+      int index,
+    ) async {
+      final colorScheme = Theme.of(context).colorScheme;
+      final subj = subjects[index];
+
+      await Get.dialog(
+        _standardDialogShell(
+          maxWidth: 520,
+          innerPadding: 20,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 320),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // ---------- HEADER ----------
                 Row(
                   children: [
                     Expanded(
                       child: Text(
-                        'Add Subject',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineSmall
+                        'Delete Subject',
+                        style: Theme.of(context).textTheme.headlineSmall
                             ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                     ),
                     IconButton(
                       onPressed: () => Get.back(),
-                      icon: Icon(Icons.close_rounded, color: colorScheme.primary),
+                      icon: Icon(
+                        Icons.close_rounded,
+                        color: colorScheme.primary,
+                      ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
-
-                // ---------- TITLE & DESCRIPTION ----------
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _field(
-                                label: 'Subject Title',
-                                hintText: 'Enter title',
-                                controller: titleCtrl,
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: _field(
-                                label: 'Subject Description',
-                                hintText: 'Enter description',
-                                controller: descCtrl,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-
-                // ---------- THUMBNAIL (styled like fields; upload button themed like Create) ----------
-                Text('Thumbnail', style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
+                const SizedBox(height: 12),
+                Text(
+                  'Are you sure you want to delete this subject?',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'This action cannot be undone — subject and related data will be permanently removed.',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
                 const SizedBox(height: 8),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  decoration: BoxDecoration(
-                    color: colorScheme.surface,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: colorScheme.outlineVariant),
-                  ),
-                  child: Obx(() {
-                    // When no image: center instruction + Upload button.
-                    // When image present: show preview near the top and pin the button to the bottom of the box.
-                    if (thumbnail.value == null) {
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Drag and drop or browse to upload a thumbnail image for the subject.',
-                            style: TextStyle(fontSize: 13, color: colorScheme.onSurfaceVariant),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 12),
-                          SizedBox(
-                            height: 36,
-                            child: ElevatedButton(
-                              onPressed: _pickThumbnail,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: colorScheme.primary,
-                                foregroundColor: colorScheme.onPrimary,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                              ),
-                              child: const Text('Upload'),
-                            ),
-                          ),
-                        ],
-                      );
-                    }
-
-                    // image is present
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        // preview centered near the top
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Container(
-                            width: 160,
-                            height: 90,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              border: Border.all(color: colorScheme.outline.withOpacity(0.3)),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(4),
-                              child: Image.memory(thumbnail.value!, fit: BoxFit.cover),
-                            ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 40,
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide(color: colorScheme.primary),
+                          foregroundColor: colorScheme.onPrimary,
+                          backgroundColor: Colors.transparent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
                           ),
                         ),
-                        // add explicit spacing between the image preview and the button
-                        const SizedBox(height: 12),
-                        // button (placed after the preview with some gap)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
-                          child: SizedBox(
-                            height: 36,
-                            child: ElevatedButton(
-                              onPressed: _pickThumbnail,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: colorScheme.primary,
-                                foregroundColor: colorScheme.onPrimary,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                              ),
-                              child: const Text('Change'),
-                            ),
+                        onPressed: () => Get.back(),
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(color: colorScheme.primary),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    SizedBox(
+                      height: 40,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: colorScheme.primary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
                           ),
                         ),
-                      ],
-                    );
-                  }),
-                ),
-                const SizedBox(height: 16),
+                        onPressed: () {
+                          try {
+                            subjects.removeAt(index);
+                            // adjust current page if the removal left the current page empty
+                            final tp = totalPages();
+                            if (currentPage.value > tp)
+                              currentPage.value = math.max(1, tp);
 
-                // ---------- CATEGORY + SUBCATEGORY ----------
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('Category', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
-                          const SizedBox(height: 8),
-                          DropdownButtonFormField<String>(
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: colorScheme.surface,
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: colorScheme.outlineVariant)),
-                            ),
-                            hint: const Text('select category'),
-                            items: const [
-                              DropdownMenuItem(value: "Cat1", child: Text("Category 1")),
-                              DropdownMenuItem(value: "Cat2", child: Text("Category 2")),
-                            ],
-                            onChanged: (_) {},
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('Subcategory', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
-                          const SizedBox(height: 8),
-                          DropdownButtonFormField<String>(
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: colorScheme.surface,
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: colorScheme.outlineVariant)),
-                            ),
-                            hint: const Text('select subcategory'),
-                            items: const [
-                              DropdownMenuItem(value: "Sub1", child: Text("Subcategory 1")),
-                              DropdownMenuItem(value: "Sub2", child: Text("Subcategory 2")),
-                            ],
-                            onChanged: (_) {},
-                          ),
-                        ],
+                            // close the dialog and notify
+                            Get.back();
+                            Get.snackbar(
+                              'Deleted',
+                              'Subject "${subj["title"] ?? ""}" was deleted',
+                              snackPosition: SnackPosition.BOTTOM,
+                            );
+                          } catch (e, st) {
+                            // ensure the dialog still closes even if an error occurs
+                            Get.back();
+                            Get.snackbar(
+                              'Error',
+                              'Failed to delete subject',
+                              snackPosition: SnackPosition.BOTTOM,
+                            );
+                            // keep a log for debugging
+                            print(
+                              'Error deleting subject at index $index: $e\n$st',
+                            );
+                          }
+                        },
+                        child: Text(
+                          'Confirm',
+                          style: TextStyle(color: colorScheme.onPrimary),
+                        ),
                       ),
                     ),
                   ],
-                ),
-                const SizedBox(height: 16),
-
-                // ---------- INSTRUCTOR + DURATION ----------
-                Row(
-                  children: [
-                    Expanded(
-                      child: _field(
-                        label: 'Instructor',
-                        hintText: 'Enter Instructor name',
-                        controller: instructorCtrl,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: _field(
-                        label: 'Duration',
-                        hintText: 'Enter Duration',
-                        controller: durationCtrl,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-
-                // ---------- LEVEL + PRICE ----------
-                Row(
-                  children: [
-                    Expanded(
-                      child: _field(
-                        label: 'Level',
-                        hintText: 'Enter Level',
-                        controller: levelCtrl,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: _field(
-                        label: 'Price',
-                        hintText: 'Enter Price',
-                        controller: priceCtrl,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                // ---------- CREATE BUTTON (scrolls into view) ----------
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: colorScheme.primary,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                    ),
-                    onPressed: () {
-                      final title = titleCtrl.text.trim();
-                      final desc = descCtrl.text.trim();
-                      if (title.isEmpty) {
-                        Get.snackbar('Validation', 'Please enter a subject title', snackPosition: SnackPosition.BOTTOM);
-                        return;
-                      }
-
-                      // add minimal subject data to the subjects list so it appears in the table
-                      subjects.add({
-                        'title': title,
-                        'desc': desc,
-                        'uploaded': 'false',
-                      });
-
-                      // keep the user on the current page after creating a subject
-                      Get.back();
-                    },
-                    child: Text('Create Subject',
-                        style: TextStyle(
-                          color: colorScheme.onPrimary,
-                          fontWeight: FontWeight.bold,
-                        )),
-                  ),
-                ),
-                      ],
-                    ),
-                  ),
                 ),
               ],
-            );
-          },
+            ),
+          ),
         ),
-      ),
-    ),
-    barrierDismissible: true,
-  );
-}
-
-  // Edit subject modal (mirrors Add modal but pre-fills fields and saves back)
-  Future<void> _showEditSubjectDialog(BuildContext context, int index) async {
-    final colorScheme = Theme.of(context).colorScheme;
-    final subj = subjects[index];
-
-    final TextEditingController titleCtrl = TextEditingController(text: subj['title'] ?? '');
-    final TextEditingController descCtrl = TextEditingController(text: subj['desc'] ?? '');
-    final TextEditingController instructorCtrl = TextEditingController(text: subj['instructor'] ?? '');
-    final TextEditingController durationCtrl = TextEditingController(text: subj['duration'] ?? '');
-    final TextEditingController levelCtrl = TextEditingController(text: subj['level'] ?? '');
-    final TextEditingController priceCtrl = TextEditingController(text: subj['price'] ?? '');
-    final Rx<Uint8List?> thumbnail = Rx<Uint8List?>(null);
-    final ImagePicker _picker = ImagePicker();
-
-    Future<void> _pickThumbnail() async {
-      final XFile? image = await _picker.pickImage(
-        source: ImageSource.gallery,
-        imageQuality: 80,
+        barrierDismissible: true,
       );
-      if (image != null) {
-        final bytes = await image.readAsBytes();
-        thumbnail.value = bytes;
-      }
     }
-
-    Get.dialog(
-      _standardDialogShell(
-        maxWidth: 900,
-        innerPadding: 24,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxHeight: 750),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          'Edit Subject',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineSmall
-                              ?.copyWith(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () => Get.back(),
-                        icon: Icon(Icons.close_rounded, color: colorScheme.primary),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: _field(
-                                  label: 'Subject Title',
-                                  hintText: 'Enter title',
-                                  controller: titleCtrl,
-                                ),
-                              ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: _field(
-                                  label: 'Subject Description',
-                                  hintText: 'Enter description',
-                                  controller: descCtrl,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-                          Text('Thumbnail', style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
-                          const SizedBox(height: 8),
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                            decoration: BoxDecoration(
-                              color: colorScheme.surface,
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: colorScheme.outlineVariant),
-                            ),
-                            child: Obx(() {
-                              if (thumbnail.value == null) {
-                                return Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Drag and drop or browse to upload a thumbnail image for the subject.',
-                                      style: TextStyle(fontSize: 13, color: colorScheme.onSurfaceVariant),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    const SizedBox(height: 12),
-                                    SizedBox(
-                                      height: 36,
-                                      child: ElevatedButton(
-                                        onPressed: _pickThumbnail,
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: colorScheme.primary,
-                                          foregroundColor: colorScheme.onPrimary,
-                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                                        ),
-                                        child: const Text('Change'),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              }
-
-                              return Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 8.0),
-                                    child: Container(
-                                      width: 160,
-                                      height: 90,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(4),
-                                        border: Border.all(color: colorScheme.outline.withOpacity(0.3)),
-                                      ),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(4),
-                                        child: Image.memory(thumbnail.value!, fit: BoxFit.cover),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 12),
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 8.0),
-                                    child: SizedBox(
-                                      height: 36,
-                                      child: ElevatedButton(
-                                        onPressed: _pickThumbnail,
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: colorScheme.primary,
-                                          foregroundColor: colorScheme.onPrimary,
-                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                                        ),
-                                        child: const Text('Change'),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }),
-                          ),
-                          const SizedBox(height: 16),
-                          // ---------- CATEGORY + SUBCATEGORY ----------
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('Category', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
-                          const SizedBox(height: 8),
-                          DropdownButtonFormField<String>(
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: colorScheme.surface,
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: colorScheme.outlineVariant)),
-                            ),
-                            hint: const Text('select category'),
-                            items: const [
-                              DropdownMenuItem(value: "Cat1", child: Text("Category 1")),
-                              DropdownMenuItem(value: "Cat2", child: Text("Category 2")),
-                            ],
-                            onChanged: (_) {},
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('Subcategory', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
-                          const SizedBox(height: 8),
-                          DropdownButtonFormField<String>(
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: colorScheme.surface,
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: colorScheme.outlineVariant)),
-                            ),
-                            hint: const Text('select subcategory'),
-                            items: const [
-                              DropdownMenuItem(value: "Sub1", child: Text("Subcategory 1")),
-                              DropdownMenuItem(value: "Sub2", child: Text("Subcategory 2")),
-                            ],
-                            onChanged: (_) {},
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: _field(
-                                  label: 'Instructor',
-                                  hintText: 'Enter Instructor name',
-                                  controller: instructorCtrl,
-                                ),
-                              ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: _field(
-                                  label: 'Duration',
-                                  hintText: 'Enter Duration',
-                                  controller: durationCtrl,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: _field(
-                                  label: 'Level',
-                                  hintText: 'Enter Level',
-                                  controller: levelCtrl,
-                                ),
-                              ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: _field(
-                                  label: 'Price',
-                                  hintText: 'Enter Price',
-                                  controller: priceCtrl,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-                          SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: colorScheme.primary,
-                                padding: const EdgeInsets.symmetric(vertical: 16),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                              ),
-                              onPressed: () {
-                                // apply changes back to the subjects list (minimal fields)
-                                subj['title'] = titleCtrl.text;
-                                subj['desc'] = descCtrl.text;
-                                // optional fields
-                                subj['instructor'] = instructorCtrl.text;
-                                subj['duration'] = durationCtrl.text;
-                                subj['level'] = levelCtrl.text;
-                                subj['price'] = priceCtrl.text;
-                                // thumbnail handling not persisted in current subjects map
-                                subjects.refresh();
-                                Get.back();
-                              },
-                              child: Text('Save Changes', style: TextStyle(color: colorScheme.onPrimary, fontWeight: FontWeight.bold)),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
-        ),
-      ),
-      barrierDismissible: true,
-    );
-  }
-
-  // Delete confirmation dialog (scoped to desktop so it can access `subjects`)
-  Future<void> _showDeleteSubjectDialog(BuildContext context, int index) async {
-    final colorScheme = Theme.of(context).colorScheme;
-    final subj = subjects[index];
-
-    await Get.dialog(
-      _standardDialogShell(
-        maxWidth: 520,
-        innerPadding: 20,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxHeight: 320),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      'Delete Subject',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineSmall
-                          ?.copyWith(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () => Get.back(),
-                    icon: Icon(Icons.close_rounded, color: colorScheme.primary),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Text(
-                'Are you sure you want to delete this subject?',
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-              const SizedBox(height: 12),
-              Text(
-                'This action cannot be undone — subject and related data will be permanently removed.',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: colorScheme.onSurfaceVariant),
-              ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 40,
-                    child: OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        side: BorderSide(color: colorScheme.primary),
-                        foregroundColor: colorScheme.onPrimary,
-                        backgroundColor: Colors.transparent,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                      ),
-                      onPressed: () => Get.back(),
-                      child: Text('Cancel', style: TextStyle(color: colorScheme.primary)),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  SizedBox(
-                    height: 40,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: colorScheme.primary,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                      ),
-                      onPressed: () {
-                        try {
-                          subjects.removeAt(index);
-                          // adjust current page if the removal left the current page empty
-                          final tp = totalPages();
-                          if (currentPage.value > tp) currentPage.value = math.max(1, tp);
-
-                          // close the dialog and notify
-                          Get.back();
-                          Get.snackbar('Deleted', 'Subject "${subj["title"] ?? ""}" was deleted', snackPosition: SnackPosition.BOTTOM);
-                        } catch (e, st) {
-                          // ensure the dialog still closes even if an error occurs
-                          Get.back();
-                          Get.snackbar('Error', 'Failed to delete subject', snackPosition: SnackPosition.BOTTOM);
-                          // keep a log for debugging
-                          print('Error deleting subject at index $index: $e\n$st');
-                        }
-                      },
-                      child: Text('Confirm', style: TextStyle(color: colorScheme.onPrimary)),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-      barrierDismissible: true,
-    );
-  }
 
     /// ---------------- SUBJECT ROW ----------------
     DataRow _buildRow(BuildContext context, int index) {
@@ -1085,10 +1398,12 @@ class AdminSubjectManagementView extends GetResponsiveView {
                     final currentlyUploaded = subj['uploaded'] == 'true';
                     subj['uploaded'] = currentlyUploaded ? 'false' : 'true';
                     subjects.refresh();
-                    Get.snackbar(currentlyUploaded ? 'Upload removed' : 'Uploaded',
-                        'Subject "${subj["title"] ?? ""}" ${currentlyUploaded ? 'marked as not uploaded' : 'subject uploaded'}',
-                        snackPosition: SnackPosition.BOTTOM,
-                        duration: const Duration(seconds: 2));
+                    Get.snackbar(
+                      currentlyUploaded ? 'Upload removed' : 'Uploaded',
+                      'Subject "${subj["title"] ?? ""}" ${currentlyUploaded ? 'marked as not uploaded' : 'subject uploaded'}',
+                      snackPosition: SnackPosition.BOTTOM,
+                      duration: const Duration(seconds: 2),
+                    );
                   },
                   icon: Icon(
                     Icons.upload,
@@ -1131,21 +1446,24 @@ class AdminSubjectManagementView extends GetResponsiveView {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Subject Management",
-                                style: Theme.of(Get.context!)
-                                    .textTheme
-                                    .headlineSmall
-                                    ?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        color: Theme.of(Get.context!)
-                                            .colorScheme
-                                            .onBackground)),
+                            Text(
+                              "Subject Management",
+                              style: Theme.of(Get.context!)
+                                  .textTheme
+                                  .headlineSmall
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(
+                                      Get.context!,
+                                    ).colorScheme.onBackground,
+                                  ),
+                            ),
                             const SizedBox(height: 30),
-                            Text("Subject List",
-                                style: Theme.of(Get.context!)
-                                    .textTheme
-                                    .titleLarge
-                                    ?.copyWith(fontWeight: FontWeight.bold)),
+                            Text(
+                              "Subject List",
+                              style: Theme.of(Get.context!).textTheme.titleLarge
+                                  ?.copyWith(fontWeight: FontWeight.bold),
+                            ),
                             const SizedBox(height: 15),
                             _buildSearchRowWithDropdowns(
                               Get.context!,
@@ -1166,9 +1484,16 @@ class AdminSubjectManagementView extends GetResponsiveView {
                                   final col3 = constraints.maxWidth * 0.2;
 
                                   return Obx(() {
-                                    final start = (currentPage.value - 1) * itemsPerPage;
-                                    final end = math.min(start + itemsPerPage, subjects.length);
-                                    final visibleCount = (end - start).clamp(0, itemsPerPage);
+                                    final start =
+                                        (currentPage.value - 1) * itemsPerPage;
+                                    final end = math.min(
+                                      start + itemsPerPage,
+                                      subjects.length,
+                                    );
+                                    final visibleCount = (end - start).clamp(
+                                      0,
+                                      itemsPerPage,
+                                    );
 
                                     final dataTable = DataTable(
                                       showCheckboxColumn: false,
@@ -1177,24 +1502,40 @@ class AdminSubjectManagementView extends GetResponsiveView {
                                       columnSpacing: 12,
                                       headingTextStyle: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: Theme.of(Get.context!).colorScheme.onSurfaceVariant,
+                                        color: Theme.of(
+                                          Get.context!,
+                                        ).colorScheme.onSurfaceVariant,
                                       ),
                                       columns: [
-                                        DataColumn(label: SizedBox(width: col1, child: const Text('Title'))),
-                                        DataColumn(label: SizedBox(width: col2, child: const Text('Description'))),
-                                        DataColumn(label: SizedBox(width: col3, child: const Text('Actions'))),
+                                        DataColumn(
+                                          label: SizedBox(
+                                            width: col1,
+                                            child: const Text('Title'),
+                                          ),
+                                        ),
+                                        DataColumn(
+                                          label: SizedBox(
+                                            width: col2,
+                                            child: const Text('Description'),
+                                          ),
+                                        ),
+                                        DataColumn(
+                                          label: SizedBox(
+                                            width: col3,
+                                            child: const Text('Actions'),
+                                          ),
+                                        ),
                                       ],
                                       rows: [
                                         for (int i = 0; i < visibleCount; i++)
-                                          _buildRow(Get.context!, start + i)
+                                          _buildRow(Get.context!, start + i),
                                       ],
                                     );
 
                                     return Column(
-                                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                                      children: [
-                                        dataTable,
-                                      ],
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: [dataTable],
                                     );
                                   });
                                 },
@@ -1232,13 +1573,13 @@ class AdminSubjectManagementView extends GetResponsiveView {
         Get.toNamed(Routes.ADMIN_SUBJECT_MANAGEMENT);
         break;
       case 6:
-        Get.toNamed(Routes.ADMIN_CREATE_LESSON);
+        Get.toNamed(Routes.ADMIN_LESSON_MANAGEMENT);
         break;
       case 7:
-        Get.toNamed(Routes.ADMIN_EDIT_LESSON);
+        // TODO: Implement edit lesson functionality
         break;
       case 8:
-        Get.toNamed(Routes.ADMIN_CREATE_QUIZ);
+        Get.toNamed(Routes.QUIZ_MANAGEMENT);
         break;
       case 9:
         Get.toNamed(Routes.ADMIN_TRANSACTION_HISTORY);
