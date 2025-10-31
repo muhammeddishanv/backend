@@ -19,7 +19,9 @@ abstract class Routes {
   static const ADMIN_EDIT_LESSON = _Paths.ADMIN_EDIT_LESSON;
   static const ADMIN_CREATE_LESSON = _Paths.ADMIN_CREATE_LESSON;
   static const SIGNIN = _Paths.SIGNIN;
-  static const SIGNIN_SCREEN_SIGNIN = _Paths.SIGNIN_SCREEN_SIGNIN + _Paths.SIGNIN;
+  static const SIGNIN_SCREEN_SIGNIN =
+      _Paths.SIGNIN_SCREEN_SIGNIN + _Paths.SIGNIN;
+  static const QUIZ_MANAGEMENT = _Paths.QUIZ_MANAGEMENT;
 }
 
 abstract class _Paths {
@@ -39,4 +41,5 @@ abstract class _Paths {
   static const ADMIN_CREATE_LESSON = '/admin-create-lesson';
   static const SIGNIN = '/signin';
   static const SIGNIN_SCREEN_SIGNIN = '/signin';
+  static const QUIZ_MANAGEMENT = '/quiz-management';
 }

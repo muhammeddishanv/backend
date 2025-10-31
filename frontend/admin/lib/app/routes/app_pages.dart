@@ -1,9 +1,5 @@
 import 'package:get/get.dart';
 
-// Route and page registrations for the admin app. Uses GetX's `GetPage`
-// abstraction which allows associating a page with a Binding. Bindings are
-// executed when the route is pushed and are the recommended place to
-// register controllers and dependencies for that page.
 import '../global_widgets/unknown_view.dart';
 import '../modules/admin_create_lesson/bindings/admin_create_lesson_binding.dart';
 import '../modules/admin_create_lesson/views/admin_create_lesson_view.dart';
@@ -29,8 +25,15 @@ import '../modules/admin_user_details/bindings/admin_user_details_binding.dart';
 import '../modules/admin_user_details/views/admin_user_details_view.dart';
 import '../modules/admin_user_management/bindings/admin_user_management_binding.dart';
 import '../modules/admin_user_management/views/admin_user_management_view.dart';
+import '../modules/quiz_management/bindings/quiz_management_binding.dart';
+import '../modules/quiz_management/views/quiz_management_view.dart';
 import '../modules/signin_screen/signin/bindings/signin_screen_signin_binding.dart';
 import '../modules/signin_screen/signin/views/signin_screen_signin_view.dart';
+
+// Route and page registrations for the admin app. Uses GetX's `GetPage`
+// abstraction which allows associating a page with a Binding. Bindings are
+// executed when the route is pushed and are the recommended place to
+// register controllers and dependencies for that page.
 
 part 'app_routes.dart';
 
@@ -111,6 +114,11 @@ class AppPages {
       name: _Paths.SIGNIN_SCREEN_SIGNIN,
       page: () => SigninScreenSigninView(),
       binding: SigninScreenSigninBinding(),
+    ),
+    GetPage(
+      name: _Paths.QUIZ_MANAGEMENT,
+      page: () => QuizManagementView(),
+      binding: QuizManagementBinding(),
     ),
   ];
 
