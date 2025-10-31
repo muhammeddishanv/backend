@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../../global_widgets/nav_bar.dart';
 import '../../../global_widgets/search_bar.dart';
 import '../../../routes/app_pages.dart';
@@ -318,7 +319,32 @@ class QuizManagementView extends GetResponsiveView {
     /// ---------------- ADD QUIZ MODAL ----------------
   Future<void> _showAddQuizDialog(BuildContext context) async {
   final colorScheme = Theme.of(context).colorScheme;
+  
+  // Quiz level controllers
   final TextEditingController quizIdCtrl = TextEditingController();
+  final TextEditingController quizTitleCtrl = TextEditingController();
+  final TextEditingController subjectNameCtrl = TextEditingController();
+  final TextEditingController chapterNumberCtrl = TextEditingController();
+  final TextEditingController lessonNumberCtrl = TextEditingController();
+  
+  // Store all questions
+  final RxList<Map<String, dynamic>> questions = <Map<String, dynamic>>[].obs;
+  final RxInt currentQuestionIndex = 0.obs;
+
+  // Initialize first question
+  questions.add({
+    'questionNumber': '',
+    'typeQuestion': '',
+    'questionMark': '',
+    'option1': '',
+    'option2': '',
+    'option3': '',
+    'option4': '',
+    'selectedOption': '',
+    'explanation': '',
+  });
+
+  // Controllers for current question
   final TextEditingController typeQuestionCtrl = TextEditingController();
   final TextEditingController explanationCtrl = TextEditingController();
   final TextEditingController option1Ctrl = TextEditingController();
@@ -328,11 +354,59 @@ class QuizManagementView extends GetResponsiveView {
   
   final RxString selectedQuestionNumber = ''.obs;
   final RxString selectedQuestionMark = ''.obs;
+  final RxList<String> correctAnswers = <String>[].obs; // Track multiple correct options
+  final RxString uploadedImagePath = ''.obs; // Track uploaded image
 
-  Widget buildOptionField(String label, TextEditingController controller) {
-    return Row(
+  // Function to save current question data
+  void saveCurrentQuestion() {
+    if (currentQuestionIndex.value < questions.length) {
+      questions[currentQuestionIndex.value] = {
+        'questionNumber': selectedQuestionNumber.value,
+        'typeQuestion': typeQuestionCtrl.text,
+        'questionMark': selectedQuestionMark.value,
+        'option1': option1Ctrl.text,
+        'option2': option2Ctrl.text,
+        'option3': option3Ctrl.text,
+        'option4': option4Ctrl.text,
+        'correctAnswers': List<String>.from(correctAnswers),
+        'imagePath': uploadedImagePath.value,
+        'explanation': explanationCtrl.text,
+      };
+    }
+  }
+
+  // Function to load question data
+  void loadQuestion(int index) {
+    if (index < questions.length) {
+      final question = questions[index];
+      selectedQuestionNumber.value = question['questionNumber'] ?? '';
+      typeQuestionCtrl.text = question['typeQuestion'] ?? '';
+      selectedQuestionMark.value = question['questionMark'] ?? '';
+      option1Ctrl.text = question['option1'] ?? '';
+      option2Ctrl.text = question['option2'] ?? '';
+      option3Ctrl.text = question['option3'] ?? '';
+      option4Ctrl.text = question['option4'] ?? '';
+      correctAnswers.value = List<String>.from(question['correctAnswers'] ?? []);
+      uploadedImagePath.value = question['imagePath'] ?? '';
+      explanationCtrl.text = question['explanation'] ?? '';
+    }
+  }
+
+  Widget buildOptionField(String label, String value, TextEditingController controller) {
+    return Obx(() => Row(
       children: [
-        Radio(value: label, groupValue: null, onChanged: (val) {}),
+        Checkbox(
+          value: correctAnswers.contains(value),
+          onChanged: (bool? checked) {
+            if (checked == true) {
+              if (!correctAnswers.contains(value)) {
+                correctAnswers.add(value);
+              }
+            } else {
+              correctAnswers.remove(value);
+            }
+          },
+        ),
         const SizedBox(width: 8),
         Expanded(
           child: TextFormField(
@@ -354,7 +428,7 @@ class QuizManagementView extends GetResponsiveView {
           ),
         ),
       ],
-    );
+    ));
   }
 
   Get.dialog(
@@ -365,27 +439,140 @@ class QuizManagementView extends GetResponsiveView {
         width: 800,
         constraints: const BoxConstraints(maxHeight: 750),
         padding: const EdgeInsets.all(32),
-        child: SingleChildScrollView(
+        child: Obx(() => SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              // ---------- HEADER ----------
-              Text('Create Quiz',
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold)),
+              // ---------- HEADER WITH NAVIGATION ----------
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Create Quiz',
+                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold)),
+                  // Question Navigation
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: colorScheme.surfaceVariant,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          onPressed: currentQuestionIndex.value > 0
+                              ? () {
+                                  saveCurrentQuestion();
+                                  currentQuestionIndex.value--;
+                                  loadQuestion(currentQuestionIndex.value);
+                                }
+                              : null,
+                          icon: Icon(Icons.chevron_left),
+                          iconSize: 20,
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                        ),
+                        const SizedBox(width: 12),
+                        Text(
+                          'Question ${currentQuestionIndex.value + 1} of ${questions.length}',
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                        const SizedBox(width: 12),
+                        IconButton(
+                          onPressed: currentQuestionIndex.value < questions.length - 1
+                              ? () {
+                                  saveCurrentQuestion();
+                                  currentQuestionIndex.value++;
+                                  loadQuestion(currentQuestionIndex.value);
+                                }
+                              : null,
+                          icon: Icon(Icons.chevron_right),
+                          iconSize: 20,
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: 24),
 
-              // ---------- ROW 1: Quiz ID & Question Number ----------
+              // ---------- QUIZ INFORMATION SECTION ----------
+              Text('Quiz Information', 
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: colorScheme.primary)),
+              const SizedBox(height: 16),
+
+              // ---------- ROW 1: Quiz ID ----------
               Row(
                 children: [
                   Expanded(
                     child: _field(
                       label: 'Quiz ID',
-                      hintText: 'type here....',
+                      hintText: 'Enter quiz ID',
                       controller: quizIdCtrl,
                     ),
                   ),
+                ],
+              ),
+              const SizedBox(height: 16),
+
+              // ---------- ROW 2: Quiz Title & Subject Name ----------
+              Row(
+                children: [
+                  Expanded(
+                    child: _field(
+                      label: 'Quiz Title',
+                      hintText: 'Enter quiz title',
+                      controller: quizTitleCtrl,
+                    ),
+                  ),
                   const SizedBox(width: 16),
+                  Expanded(
+                    child: _field(
+                      label: 'Subject Name',
+                      hintText: 'Enter subject name',
+                      controller: subjectNameCtrl,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+
+              // ---------- ROW 3: Chapter Number & Lesson Number ----------
+              Row(
+                children: [
+                  Expanded(
+                    child: _field(
+                      label: 'Chapter Number',
+                      hintText: 'Enter chapter number',
+                      controller: chapterNumberCtrl,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: _field(
+                      label: 'Lesson Number',
+                      hintText: 'Enter lesson number',
+                      controller: lessonNumberCtrl,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+
+              // Divider
+              Divider(color: colorScheme.outlineVariant, thickness: 1),
+              const SizedBox(height: 24),
+
+              // ---------- QUESTION SECTION ----------
+              Text('Question Details', 
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: colorScheme.primary)),
+              const SizedBox(height: 16),
+
+              // ---------- ROW 4: Question Number ----------
+              Row(
+                children: [
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -420,13 +607,13 @@ class QuizManagementView extends GetResponsiveView {
               ),
               const SizedBox(height: 16),
 
-              // ---------- ROW 2: Type Question & Question Mark ----------
+              // ---------- ROW 5: Type Question & Question Mark ----------
               Row(
                 children: [
                   Expanded(
                     child: _field(
                       label: 'Type Question',
-                      hintText: 'type here....',
+                      hintText: 'Enter your question',
                       controller: typeQuestionCtrl,
                     ),
                   ),
@@ -465,7 +652,7 @@ class QuizManagementView extends GetResponsiveView {
               ),
               const SizedBox(height: 24),
 
-              // ---------- ROW 3: Add Options & Add Image ----------
+              // ---------- ROW 6: Add Options & Add Image ----------
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -476,13 +663,13 @@ class QuizManagementView extends GetResponsiveView {
                       children: [
                         const Text('Add Options:', style: TextStyle(fontWeight: FontWeight.w500)),
                         const SizedBox(height: 12),
-                        buildOptionField('Option 1', option1Ctrl),
+                        buildOptionField('Option 1', 'option1', option1Ctrl),
                         const SizedBox(height: 8),
-                        buildOptionField('Option 2', option2Ctrl),
+                        buildOptionField('Option 2', 'option2', option2Ctrl),
                         const SizedBox(height: 8),
-                        buildOptionField('Option 3', option3Ctrl),
+                        buildOptionField('Option 3', 'option3', option3Ctrl),
                         const SizedBox(height: 8),
-                        buildOptionField('Option 4', option4Ctrl),
+                        buildOptionField('Option 4', 'option4', option4Ctrl),
                       ],
                     ),
                   ),
@@ -494,42 +681,94 @@ class QuizManagementView extends GetResponsiveView {
                       children: [
                         const Text('Add Image:', style: TextStyle(fontWeight: FontWeight.w500)),
                         const SizedBox(height: 12),
-                        Container(
+                        Obx(() => Container(
                           height: 200,
                           decoration: BoxDecoration(
                             border: Border.all(color: colorScheme.outlineVariant, style: BorderStyle.solid, width: 2),
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text('Upload Images',
-                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                              const SizedBox(height: 4),
-                              Text('Drag and drop or browse to upload images.',
-                                  style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 12)),
-                              const SizedBox(height: 16),
-                              ElevatedButton(
-                                onPressed: () {
-                                  // Handle image upload
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: colorScheme.surfaceVariant,
-                                  foregroundColor: colorScheme.onSurface,
-                                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          child: uploadedImagePath.value.isEmpty
+                              ? Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text('Upload Images',
+                                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                                    const SizedBox(height: 4),
+                                    Text('Drag and drop or browse to upload images.',
+                                        style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 12)),
+                                    const SizedBox(height: 16),
+                                    ElevatedButton(
+                                      onPressed: () async {
+                                        final ImagePicker picker = ImagePicker();
+                                        final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+                                        if (image != null) {
+                                          uploadedImagePath.value = image.path;
+                                          Get.snackbar('Success', 'Image uploaded successfully',
+                                              snackPosition: SnackPosition.BOTTOM);
+                                        }
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: colorScheme.surfaceVariant,
+                                        foregroundColor: colorScheme.onSurface,
+                                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                      ),
+                                      child: const Text('Upload'),
+                                    ),
+                                  ],
+                                )
+                              : Stack(
+                                  children: [
+                                    Center(
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.image, size: 60, color: colorScheme.primary),
+                                          const SizedBox(height: 8),
+                                          Text('Image Selected',
+                                              style: TextStyle(fontWeight: FontWeight.bold)),
+                                          const SizedBox(height: 4),
+                                          Text(uploadedImagePath.value.split('/').last,
+                                              style: TextStyle(fontSize: 12, color: colorScheme.onSurfaceVariant),
+                                              overflow: TextOverflow.ellipsis),
+                                        ],
+                                      ),
+                                    ),
+                                    Positioned(
+                                      top: 8,
+                                      right: 8,
+                                      child: IconButton(
+                                        onPressed: () {
+                                          uploadedImagePath.value = '';
+                                        },
+                                        icon: Icon(Icons.close, color: colorScheme.error),
+                                        style: IconButton.styleFrom(
+                                          backgroundColor: colorScheme.surface,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                child: const Text('Upload'),
-                              ),
-                            ],
-                          ),
-                        ),
+                        )),
                         const SizedBox(height: 16),
                         Align(
                           alignment: Alignment.centerRight,
                           child: ElevatedButton(
                             onPressed: () {
-                              // Handle Add Question
+                              // Save current question and add new one
+                              saveCurrentQuestion();
+                              questions.add({
+                                'questionNumber': '',
+                                'typeQuestion': '',
+                                'questionMark': '',
+                                'option1': '',
+                                'option2': '',
+                                'option3': '',
+                                'option4': '',
+                                'explanation': '',
+                              });
+                              currentQuestionIndex.value = questions.length - 1;
+                              loadQuestion(currentQuestionIndex.value);
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: colorScheme.primary,
@@ -577,25 +816,49 @@ class QuizManagementView extends GetResponsiveView {
 
               // ---------- BUTTONS ----------
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  // Delete Question Button
+                  if (questions.length > 1)
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        if (questions.length > 1) {
+                          questions.removeAt(currentQuestionIndex.value);
+                          if (currentQuestionIndex.value >= questions.length) {
+                            currentQuestionIndex.value = questions.length - 1;
+                          }
+                          loadQuestion(currentQuestionIndex.value);
+                        }
+                      },
+                      icon: Icon(Icons.delete, size: 18),
+                      label: const Text('Delete Question'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: colorScheme.error,
+                        foregroundColor: colorScheme.onError,
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      ),
+                    ),
+                  const Spacer(),
                   ElevatedButton(
                     onPressed: () {
-                      // Handle Previous
+                      Get.back();
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: colorScheme.primary,
-                      foregroundColor: colorScheme.onPrimary,
+                      backgroundColor: colorScheme.surfaceVariant,
+                      foregroundColor: colorScheme.onSurface,
                       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                     ),
-                    child: const Text('Previous'),
+                    child: const Text('Cancel'),
                   ),
                   const SizedBox(width: 12),
                   ElevatedButton(
                     onPressed: () {
+                      saveCurrentQuestion();
                       Get.back();
-                      Get.snackbar('Success', 'Quiz created successfully', snackPosition: SnackPosition.BOTTOM);
+                      Get.snackbar('Success', 'Quiz with ${questions.length} question(s) created successfully', 
+                        snackPosition: SnackPosition.BOTTOM);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: colorScheme.primary,
@@ -603,13 +866,13 @@ class QuizManagementView extends GetResponsiveView {
                       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                     ),
-                    child: const Text('Save'),
+                    child: const Text('Save Quiz'),
                   ),
                 ],
               ),
             ],
           ),
-        ),
+        )),
       ),
     ),
     barrierDismissible: true,
@@ -621,7 +884,30 @@ class QuizManagementView extends GetResponsiveView {
     final colorScheme = Theme.of(context).colorScheme;
     final quiz = quizzes[index];
 
-    final TextEditingController quizIdCtrl = TextEditingController(text: quiz['title'] ?? '');
+    // Quiz level controllers with existing data
+    final TextEditingController quizIdCtrl = TextEditingController();
+    final TextEditingController quizTitleCtrl = TextEditingController(text: quiz['title'] ?? '');
+    final TextEditingController subjectNameCtrl = TextEditingController(text: quiz['subject'] ?? '');
+    final TextEditingController chapterNumberCtrl = TextEditingController(text: quiz['chapter'] ?? '');
+    final TextEditingController lessonNumberCtrl = TextEditingController(text: quiz['lesson'] ?? '');
+    
+    // Store all questions (load existing or create first question)
+    final RxList<Map<String, dynamic>> questions = <Map<String, dynamic>>[].obs;
+    final RxInt currentQuestionIndex = 0.obs;
+
+    // Initialize with first question (you can load existing questions here)
+    questions.add({
+      'questionNumber': '',
+      'typeQuestion': '',
+      'questionMark': '',
+      'option1': '',
+      'option2': '',
+      'option3': '',
+      'option4': '',
+      'explanation': '',
+    });
+
+    // Controllers for current question
     final TextEditingController typeQuestionCtrl = TextEditingController();
     final TextEditingController explanationCtrl = TextEditingController();
     final TextEditingController option1Ctrl = TextEditingController();
@@ -629,13 +915,61 @@ class QuizManagementView extends GetResponsiveView {
     final TextEditingController option3Ctrl = TextEditingController();
     final TextEditingController option4Ctrl = TextEditingController();
     
-    final RxString selectedQuestionNumber = (quiz['chapter'] ?? '').obs;
+    final RxString selectedQuestionNumber = ''.obs;
     final RxString selectedQuestionMark = ''.obs;
+    final RxList<String> correctAnswers = <String>[].obs; // Track multiple correct options
+    final RxString uploadedImagePath = ''.obs; // Track uploaded image
 
-    Widget buildOptionField(String label, TextEditingController controller) {
-      return Row(
+    // Function to save current question data
+    void saveCurrentQuestion() {
+      if (currentQuestionIndex.value < questions.length) {
+        questions[currentQuestionIndex.value] = {
+          'questionNumber': selectedQuestionNumber.value,
+          'typeQuestion': typeQuestionCtrl.text,
+          'questionMark': selectedQuestionMark.value,
+          'option1': option1Ctrl.text,
+          'option2': option2Ctrl.text,
+          'option3': option3Ctrl.text,
+          'option4': option4Ctrl.text,
+          'correctAnswers': List<String>.from(correctAnswers),
+          'imagePath': uploadedImagePath.value,
+          'explanation': explanationCtrl.text,
+        };
+      }
+    }
+
+    // Function to load question data
+    void loadQuestion(int index) {
+      if (index < questions.length) {
+        final question = questions[index];
+        selectedQuestionNumber.value = question['questionNumber'] ?? '';
+        typeQuestionCtrl.text = question['typeQuestion'] ?? '';
+        selectedQuestionMark.value = question['questionMark'] ?? '';
+        option1Ctrl.text = question['option1'] ?? '';
+        option2Ctrl.text = question['option2'] ?? '';
+        option3Ctrl.text = question['option3'] ?? '';
+        option4Ctrl.text = question['option4'] ?? '';
+        correctAnswers.value = List<String>.from(question['correctAnswers'] ?? []);
+        uploadedImagePath.value = question['imagePath'] ?? '';
+        explanationCtrl.text = question['explanation'] ?? '';
+      }
+    }
+
+    Widget buildOptionField(String label, String value, TextEditingController controller) {
+      return Obx(() => Row(
         children: [
-          Radio(value: label, groupValue: null, onChanged: (val) {}),
+          Checkbox(
+            value: correctAnswers.contains(value),
+            onChanged: (bool? checked) {
+              if (checked == true) {
+                if (!correctAnswers.contains(value)) {
+                  correctAnswers.add(value);
+                }
+              } else {
+                correctAnswers.remove(value);
+              }
+            },
+          ),
           const SizedBox(width: 8),
           Expanded(
             child: TextFormField(
@@ -657,7 +991,7 @@ class QuizManagementView extends GetResponsiveView {
             ),
           ),
         ],
-      );
+      ));
     }
 
     Get.dialog(
@@ -668,27 +1002,140 @@ class QuizManagementView extends GetResponsiveView {
           width: 800,
           constraints: const BoxConstraints(maxHeight: 750),
           padding: const EdgeInsets.all(32),
-          child: SingleChildScrollView(
+          child: Obx(() => SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                // ---------- HEADER ----------
-                Text('Edit Quiz',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold)),
+                // ---------- HEADER WITH NAVIGATION ----------
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Edit Quiz',
+                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold)),
+                    // Question Navigation
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: colorScheme.surfaceVariant,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        children: [
+                          IconButton(
+                            onPressed: currentQuestionIndex.value > 0
+                                ? () {
+                                    saveCurrentQuestion();
+                                    currentQuestionIndex.value--;
+                                    loadQuestion(currentQuestionIndex.value);
+                                  }
+                                : null,
+                            icon: Icon(Icons.chevron_left),
+                            iconSize: 20,
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(),
+                          ),
+                          const SizedBox(width: 12),
+                          Text(
+                            'Question ${currentQuestionIndex.value + 1} of ${questions.length}',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                          const SizedBox(width: 12),
+                          IconButton(
+                            onPressed: currentQuestionIndex.value < questions.length - 1
+                                ? () {
+                                    saveCurrentQuestion();
+                                    currentQuestionIndex.value++;
+                                    loadQuestion(currentQuestionIndex.value);
+                                  }
+                                : null,
+                            icon: Icon(Icons.chevron_right),
+                            iconSize: 20,
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 24),
 
-                // ---------- ROW 1: Quiz ID & Question Number ----------
+                // ---------- QUIZ INFORMATION SECTION ----------
+                Text('Quiz Information', 
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: colorScheme.primary)),
+                const SizedBox(height: 16),
+
+                // ---------- ROW 1: Quiz ID ----------
                 Row(
                   children: [
                     Expanded(
                       child: _field(
                         label: 'Quiz ID',
-                        hintText: 'type here....',
+                        hintText: 'Enter quiz ID',
                         controller: quizIdCtrl,
                       ),
                     ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                // ---------- ROW 2: Quiz Title & Subject Name ----------
+                Row(
+                  children: [
+                    Expanded(
+                      child: _field(
+                        label: 'Quiz Title',
+                        hintText: 'Enter quiz title',
+                        controller: quizTitleCtrl,
+                      ),
+                    ),
                     const SizedBox(width: 16),
+                    Expanded(
+                      child: _field(
+                        label: 'Subject Name',
+                        hintText: 'Enter subject name',
+                        controller: subjectNameCtrl,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                // ---------- ROW 3: Chapter Number & Lesson Number ----------
+                Row(
+                  children: [
+                    Expanded(
+                      child: _field(
+                        label: 'Chapter Number',
+                        hintText: 'Enter chapter number',
+                        controller: chapterNumberCtrl,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: _field(
+                        label: 'Lesson Number',
+                        hintText: 'Enter lesson number',
+                        controller: lessonNumberCtrl,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+
+                // Divider
+                Divider(color: colorScheme.outlineVariant, thickness: 1),
+                const SizedBox(height: 24),
+
+                // ---------- QUESTION SECTION ----------
+                Text('Question Details', 
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: colorScheme.primary)),
+                const SizedBox(height: 16),
+
+                // ---------- ROW 4: Question Number & Type Question ----------
+                Row(
+                  children: [
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -723,13 +1170,13 @@ class QuizManagementView extends GetResponsiveView {
                 ),
                 const SizedBox(height: 16),
 
-                // ---------- ROW 2: Type Question & Question Mark ----------
+                // ---------- ROW 5: Type Question & Question Mark ----------
                 Row(
                   children: [
                     Expanded(
                       child: _field(
                         label: 'Type Question',
-                        hintText: 'type here....',
+                        hintText: 'Enter your question',
                         controller: typeQuestionCtrl,
                       ),
                     ),
@@ -768,7 +1215,7 @@ class QuizManagementView extends GetResponsiveView {
                 ),
                 const SizedBox(height: 24),
 
-                // ---------- ROW 3: Add Options & Add Image ----------
+                // ---------- ROW 6: Add Options & Add Image ----------
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -779,13 +1226,13 @@ class QuizManagementView extends GetResponsiveView {
                         children: [
                           const Text('Add Options:', style: TextStyle(fontWeight: FontWeight.w500)),
                           const SizedBox(height: 12),
-                          buildOptionField('Option 1', option1Ctrl),
+                          buildOptionField('Option 1', 'option1', option1Ctrl),
                           const SizedBox(height: 8),
-                          buildOptionField('Option 2', option2Ctrl),
+                          buildOptionField('Option 2', 'option2', option2Ctrl),
                           const SizedBox(height: 8),
-                          buildOptionField('Option 3', option3Ctrl),
+                          buildOptionField('Option 3', 'option3', option3Ctrl),
                           const SizedBox(height: 8),
-                          buildOptionField('Option 4', option4Ctrl),
+                          buildOptionField('Option 4', 'option4', option4Ctrl),
                         ],
                       ),
                     ),
@@ -797,42 +1244,94 @@ class QuizManagementView extends GetResponsiveView {
                         children: [
                           const Text('Add Image:', style: TextStyle(fontWeight: FontWeight.w500)),
                           const SizedBox(height: 12),
-                          Container(
+                          Obx(() => Container(
                             height: 200,
                             decoration: BoxDecoration(
                               border: Border.all(color: colorScheme.outlineVariant, style: BorderStyle.solid, width: 2),
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text('Upload Images',
-                                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                                const SizedBox(height: 4),
-                                Text('Drag and drop or browse to upload images.',
-                                    style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 12)),
-                                const SizedBox(height: 16),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    // Handle image upload
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: colorScheme.surfaceVariant,
-                                    foregroundColor: colorScheme.onSurface,
-                                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                            child: uploadedImagePath.value.isEmpty
+                                ? Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text('Upload Images',
+                                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                                      const SizedBox(height: 4),
+                                      Text('Drag and drop or browse to upload images.',
+                                          style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 12)),
+                                      const SizedBox(height: 16),
+                                      ElevatedButton(
+                                        onPressed: () async {
+                                          final ImagePicker picker = ImagePicker();
+                                          final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+                                          if (image != null) {
+                                            uploadedImagePath.value = image.path;
+                                            Get.snackbar('Success', 'Image uploaded successfully',
+                                                snackPosition: SnackPosition.BOTTOM);
+                                          }
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: colorScheme.surfaceVariant,
+                                          foregroundColor: colorScheme.onSurface,
+                                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                        ),
+                                        child: const Text('Upload'),
+                                      ),
+                                    ],
+                                  )
+                                : Stack(
+                                    children: [
+                                      Center(
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Icon(Icons.image, size: 60, color: colorScheme.primary),
+                                            const SizedBox(height: 8),
+                                            Text('Image Selected',
+                                                style: TextStyle(fontWeight: FontWeight.bold)),
+                                            const SizedBox(height: 4),
+                                            Text(uploadedImagePath.value.split('/').last,
+                                                style: TextStyle(fontSize: 12, color: colorScheme.onSurfaceVariant),
+                                                overflow: TextOverflow.ellipsis),
+                                          ],
+                                        ),
+                                      ),
+                                      Positioned(
+                                        top: 8,
+                                        right: 8,
+                                        child: IconButton(
+                                          onPressed: () {
+                                            uploadedImagePath.value = '';
+                                          },
+                                          icon: Icon(Icons.close, color: colorScheme.error),
+                                          style: IconButton.styleFrom(
+                                            backgroundColor: colorScheme.surface,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  child: const Text('Upload'),
-                                ),
-                              ],
-                            ),
-                          ),
+                          )),
                           const SizedBox(height: 16),
                           Align(
                             alignment: Alignment.centerRight,
                             child: ElevatedButton(
                               onPressed: () {
-                                // Handle Add Question
+                                // Save current question and add new one
+                                saveCurrentQuestion();
+                                questions.add({
+                                  'questionNumber': '',
+                                  'typeQuestion': '',
+                                  'questionMark': '',
+                                  'option1': '',
+                                  'option2': '',
+                                  'option3': '',
+                                  'option4': '',
+                                  'explanation': '',
+                                });
+                                currentQuestionIndex.value = questions.length - 1;
+                                loadQuestion(currentQuestionIndex.value);
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: colorScheme.primary,
@@ -880,27 +1379,54 @@ class QuizManagementView extends GetResponsiveView {
 
                 // ---------- BUTTONS ----------
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    // Delete Question Button
+                    if (questions.length > 1)
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          if (questions.length > 1) {
+                            questions.removeAt(currentQuestionIndex.value);
+                            if (currentQuestionIndex.value >= questions.length) {
+                              currentQuestionIndex.value = questions.length - 1;
+                            }
+                            loadQuestion(currentQuestionIndex.value);
+                          }
+                        },
+                        icon: Icon(Icons.delete, size: 18),
+                        label: const Text('Delete Question'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: colorScheme.error,
+                          foregroundColor: colorScheme.onError,
+                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        ),
+                      ),
+                    const Spacer(),
                     ElevatedButton(
                       onPressed: () {
-                        // Handle Previous
+                        Get.back();
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: colorScheme.primary,
-                        foregroundColor: colorScheme.onPrimary,
+                        backgroundColor: colorScheme.surfaceVariant,
+                        foregroundColor: colorScheme.onSurface,
                         padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                       ),
-                      child: const Text('Previous'),
+                      child: const Text('Cancel'),
                     ),
                     const SizedBox(width: 12),
                     ElevatedButton(
                       onPressed: () {
-                        quiz['title'] = quizIdCtrl.text;
+                        saveCurrentQuestion();
+                        quiz['title'] = quizTitleCtrl.text;
+                        quiz['subject'] = subjectNameCtrl.text;
+                        quiz['chapter'] = chapterNumberCtrl.text;
+                        quiz['lesson'] = lessonNumberCtrl.text;
                         quizzes.refresh();
                         Get.back();
-                        Get.snackbar('Success', 'Quiz updated successfully', snackPosition: SnackPosition.BOTTOM);
+                        Get.snackbar('Success', 'Quiz with ${questions.length} question(s) updated successfully', 
+                          snackPosition: SnackPosition.BOTTOM);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: colorScheme.primary,
@@ -908,13 +1434,13 @@ class QuizManagementView extends GetResponsiveView {
                         padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                       ),
-                      child: const Text('Save'),
+                      child: const Text('Save Quiz'),
                     ),
                   ],
                 ),
               ],
             ),
-          ),
+          )),
         ),
       ),
       barrierDismissible: true,
@@ -1113,7 +1639,7 @@ class QuizManagementView extends GetResponsiveView {
                                             .colorScheme
                                             .onBackground)),
                             const SizedBox(height: 30),
-                            Text("quiz List",
+                            Text("Quiz List",
                                 style: Theme.of(Get.context!)
                                     .textTheme
                                     .titleLarge
