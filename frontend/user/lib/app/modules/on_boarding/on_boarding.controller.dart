@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
 
-class DashboardController extends GetxController {
-  //TODO: Implement DashboardController
+class OnBoardingController extends GetxController {
+  //TODO: Implement OnBoardingController
 
-  final count = 0.obs;
+  final index = 0.obs;
   @override
   void onInit() {
     super.onInit();
@@ -19,5 +19,4 @@ class DashboardController extends GetxController {
     super.onClose();
   }
 
-  void increment() => count.value++;
 }

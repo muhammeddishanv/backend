@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
-class DashboardController extends GetxController {
-  //TODO: Implement DashboardController
+class CategoryController extends GetxController {
+  //TODO: Implement CategoryController
 
   final count = 0.obs;
   @override
